@@ -710,6 +710,41 @@
     </div>
   </div>
 
+  <!-- Today's Highlights & Recommendations -->
+  <div class="card full" style="margin-top:20px; animation-delay:0.45s">
+    <div class="card-title"><span class="icon">📌</span> 今日关注与建议</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent);">
+          <div style="font-weight:600; font-size:14px; color:var(--accent); margin-bottom:4px;">🛠 日报体系全面建立</div>
+          <div style="font-size:13px; color:var(--text-dim);">三人格日报系统框架完成——真由美夜间汇报、里美工作日早晚报设计定义完毕并创建 cron 任务。三人日报覆盖三大场景：情感陪伴、工作跟进、系统运维。</div>
+        </div>
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent3);">
+          <div style="font-weight:600; font-size:14px; color:var(--accent3); margin-bottom:4px;">🔧 思考与展示配置修正</div>
+          <div style="font-size:13px; color:var(--text-dim);">修正 reasoning_effort 从 none 恢复到 high，同时将微信/飞书 show_reasoning 设为 false。实现「思考做但不在网关平台展示给用户看」的目标。已向 Hermes 仓库提交滚动跟随不自动的 bug 反馈 issue。</div>
+        </div>
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent4);">
+          <div style="font-weight:600; font-size:14px; color:var(--accent4); margin-bottom:4px;">🌐 GitHub Pages 部署上线</div>
+          <div style="font-size:13px; color:var(--text-dim);">系统日报 HTML 已推送至 GitHub Pages，手机和任何设备随时可打开查看。后续每次 cron 自动更新。</div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent2);">
+          <div style="font-weight:600; font-size:14px; color:var(--accent2); margin-bottom:4px;">💡 建议 1：让日报跑一个完整周期</div>
+          <div style="font-size:13px; color:var(--text-dim);">真由美凌晨汇报、里美早晚报、佐知子系统日报均已在今天手动触发测试。建议明天让它们按正常 cron 时间自然运行一次，观察是否有任何送达异常或内容偏差。</div>
+        </div>
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent5);">
+          <div style="font-weight:600; font-size:14px; color:var(--accent5); margin-bottom:4px;">💡 建议 2：确认 git 邮箱配置</div>
+          <div style="font-size:13px; color:var(--text-dim);">git config user.email 当前为空，后续 GitHub Pages 自动 push 可能需要设置正确邮箱。建议运行 git config --global user.email 补充。</div>
+        </div>
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid #7c3aed;">
+          <div style="font-weight:600; font-size:14px; color:#a78bfa; margin-bottom:4px;">💡 建议 3：佐知子系统日报 cron 创建</div>
+          <div style="font-size:13px; color:var(--text-dim);">模板和部署链路已就绪，但正式的中午 12:00 系统日报 cron job 尚未创建。建议完成后保持一致的三报联动。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Host System Status -->
   <div class="card full" style="margin-top:20px; animation-delay:0.45s">
     <div class="card-title"><span class="icon">💻</span> 宿主机系统状态</div>
