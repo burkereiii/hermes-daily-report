@@ -450,21 +450,21 @@
       </div>
       <h1>Hermes <span>系统日报</span></h1>
       <div class="hero-subtitle">
-        2026年6月14日 · 01:14 CST · 全系统运行正常<br>
-        覆盖过去 24h 的完整系统画像——156 个会话，1,067 次工具调用，¥2.46 日耗
+        2026年6月14日 · 01:31 CST · 全系统运行正常<br>
+        覆盖过去 24h 的完整系统画像——158 个会话，1,209 次工具调用，¥2.79 日耗
       </div>
       <div class="hero-stats">
         <div class="hero-stat">
-          <div class="hero-stat-val">156</div>
+          <div class="hero-stat-val">158</div>
           <div class="hero-stat-lbl">会话</div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-val">2.15M</div>
-                    <div class="hero-stat-lbl">Token</div>
+          <div class="hero-stat-val">2.44M</div>
+          <div class="hero-stat-lbl">Token</div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-val">¥2.46</div>
-                    <div class="hero-stat-lbl">费用</div>
+          <div class="hero-stat-val">¥2.79</div>
+          <div class="hero-stat-lbl">费用</div>
         </div>
       </div>
     </div>
@@ -475,27 +475,27 @@
     <div class="card-title"><span class="icon">📊</span> 24h 总览</div>
     <div class="stat-row">
       <div class="stat">
-        <div class="stat-value">156</div>
+        <div class="stat-value">158</div>
         <div class="stat-label">会话数</div>
       </div>
       <div class="stat">
-        <div class="stat-value">2,685</div>
+        <div class="stat-value">2,970</div>
         <div class="stat-label">消息数</div>
       </div>
       <div class="stat">
-        <div class="stat-value">2.15M</div>
+        <div class="stat-value">2.44M</div>
         <div class="stat-label">日 Token (I+O)</div>
       </div>
       <div class="stat">
-        <div class="stat-value">¥2.46</div>
-                <div class="stat-label">今日费用</div>
+        <div class="stat-value">¥2.79</div>
+        <div class="stat-label">今日费用</div>
       </div>
       <div class="stat">
-        <div class="stat-value">4h 29m</div>
+        <div class="stat-value">4h 36m</div>
         <div class="stat-label">活跃时间</div>
       </div>
       <div class="stat">
-        <div class="stat-value">1,067</div>
+        <div class="stat-value">1,209</div>
         <div class="stat-label">工具调用</div>
       </div>
     </div>
@@ -509,7 +509,7 @@
         <div class="platform-icon weixin">💬</div>
         <div class="platform-info">
           <div class="platform-name">微信 · 真由美</div>
-          <div class="platform-meta">3 会话 · 29 消息 · 313K tokens</div>
+          <div class="platform-meta">3 会话 · 46 消息 · 609K tokens</div>
         </div>
         <div class="platform-status online" title="已连接"></div>
       </div>
@@ -517,7 +517,7 @@
         <div class="platform-icon feishu">📋</div>
         <div class="platform-info">
           <div class="platform-name">飞书 · 里美</div>
-          <div class="platform-meta">4 会话 · 102 消息 · 1.43M tokens</div>
+          <div class="platform-meta">4 会话 · 112 消息 · 1.79M tokens</div>
         </div>
         <div class="platform-status online" title="已连接"></div>
       </div>
@@ -525,14 +525,14 @@
         <div class="platform-icon cli">🖥</div>
         <div class="platform-info">
           <div class="platform-name">桌面终端 · 佐知子</div>
-          <div class="platform-meta">5 会话 · 955 消息 · 57.8M tokens</div>
+          <div class="platform-meta">6 会话 · 1,154 消息 · 68.4M tokens</div>
         </div>
       </div>
       <div class="platform-card" style="background: transparent;">
         <div class="platform-icon" style="background: rgba(255,140,64,0.15);">⚡</div>
         <div class="platform-info">
           <div class="platform-name">Cron 任务</div>
-          <div class="platform-meta">142 会话 · 1,578 消息 · 70.0M tokens</div>
+          <div class="platform-meta">144 会话 · 1,638 消息 · 70.1M tokens</div>
         </div>
       </div>
     </div>
@@ -543,7 +543,7 @@
         <div style="width:12px;height:12px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(127,217,98,0.5);animation:pulse 2s ease-in-out infinite;"></div>
         <div>
           <div style="font-weight:600;font-size:15px;">网关正常运行</div>
-          <div style="font-size:12px;color:var(--text-dim);">PID 34248 · 运行中</div>
+          <div style="font-size:12px;color:var(--text-dim);">PID 34248 · 运行中 · 活跃代理 0</div>
         </div>
       </div>
       <div class="bar-group">
@@ -554,8 +554,12 @@
         <div class="bar-label"><span>飞书连接</span><span class="val">已连接</span></div>
         <div class="bar-track"><div class="bar-fill accent" style="width:100%"></div></div>
       </div>
-      <div style="margin-top:16px; padding:12px; background:var(--surface2); border-radius:var(--radius-sm); font-size:13px; color:var(--green);">
-        ⚠️ 24h 内多次网关重启 · 微信与飞书曾短暂断连后自动恢复
+      <div class="bar-group">
+        <div class="bar-label"><span>Ntfy 连接</span><span class="val">已断开</span></div>
+        <div class="bar-track"><div class="bar-fill accent4" style="width:0%"></div></div>
+      </div>
+      <div style="margin-top:16px; padding:12px; background:var(--surface2); border-radius:var(--radius-sm); font-size:13px; color:var(--yellow);">
+        ⚠️ 微信 iLink 发送频率限制 · 真由美夜间汇报发送失败 · Ntfy 连接中断超过 11 小时
       </div>
     </div>
   </div>
@@ -565,22 +569,26 @@
     <div class="card" style="animation-delay:0.25s">
       <div class="card-title"><span class="icon">💰</span> Token 与费用明细</div>
       <div class="bar-group">
-        <div class="bar-label"><span>输入 Token（缓存命中约 90%）</span><span class="val">1.84M</span></div>
+        <div class="bar-label"><span>输入 Token</span><span class="val">2.08M</span></div>
         <div class="bar-track"><div class="bar-fill accent" style="width:100%"></div></div>
       </div>
       <div class="bar-group">
-        <div class="bar-label"><span>输出 Token</span><span class="val">312K</span></div>
-        <div class="bar-track"><div class="bar-fill accent2" style="width:16%"></div></div>
+        <div class="bar-label"><span>输出 Token</span><span class="val">0.36M</span></div>
+        <div class="bar-track"><div class="bar-fill accent2" style="width:17%"></div></div>
       </div>
       <div class="bar-group">
-        <div class="bar-label"><span>日 Token 合计</span><span class="val">2.15M</span></div>
+        <div class="bar-label"><span>日 Token 合计 (I+O)</span><span class="val">2.44M</span></div>
         <div class="bar-track"><div class="bar-fill accent3" style="width:100%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>含缓存 Token 总量</span><span class="val">141.2M</span></div>
+        <div class="bar-track"><div class="bar-fill accent5" style="width:100%"></div></div>
       </div>
       <div style="margin-top:14px; padding:12px; background:var(--surface2); border-radius:var(--radius-sm); font-size:13px;">
         📐 <strong>DeepSeek v4-pro 定价</strong><br>
         <span style="color:var(--text-dim)">缓存命中 0.025¥/M · 未命中 3¥/M · 输出 6¥/M</span><br>
-        <span style="color:var(--accent); font-weight:600; font-size:15px;">估算费用 ¥2.46</span>
-        <span style="color:var(--text-dim);font-size:11px;">（含缓存折扣）</span>
+        <span style="color:var(--accent); font-weight:600; font-size:15px;">估算费用 ¥2.79</span>
+        <span style="color:var(--text-dim);font-size:11px;">（含缓存折扣，缓存命中率约 98%）</span>
       </div>
     </div>
 
@@ -590,12 +598,20 @@
         <div style="width:40px;height:40px;border-radius:10px;background:rgba(57,186,230,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;">🧠</div>
         <div class="platform-info">
           <div class="platform-name">DeepSeek v4-pro</div>
-          <div class="platform-meta">155 会话 · 2.15M 日 tokens</div>
+          <div class="platform-meta">157 会话 · 141.2M 含缓存 tokens</div>
         </div>
         <span class="badge ok">主力</span>
       </div>
+      <div class="platform-card" style="background:var(--surface2); margin-top:8px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,140,64,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;">❓</div>
+        <div class="platform-info">
+          <div class="platform-name">未知模型</div>
+          <div class="platform-meta">1 会话 · 0 tokens</div>
+        </div>
+        <span class="badge warn">异常</span>
+      </div>
       <div style="margin-top:16px; padding:12px; background:rgba(127,217,98,0.08); border-radius:var(--radius-sm); font-size:13px; color:var(--green);">
-        ✅ 未触发 fallback · 模型全程稳定运行
+        ✅ 未触发 fallback · 主力模型全程稳定运行
       </div>
     </div>
   </div>
@@ -606,46 +622,46 @@
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
       <div>
         <div class="bar-group">
-          <div class="bar-label"><span>terminal</span><span class="val">548 (51.4%)</span></div>
+          <div class="bar-label"><span>terminal</span><span class="val">601 (49.7%)</span></div>
           <div class="bar-track"><div class="bar-fill accent" style="width:100%"></div></div>
         </div>
         <div class="bar-group">
-          <div class="bar-label"><span>read_file</span><span class="val">247 (23.1%)</span></div>
-          <div class="bar-track"><div class="bar-fill accent2" style="width:45%"></div></div>
+          <div class="bar-label"><span>read_file</span><span class="val">267 (22.1%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent2" style="width:44%"></div></div>
         </div>
         <div class="bar-group">
-          <div class="bar-label"><span>search_files</span><span class="val">73 (6.9%)</span></div>
+          <div class="bar-label"><span>search_files</span><span class="val">83 (6.9%)</span></div>
           <div class="bar-track"><div class="bar-fill accent3" style="width:14%"></div></div>
         </div>
         <div class="bar-group">
-          <div class="bar-label"><span>skill_view</span><span class="val">35 (3.3%)</span></div>
-          <div class="bar-track"><div class="bar-fill accent4" style="width:6%"></div></div>
+          <div class="bar-label"><span>skill_view</span><span class="val">41 (3.4%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent4" style="width:7%"></div></div>
         </div>
         <div class="bar-group">
-          <div class="bar-label"><span>session_search</span><span class="val">28 (2.6%)</span></div>
-          <div class="bar-track"><div class="bar-fill accent5" style="width:5%"></div></div>
+          <div class="bar-label"><span>session_search</span><span class="val">38 (3.1%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent5" style="width:6%"></div></div>
         </div>
       </div>
       <div>
         <div class="bar-group">
-          <div class="bar-label"><span>write_file + patch</span><span class="val">29 (2.7%)</span></div>
-          <div class="bar-track"><div class="bar-fill accent2" style="width:5%"></div></div>
+          <div class="bar-label"><span>cronjob + skill_manage</span><span class="val">56 (4.6%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent" style="width:9%"></div></div>
         </div>
         <div class="bar-group">
-          <div class="bar-label"><span>image_generate</span><span class="val">19 (1.8%)</span></div>
+          <div class="bar-label"><span>write_file</span><span class="val">25 (2.1%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent2" style="width:4%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span>image_generate</span><span class="val">22 (1.8%)</span></div>
           <div class="bar-track"><div class="bar-fill accent4" style="width:4%"></div></div>
         </div>
         <div class="bar-group">
-          <div class="bar-label"><span>execute_code</span><span class="val">18 (1.7%)</span></div>
+          <div class="bar-label"><span>execute_code</span><span class="val">19 (1.6%)</span></div>
           <div class="bar-track"><div class="bar-fill accent3" style="width:3%"></div></div>
         </div>
         <div class="bar-group">
-          <div class="bar-label"><span>cronjob + process</span><span class="val">31 (2.9%)</span></div>
-          <div class="bar-track"><div class="bar-fill accent" style="width:6%"></div></div>
-        </div>
-        <div class="bar-group">
-          <div class="bar-label"><span>其他 7 种工具</span><span class="val">39 (3.7%)</span></div>
-          <div class="bar-track"><div class="bar-fill accent5" style="width:7%"></div></div>
+          <div class="bar-label"><span>其他 8 种工具</span><span class="val">57 (4.7%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent5" style="width:9%"></div></div>
         </div>
       </div>
     </div>
@@ -686,7 +702,7 @@
           <tr>
             <td><strong>[通用] 网关健康巡检</strong></td>
             <td>每 5 分钟</td>
-            <td>Jun 14 01:10</td>
+            <td>Jun 14 01:27</td>
             <td><span class="badge ok">成功</span></td>
           </tr>
           <tr>
@@ -704,7 +720,7 @@
           <tr>
             <td><strong>[佐知子] Hermes系统日报</strong></td>
             <td>每日 00:00</td>
-            <td>Jun 14 01:14</td>
+            <td>Jun 14 01:12</td>
             <td><span class="badge ok">成功</span></td>
           </tr>
           <tr>
@@ -723,7 +739,7 @@
       </table>
     </div>
     <div style="margin-top:12px; padding:12px; background:rgba(255,204,102,0.08); border-radius:var(--radius-sm); font-size:13px; color:var(--yellow);">
-      ⚠️ 9 个 cron 任务中 6 个正常 · 1 个发送失败（真由美夜间汇报）· 3 个待触发
+      ⚠️ 9 个 cron 任务中 6 个正常 · 1 个发送失败（真由美夜间汇报，微信频率限制）· 3 个待触发
     </div>
   </div>
 
@@ -734,33 +750,33 @@
       <div style="display:flex; flex-direction:column; gap:12px;">
         <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent4);">
           <div style="font-weight:600; font-size:14px; color:var(--accent4); margin-bottom:4px;">🚨 真由美夜间汇报发送失败：微信频率限制</div>
-          <div style="font-size:13px; color:var(--text-dim);">今日 01:03 的夜间汇报成功生成但微信发送失败（iLink rate limited）。根因：每 5 分钟的健康巡检占用微信发送配额，与汇报通知产生竞争。用户未收到真由美的汇报。</div>
+          <div style="font-size:13px; color:var(--text-dim);">今日 01:03 的夜间汇报成功生成但微信发送失败（iLink rate limited）。根因：每 5 分钟的健康巡检占用微信发送配额，与汇报通知产生竞争。用户未收到真由美的汇报。此为连续第二日出现。</div>
         </div>
         <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent);">
-          <div style="font-weight:600; font-size:14px; color:var(--accent); margin-bottom:4px;">🔄 24h 内多次网关重启 · 短暂断连后自动恢复</div>
-          <div style="font-size:13px; color:var(--text-dim);">156 个会话中 142 个来自 cron 自动任务。多次网关重启导致微信 iLink 发送配额被占满，真由美夜间汇报发送失败。重启后所有连接已恢复。</div>
+          <div style="font-weight:600; font-size:14px; color:var(--accent); margin-bottom:4px;">🔄 24h 内 144 个 cron 会话，系统高密度自动化运转</div>
+          <div style="font-size:13px; color:var(--text-dim);">158 个会话中 144 个来自 cron 自动任务（91.1%）。网关健康巡检每 5 分钟触发一次，日产生约 288 个会话。微信 iLink 发送配额被大量 cron 通知占满，影响用户消息送达。</div>
         </div>
         <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent2);">
-          <div style="font-weight:600; font-size:14px; color:var(--accent2); margin-bottom:4px;">💾 state.db 增长至 43MB</div>
-          <div style="font-size:13px; color:var(--text-dim);">状态数据库从上期 40MB 增至 43MB（+7.5%），增长速度持续。已安排周日 03:30 周维护（vacuum+缓存+日志），届时将自动回收空间。</div>
+          <div style="font-weight:600; font-size:14px; color:var(--accent2); margin-bottom:4px;">💾 state.db 增长至 48MB · 周维护待触发</div>
+          <div style="font-size:13px; color:var(--text-dim);">状态数据库从 43MB 增至 48MB（+11.6%），增长速度加快（上期增幅 7.5%）。周日 03:30 周维护（vacuum+缓存+日志）将自动回收空间，但若持续此增速，每周 vacuum 压力将增加。</div>
         </div>
         <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid #7c3aed;">
-          <div style="font-weight:600; font-size:14px; color:#a78bfa; margin-bottom:4px;">🎨 hippo-selfie 迭代密度持续最高</div>
-          <div style="font-size:13px; color:var(--text-dim);">自拍技能 24h 内加载 28 次、编辑 5 次，连续第二日位居技能活跃榜首。外观保真、画廊归档、平台适配等模块已趋稳定，迭代频率可能回落。</div>
+          <div style="font-weight:600; font-size:14px; color:#a78bfa; margin-bottom:4px;">🎨 hippo-selfie 迭代密度继续领跑</div>
+          <div style="font-size:13px; color:var(--text-dim);">自拍技能 24h 内加载 32 次、编辑 27 次，连续多日位居技能活跃榜首。画廊归档、桌面渲染修复、网关适配等模块经密集修补已趋稳定。新问题：cron 会话中 image_generate 不可用需 fallback。</div>
         </div>
       </div>
       <div style="display:flex; flex-direction:column; gap:12px;">
         <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent4);">
-          <div style="font-weight:600; font-size:14px; color:var(--accent4); margin-bottom:4px;">💡 建议 1：错开微信发送窗口</div>
-          <div style="font-size:13px; color:var(--text-dim);">健康巡检与夜间汇报共享微信 iLink 发送配额，导致后者被限流。建议将巡检的微信通知改为仅异常时发送，或将夜间汇报延迟 2-3 分钟以错开巡检整点窗口。</div>
+          <div style="font-weight:600; font-size:14px; color:var(--accent4); margin-bottom:4px;">💡 建议 1：将健康巡检改为仅异常时微信通知</div>
+          <div style="font-size:13px; color:var(--text-dim);">当前每 5 分钟巡检每次都向微信发送结果，消耗 iLink 配额。建议：巡检结果默认仅 local 投递，仅在检测到断连/异常时触发微信推送。可立即缓解夜间汇报被限流问题。</div>
         </div>
         <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent5);">
-          <div style="font-weight:600; font-size:14px; color:var(--accent5); margin-bottom:4px;">💡 建议 2：延长健康巡检间隔</div>
-          <div style="font-size:13px; color:var(--text-dim);">每 5 分钟巡检产生约 288 个会话/天，占大量 token 和 iLink 配额。当前网关已连续 24h 稳定运行，建议评估延长至 10-15 分钟，或在稳定期降频。</div>
+          <div style="font-weight:600; font-size:14px; color:var(--accent5); margin-bottom:4px;">💡 建议 2：延长健康巡检间隔至 10-15 分钟</div>
+          <div style="font-size:13px; color:var(--text-dim);">每 5 分钟巡检日产生约 288 个 cron 会话，贡献约 50% 的日 token 消耗。当前网关已稳定连接超 8 小时，延长至 10-15 分钟可大幅降低系统开销和微信配额竞争。</div>
         </div>
         <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent3);">
-          <div style="font-weight:600; font-size:14px; color:var(--accent3); margin-bottom:4px;">💡 建议 3：GPU 闲置可部署本地推理</div>
-          <div style="font-size:13px; color:var(--text-dim);">RTX 3060 利用率 0%、VRAM 使用 24%，算力基本空转。如有 ComfyUI 工作流或本地模型推理需求，当前正是部署窗口，不会影响现有服务。</div>
+          <div style="font-weight:600; font-size:14px; color:var(--accent3); margin-bottom:4px;">💡 建议 3：关注 Ntfy 连接中断</div>
+          <div style="font-size:13px; color:var(--text-dim);">Ntfy 推送通道已断开超过 11 小时（最后更新 Jun 13 22:28 CST）。虽然微信和飞书为主要通信渠道，Ntfy 作为备用通知链建议排查恢复，或确认是否可移除。</div>
         </div>
       </div>
     </div>
@@ -773,32 +789,32 @@
       <div class="sys-item">
         <div class="sys-item-label">CPU</div>
         <div class="sys-item-val" style="color:var(--accent);">i7-11800H</div>
-        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">8 核 16 线程 @ 2.30 GHz</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">8 核 16 线程 @ 2.30 GHz · 负载 8%</div>
       </div>
       <div class="sys-item">
         <div class="sys-item-label">GPU</div>
         <div class="sys-item-val" style="color:var(--accent2);">RTX 3060</div>
-        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">6GB VRAM · 使用 1.4GB (24%) · 14% 负载 · 57°C</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">6GB VRAM · 使用 1.5GB (24%) · 7% 负载 · 54°C</div>
       </div>
       <div class="sys-item">
         <div class="sys-item-label">内存</div>
         <div class="sys-item-val" style="color:var(--accent3);">39.7 GB</div>
-        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">可用 24.4 GB · 使用率 38.5%</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">可用 24.1 GB · 使用率 39.3%</div>
       </div>
       <div class="sys-item">
         <div class="sys-item-label">磁盘 C:</div>
-        <div class="sys-item-val" style="color:var(--accent4);">454 GB</div>
-        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">可用 199 GB · 使用率 56.1%</div>
+        <div class="sys-item-val" style="color:var(--accent4);">453 GB</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">可用 198 GB · 使用率 56.3%</div>
       </div>
       <div class="sys-item">
         <div class="sys-item-label">磁盘 D:</div>
         <div class="sys-item-val" style="color:var(--accent5);">454 GB</div>
-        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">可用 391 GB · 使用率 13.9%</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">可用 390 GB · 使用率 14.0%</div>
       </div>
       <div class="sys-item">
         <div class="sys-item-label">系统事件</div>
-        <div class="sys-item-val" style="color:var(--green); font-size:16px;">✅ 无异常</div>
-        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">24h 内无 Critical/Error 事件</div>
+        <div class="sys-item-val" style="color:var(--yellow); font-size:16px;">⚠️ 需关注</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">Windows Update 失败 (KB5094126) · 非正常关机事件 · 多个驱动服务错误</div>
       </div>
     </div>
   </div>
@@ -808,11 +824,11 @@
     <div class="card-title"><span class="icon">💾</span> 存储概况</div>
     <div class="stat-row">
       <div class="stat">
-        <div class="stat-value">73 MB</div>
+        <div class="stat-value">80 MB</div>
         <div class="stat-label">缓存目录</div>
       </div>
       <div class="stat">
-        <div class="stat-value">43 MB</div>
+        <div class="stat-value">48 MB</div>
         <div class="stat-label">状态数据库 (state.db)</div>
       </div>
       <div class="stat">
@@ -820,11 +836,11 @@
         <div class="stat-label">状态快照</div>
       </div>
       <div class="stat">
-        <div class="stat-value">112 KB</div>
+        <div class="stat-value">N/A</div>
         <div class="stat-label">Kanban 数据库</div>
       </div>
       <div class="stat">
-        <div class="stat-value">4.0 KB</div>
+        <div class="stat-value">20 KB</div>
         <div class="stat-label">记忆文件</div>
       </div>
     </div>
@@ -836,13 +852,13 @@
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
       <div>
         <div class="stat" style="margin-bottom:12px;">
-          <div class="stat-value">137 / 153</div>
-          <div class="stat-label">周六活跃会话占比 (89.5%)</div>
+          <div class="stat-value">137 / 158</div>
+          <div class="stat-label">周六活跃会话占比 (86.7%)</div>
         </div>
         <div style="font-size:13px;color:var(--text-dim);">
           活跃天数：2 天 · 最长连续：2 天<br>
           平均会话时长：2 分钟<br>
-          平均消息/会话：17.2
+          平均消息/会话：18.8
         </div>
       </div>
       <div>
