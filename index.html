@@ -6,38 +6,67 @@
 <title>Hermes 系统日报 · 2026-06-15</title>
 <style>
   :root {
-    --bg: #0a0e14; --surface: #12171f; --surface2: #1a1f2b;
-    --border: #1e2633; --text: #c8d6e5; --text-dim: #6b7384;
-    --accent: #39bae6; --accent2: #ff8f40; --accent3: #aad94c;
-    --accent4: #ff6584; --accent5: #95e6cb;
-    --red: #f26d78; --green: #7fd962; --yellow: #ffcc66;
-    --radius: 10px; --radius-sm: 6px;
+    --bg: #0a0e14;
+    --surface: #12171f;
+    --surface2: #1a1f2b;
+    --border: #1e2633;
+    --text: #c8d6e5;
+    --text-dim: #6b7384;
+    --accent: #39bae6;
+    --accent2: #ff8f40;
+    --accent3: #aad94c;
+    --accent4: #ff6584;
+    --accent5: #95e6cb;
+    --red: #f26d78;
+    --green: #7fd962;
+    --yellow: #ffcc66;
+    --radius: 10px;
+    --radius-sm: 6px;
     --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: var(--bg); color: var(--text); line-height: 1.6;
-    min-height: 100vh; overflow-x: hidden;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
+  
+  /* Animated background grid */
   body::before {
-    content: ''; position: fixed; inset: 0;
+    content: '';
+    position: fixed;
+    inset: 0;
     background-image:
       linear-gradient(rgba(57,186,230,0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(57,186,230,0.03) 1px, transparent 1px);
     background-size: 60px 60px;
     animation: gridMove 20s linear infinite;
-    pointer-events: none; z-index: 0;
+    pointer-events: none;
+    z-index: 0;
   }
   @keyframes gridMove {
     0% { background-position: 0 0, 0 0; }
     100% { background-position: 60px 60px, 60px 60px; }
   }
-  .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  
+  /* Floating particles */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
   .particle {
-    position: absolute; width: 2px; height: 2px;
-    background: var(--accent); border-radius: 50%;
-    animation: float 8s ease-in-out infinite; opacity: 0.3;
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+    opacity: 0.3;
   }
   @keyframes float {
     0%, 100% { transform: translateY(0) translateX(0); opacity: 0.1; }
@@ -45,221 +74,844 @@
     50% { transform: translateY(-40px) translateX(20px); opacity: 0.2; }
     75% { opacity: 0.1; }
   }
-  .container { max-width: 1280px; margin: 0 auto; padding: 24px; position: relative; z-index: 1; }
-  .header { text-align: center; padding: 48px 24px 36px; position: relative; }
-  .header-glow {
-    position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
-    width: 400px; height: 200px;
-    background: radial-gradient(ellipse, rgba(57,186,230,0.12) 0%, transparent 70%);
-    pointer-events: none;
+  
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px;
+    position: relative;
+    z-index: 1;
   }
-  .logo { font-size: 14px; letter-spacing: 4px; color: var(--accent); text-transform: uppercase; margin-bottom: 12px; animation: fadeInDown 0.8s ease-out; }
-  h1 { font-size: 36px; font-weight: 700; background: linear-gradient(135deg, var(--accent), #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: fadeInDown 0.8s ease-out 0.1s both; letter-spacing: -1px; }
-  .subtitle { color: var(--text-dim); font-size: 15px; margin-top: 8px; animation: fadeInDown 0.8s ease-out 0.2s both; }
-  .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-right: 8px; animation: pulse 2s ease-in-out infinite; }
-  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(127,217,98,0.4); } 50% { box-shadow: 0 0 0 8px rgba(127,217,98,0); } }
+  
+  /* Hero Banner */
+  .hero {
+    position: relative;
+    width: 100%;
+    min-height: 480px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('sachiko-hero.png') center/cover no-repeat;
+    background-position: 35% center;
+    filter: brightness(0.55) saturate(1.1);
+    transform: scale(1.02);
+    transition: transform 8s ease-out;
+  }
+  .hero:hover .hero-bg {
+    transform: scale(1.06);
+  }
+  .hero-gradient-left {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, 
+      rgba(10,14,20,0.95) 0%, 
+      rgba(10,14,20,0.7) 35%, 
+      rgba(10,14,20,0.15) 65%, 
+      rgba(10,14,20,0.02) 100%);
+  }
+  .hero-gradient-bottom {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(10,14,20,1) 0%, transparent 35%);
+  }
+  .hero-scanline {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(57,186,230,0.03) 2px,
+      rgba(57,186,230,0.03) 4px
+    );
+    pointer-events: none;
+    animation: scanlineMove 8s linear infinite;
+  }
+  @keyframes scanlineMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100px; }
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 60px 48px;
+    max-width: 650px;
+  }
+  .hero-content .logo {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    animation: fadeInLeft 0.8s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-content .logo .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px rgba(127,217,98,0.6);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .hero-content h1 {
+    font-size: 44px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.15;
+    margin-bottom: 8px;
+    letter-spacing: -1.5px;
+    animation: fadeInLeft 0.8s ease-out 0.15s both;
+  }
+  .hero-content h1 span {
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-content .hero-subtitle {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    animation: fadeInLeft 0.8s ease-out 0.3s both;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 24px;
+    animation: fadeInLeft 0.8s ease-out 0.45s both;
+  }
+  .hero-stat {
+    text-align: left;
+  }
+  .hero-stat-val {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+  }
+  .hero-stat-lbl {
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-right: 8px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(127,217,98,0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(127,217,98,0); }
+  }
   @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
   @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  
+  /* Grid */
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; position: relative; overflow: hidden; animation: scaleIn 0.5s ease-out both; transition: border-color var(--transition), box-shadow var(--transition); }
-  .card:hover { border-color: rgba(57,186,230,0.3); box-shadow: 0 4px 30px rgba(57,186,230,0.06); }
+  @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+  
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    animation: scaleIn 0.5s ease-out both;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .card:hover {
+    border-color: rgba(57,186,230,0.3);
+    box-shadow: 0 4px 30px rgba(57,186,230,0.06);
+  }
   .card.full { grid-column: 1 / -1; }
-  .card-title { font-size: 13px; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
-  .stat { background: var(--surface2); border-radius: var(--radius-sm); padding: 16px; text-align: center; transition: transform var(--transition); }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(57,186,230,0.5), transparent);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+  .card:hover::before { opacity: 1; }
+  .card-title {
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon { font-size: 18px; }
+  
+  /* Stats row */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+  }
+  .stat {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+    transition: transform var(--transition);
+  }
   .stat:hover { transform: translateY(-2px); }
-  .stat-value { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--accent), #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+  }
   .stat-label { font-size: 11px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+  
+  /* Progress bars */
   .bar-group { margin-bottom: 14px; }
-  .bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; color: var(--text); }
-  .bar-track { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; position: relative; }
-  .bar-fill { height: 100%; border-radius: 3px; transition: width 1.5s ease-out; position: relative; }
-  .bar-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); animation: shimmer 2s ease-in-out infinite; }
-  @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { text-align: left; padding: 10px 12px; color: var(--text-dim); font-weight: 600; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-  td { padding: 10px 12px; border-bottom: 1px solid rgba(30,38,51,0.5); color: var(--text); }
+  .bar-label {
+    display: flex; justify-content: space-between;
+    font-size: 13px; margin-bottom: 6px;
+    color: var(--text);
+  }
+  .bar-label .val { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+  .bar-track {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.5s ease-out;
+    position: relative;
+  }
+  .bar-fill::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    animation: shimmer 2s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
+  .bar-fill.accent { background: linear-gradient(90deg, var(--accent), #5cc8ff); }
+  .bar-fill.accent2 { background: linear-gradient(90deg, var(--accent2), #ffaa60); }
+  .bar-fill.accent3 { background: linear-gradient(90deg, var(--accent3), #c4e870); }
+  .bar-fill.accent4 { background: linear-gradient(90deg, var(--accent4), #ff8095); }
+  .bar-fill.accent5 { background: linear-gradient(90deg, var(--accent5), #b8f0d8); }
+  
+  /* Platform cards */
+  .platform-card {
+    display: flex; align-items: center;
+    padding: 14px;
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+    gap: 14px;
+    transition: transform var(--transition), border-color var(--transition);
+    border: 1px solid transparent;
+  }
+  .platform-card:hover { transform: translateX(4px); border-color: var(--border); }
+  .platform-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .platform-icon.weixin { background: rgba(167,213,66,0.15); }
+  .platform-icon.feishu { background: rgba(57,186,230,0.15); }
+  .platform-icon.cli { background: rgba(124,58,237,0.15); }
+  .platform-info { flex: 1; }
+  .platform-name { font-weight: 600; font-size: 14px; }
+  .platform-meta { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .platform-status {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .platform-status.online { background: var(--green); box-shadow: 0 0 8px rgba(127,217,98,0.4); }
+  .platform-status.offline { background: var(--red); }
+  
+  /* System metrics */
+  .sys-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .sys-item {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+  }
+  .sys-item-label { font-size: 11px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .sys-item-val { font-size: 20px; font-weight: 700; }
+  
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(30,38,51,0.5);
+    color: var(--text);
+  }
+  tr { transition: background var(--transition); }
   tr:hover { background: var(--surface2); }
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
   .badge.ok { background: rgba(127,217,98,0.15); color: var(--green); }
   .badge.warn { background: rgba(255,204,102,0.15); color: var(--yellow); }
-  .hero-img { width: 100%; border-radius: var(--radius); margin-bottom: 24px; border: 1px solid var(--border); }
-  .footer { text-align: center; padding: 40px 24px; color: var(--text-dim); font-size: 13px; border-top: 1px solid var(--border); margin-top: 20px; }
-  .generated-by { background: linear-gradient(135deg, var(--accent), #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
-  @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } .container { padding: 12px; } h1 { font-size: 24px; } .stat-value { font-size: 22px; } }
+  .badge.err { background: rgba(242,109,120,0.15); color: var(--red); }
+  
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--text-dim);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .footer .generated-by {
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+  }
+  
+  /* Responsive */
+  @media (max-width: 900px) {
+    .sys-grid { grid-template-columns: 1fr; }
+    .container { padding: 12px; }
+    h1 { font-size: 24px; }
+    .stat-value { font-size: 22px; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
+  }
 </style>
 </head>
 <body>
 <div class="particles" id="particles"></div>
+
 <div class="container">
-  <!-- HERO -->
-  <img class="hero-img" src="sachiko-hero.png" alt="佐知子">
-  <!-- HEADER -->
-  <div class="header">
-    <div class="header-glow"></div>
-    <div class="logo">Hermes System Report</div>
-    <h1>Hermes 系统日报</h1>
-    <div class="subtitle"><span class="status-dot"></span>2026-06-15 · 全平台运行正常 · 0:00 生成</div>
+  <!-- Hero Banner -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-gradient-left"></div>
+    <div class="hero-gradient-bottom"></div>
+    <div class="hero-scanline"></div>
+    <div class="hero-content">
+      <div class="logo">
+        <span class="dot"></span>
+        HERMES SYSTEM REPORT · 佐知子
+      </div>
+      <h1>Hermes <span>系统日报</span></h1>
+      <div class="hero-subtitle">
+        2026年6月14日 · 01:31 CST · 全系统运行正常<br>
+        覆盖过去 24h 的完整系统画像——158 个会话，1,209 次工具调用，¥2.79 日耗
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-val">158</div>
+          <div class="hero-stat-lbl">会话</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">2.44M</div>
+          <div class="hero-stat-lbl">Token</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-val">¥2.79</div>
+          <div class="hero-stat-lbl">费用</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- 24H OVERVIEW -->
-  <div class="grid">
-    <div class="card full">
-      <div class="card-title">📊 24 小时概览</div>
-      <div class="stat-row">
-        <div class="stat"><div class="stat-value">30</div><div class="stat-label">会话数</div></div>
-        <div class="stat"><div class="stat-value">1,216</div><div class="stat-label">消息数</div></div>
-        <div class="stat"><div class="stat-value">610</div><div class="stat-label">工具调用</div></div>
-        <div class="stat"><div class="stat-value">101</div><div class="stat-label">用户消息</div></div>
-        <div class="stat"><div class="stat-value">1.73M</div><div class="stat-label">Token / 日</div></div>
-        <div class="stat"><div class="stat-value">¥2.17</div><div class="stat-label">日费用</div></div>
-        <div class="stat"><div class="stat-value">~44m</div><div class="stat-label">活跃时间</div></div>
-        <div class="stat"><div class="stat-value">~2m</div><div class="stat-label">平均会话</div></div>
+  <!-- Overview Stats -->
+  <div class="card full" style="animation-delay:0.1s">
+    <div class="card-title"><span class="icon">📊</span> 24h 总览</div>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-value">158</div>
+        <div class="stat-label">会话数</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">2,970</div>
+        <div class="stat-label">消息数</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">2.44M</div>
+        <div class="stat-label">日 Token (I+O)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">¥2.79</div>
+        <div class="stat-label">今日费用</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">4h 36m</div>
+        <div class="stat-label">活跃时间</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">1,209</div>
+        <div class="stat-label">工具调用</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Platform breakdown + Gateway -->
+  <div class="grid" style="margin-top:20px">
+    <div class="card" style="animation-delay:0.15s">
+      <div class="card-title"><span class="icon">📱</span> 平台分布</div>
+      <div class="platform-card">
+        <div class="platform-icon weixin">💬</div>
+        <div class="platform-info">
+          <div class="platform-name">微信 · 真由美</div>
+          <div class="platform-meta">3 会话 · 46 消息 · 609K tokens</div>
+        </div>
+        <div class="platform-status online" title="已连接"></div>
+      </div>
+      <div class="platform-card">
+        <div class="platform-icon feishu">📋</div>
+        <div class="platform-info">
+          <div class="platform-name">飞书 · 里美</div>
+          <div class="platform-meta">4 会话 · 112 消息 · 1.79M tokens</div>
+        </div>
+        <div class="platform-status online" title="已连接"></div>
+      </div>
+      <div class="platform-card">
+        <div class="platform-icon cli">🖥</div>
+        <div class="platform-info">
+          <div class="platform-name">桌面终端 · 佐知子</div>
+          <div class="platform-meta">6 会话 · 1,154 消息 · 68.4M tokens</div>
+        </div>
+      </div>
+      <div class="platform-card" style="background: transparent;">
+        <div class="platform-icon" style="background: rgba(255,140,64,0.15);">⚡</div>
+        <div class="platform-info">
+          <div class="platform-name">Cron 任务</div>
+          <div class="platform-meta">144 会话 · 1,638 消息 · 70.1M tokens</div>
+        </div>
       </div>
     </div>
 
-    <!-- PLATFORM BREAKDOWN -->
-    <div class="card">
-      <div class="card-title">📱 平台分布</div>
+    <div class="card" style="animation-delay:0.2s">
+      <div class="card-title"><span class="icon">🌐</span> 网关运行状态</div>
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(127,217,98,0.5);animation:pulse 2s ease-in-out infinite;"></div>
+        <div>
+          <div style="font-weight:600;font-size:15px;">网关正常运行</div>
+          <div style="font-size:12px;color:var(--text-dim);">PID 34248 · 运行中 · 活跃代理 0</div>
+        </div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>微信连接</span><span class="val">已连接</span></div>
+        <div class="bar-track"><div class="bar-fill accent3" style="width:100%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>飞书连接</span><span class="val">已连接</span></div>
+        <div class="bar-track"><div class="bar-fill accent" style="width:100%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>Ntfy 连接</span><span class="val">已断开</span></div>
+        <div class="bar-track"><div class="bar-fill accent4" style="width:0%"></div></div>
+      </div>
+      <div style="margin-top:16px; padding:12px; background:var(--surface2); border-radius:var(--radius-sm); font-size:13px; color:var(--yellow);">
+        ⚠️ 微信 iLink 发送频率限制 · 真由美夜间汇报发送失败 · Ntfy 连接中断超过 11 小时
+      </div>
+    </div>
+  </div>
+
+  <!-- Token & Cost Details -->
+  <div class="grid" style="margin-top:20px">
+    <div class="card" style="animation-delay:0.25s">
+      <div class="card-title"><span class="icon">💰</span> Token 与费用明细</div>
+      <div class="bar-group">
+        <div class="bar-label"><span>输入 Token</span><span class="val">2.08M</span></div>
+        <div class="bar-track"><div class="bar-fill accent" style="width:100%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>输出 Token</span><span class="val">0.36M</span></div>
+        <div class="bar-track"><div class="bar-fill accent2" style="width:17%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>日 Token 合计 (I+O)</span><span class="val">2.44M</span></div>
+        <div class="bar-track"><div class="bar-fill accent3" style="width:100%"></div></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-label"><span>含缓存 Token 总量</span><span class="val">141.2M</span></div>
+        <div class="bar-track"><div class="bar-fill accent5" style="width:100%"></div></div>
+      </div>
+      <div style="margin-top:14px; padding:12px; background:var(--surface2); border-radius:var(--radius-sm); font-size:13px;">
+        📐 <strong>DeepSeek v4-pro 定价</strong><br>
+        <span style="color:var(--text-dim)">缓存命中 0.025¥/M · 未命中 3¥/M · 输出 6¥/M</span><br>
+        <span style="color:var(--accent); font-weight:600; font-size:15px;">估算费用 ¥2.79</span>
+        <span style="color:var(--text-dim);font-size:11px;">（含缓存折扣，缓存命中率约 98%）</span>
+      </div>
+    </div>
+
+    <div class="card" style="animation-delay:0.3s">
+      <div class="card-title"><span class="icon">🤖</span> 模型使用</div>
+      <div class="platform-card" style="background:var(--surface2);">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(57,186,230,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;">🧠</div>
+        <div class="platform-info">
+          <div class="platform-name">DeepSeek v4-pro</div>
+          <div class="platform-meta">157 会话 · 141.2M 含缓存 tokens</div>
+        </div>
+        <span class="badge ok">主力</span>
+      </div>
+      <div class="platform-card" style="background:var(--surface2); margin-top:8px;">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,140,64,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;">❓</div>
+        <div class="platform-info">
+          <div class="platform-name">未知模型</div>
+          <div class="platform-meta">1 会话 · 0 tokens</div>
+        </div>
+        <span class="badge warn">异常</span>
+      </div>
+      <div style="margin-top:16px; padding:12px; background:rgba(127,217,98,0.08); border-radius:var(--radius-sm); font-size:13px; color:var(--green);">
+        ✅ 未触发 fallback · 主力模型全程稳定运行
+      </div>
+    </div>
+  </div>
+
+  <!-- Tool Distribution -->
+  <div class="card full" style="margin-top:20px; animation-delay:0.35s">
+    <div class="card-title"><span class="icon">🔧</span> 工具调用分布</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+      <div>
+        <div class="bar-group">
+          <div class="bar-label"><span>terminal</span><span class="val">601 (49.7%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent" style="width:100%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span>read_file</span><span class="val">267 (22.1%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent2" style="width:44%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span>search_files</span><span class="val">83 (6.9%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent3" style="width:14%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span>skill_view</span><span class="val">41 (3.4%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent4" style="width:7%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span>session_search</span><span class="val">38 (3.1%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent5" style="width:6%"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="bar-group">
+          <div class="bar-label"><span>cronjob + skill_manage</span><span class="val">56 (4.6%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent" style="width:9%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span>write_file</span><span class="val">25 (2.1%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent2" style="width:4%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span>image_generate</span><span class="val">22 (1.8%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent4" style="width:4%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span>execute_code</span><span class="val">19 (1.6%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent3" style="width:3%"></div></div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-label"><span>其他 8 种工具</span><span class="val">57 (4.7%)</span></div>
+          <div class="bar-track"><div class="bar-fill accent5" style="width:9%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cron Status -->
+  <div class="card full" style="margin-top:20px; animation-delay:0.4s">
+    <div class="card-title"><span class="icon">⏱</span> Cron 任务执行状态</div>
+    <div style="overflow-x:auto;">
       <table>
-        <tr><th>平台</th><th>会话</th><th>消息</th><th>Token</th></tr>
-        <tr><td><span style="color:var(--accent)">●</span> Cron</td><td>23</td><td>453</td><td>7,166,551</td></tr>
-        <tr><td><span style="color:var(--accent2)">●</span> TUI</td><td>4</td><td>714</td><td>40,414,221</td></tr>
-        <tr><td><span style="color:var(--green)">●</span> 微信</td><td>1</td><td>30</td><td>605,817</td></tr>
-        <tr><td><span style="color:var(--accent5)">●</span> 飞书</td><td>1</td><td>17</td><td>248,676</td></tr>
-        <tr><td><span style="color:var(--text-dim)">●</span> CLI</td><td>1</td><td>2</td><td>21,463</td></tr>
-        <tr style="font-weight:700;border-top:1px solid var(--border)"><td>合计</td><td>30</td><td>1,216</td><td>48,456,728</td></tr>
+        <thead>
+          <tr>
+            <th>任务名称</th>
+            <th>计划</th>
+            <th>最后运行</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>[通用] 记忆蒸馏</strong></td>
+            <td>每日 04:00</td>
+            <td>Jun 13 04:00</td>
+            <td><span class="badge ok">成功</span></td>
+          </tr>
+          <tr>
+            <td><strong>[真由美] 夜间汇报</strong></td>
+            <td>每日 01:00</td>
+            <td>Jun 14 01:03</td>
+            <td><span class="badge warn">发送失败</span></td>
+          </tr>
+          <tr>
+            <td><strong>[佐知子] Steam河马日报</strong></td>
+            <td>每日 12:00</td>
+            <td>—</td>
+            <td><span class="badge warn">待触发</span></td>
+          </tr>
+          <tr>
+            <td><strong>[通用] 网关健康巡检</strong></td>
+            <td>每 5 分钟</td>
+            <td>Jun 14 01:27</td>
+            <td><span class="badge ok">成功</span></td>
+          </tr>
+          <tr>
+            <td><strong>[里美] 工作日早报</strong></td>
+            <td>工作日 10:00</td>
+            <td>Jun 13 19:49</td>
+            <td><span class="badge ok">成功</span></td>
+          </tr>
+          <tr>
+            <td><strong>[里美] 工作日晚报</strong></td>
+            <td>工作日 19:00</td>
+            <td>Jun 13 19:50</td>
+            <td><span class="badge ok">成功</span></td>
+          </tr>
+          <tr>
+            <td><strong>[佐知子] Hermes系统日报</strong></td>
+            <td>每日 00:00</td>
+            <td>Jun 14 01:12</td>
+            <td><span class="badge ok">成功</span></td>
+          </tr>
+          <tr>
+            <td><strong>[运维] 日常备份+磁盘预警</strong></td>
+            <td>每日 03:00</td>
+            <td>—</td>
+            <td><span class="badge warn">待触发</span></td>
+          </tr>
+          <tr>
+            <td><strong>[运维] 周维护</strong></td>
+            <td>周日 03:30</td>
+            <td>—</td>
+            <td><span class="badge warn">待触发</span></td>
+          </tr>
+        </tbody>
       </table>
     </div>
-
-    <!-- GATEWAY STATUS -->
-    <div class="card">
-      <div class="card-title">🌐 网关状态</div>
-      <div class="bar-group">
-        <div class="bar-label"><span>微信 <span style="color:var(--green);font-size:11px">connected</span></span><span>24h+ 稳定</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--green)"></div></div>
-      </div>
-      <div class="bar-group">
-        <div class="bar-label"><span>飞书 <span style="color:var(--green);font-size:11px">connected</span></span><span>24h+ 稳定</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--green)"></div></div>
-      </div>
-      <div class="bar-group">
-        <div class="bar-label"><span>Ntfy <span style="color:var(--red);font-size:11px">disconnected</span></span><span>—</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--red)"></div></div>
-      </div>
-      <p style="font-size:12px;color:var(--text-dim);margin-top:12px">gateway_state: running | PID: 35404 | active_agents: 0</p>
-    </div>
-
-    <!-- TOKEN & COST -->
-    <div class="card">
-      <div class="card-title">💰 Token & 费用详情</div>
-      <div class="bar-group">
-        <div class="bar-label"><span>输入 Token</span><span>1,446,922</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:83.6%;background:var(--accent)"></div></div>
-      </div>
-      <div class="bar-group">
-        <div class="bar-label"><span>↳ Cache Hit (~90%)</span><span>1,302,230 × ¥0.025/M = ¥0.03</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:75%;background:var(--accent5);opacity:0.7"></div></div>
-      </div>
-      <div class="bar-group">
-        <div class="bar-label"><span>↳ Cache Miss (~10%)</span><span>144,692 × ¥3/M = ¥0.43</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:8%;background:var(--accent2);opacity:0.7"></div></div>
-      </div>
-      <div class="bar-group">
-        <div class="bar-label"><span>输出 Token</span><span>283,790 × ¥6/M = ¥1.70</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:16.4%;background:var(--accent4)"></div></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:14px">
-        <span style="font-weight:700">日合计</span>
-        <span style="font-weight:700;background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent">¥2.17</span>
-      </div>
-    </div>
-
-    <!-- TOOL DISTRIBUTION -->
-    <div class="card">
-      <div class="card-title">🔧 工具分布 Top 10</div>
-      <div class="bar-group"><div class="bar-label"><span>terminal</span><span>300 (49.2%)</span></div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--accent)"></div></div></div>
-      <div class="bar-group"><div class="bar-label"><span>read_file</span><span>67 (11.0%)</span></div><div class="bar-track"><div class="bar-fill" style="width:22.3%;background:var(--accent5)"></div></div></div>
-      <div class="bar-group"><div class="bar-label"><span>web_search</span><span>38 (6.2%)</span></div><div class="bar-track"><div class="bar-fill" style="width:12.7%;background:var(--accent2)"></div></div></div>
-      <div class="bar-group"><div class="bar-label"><span>browser_navigate</span><span>26 (4.3%)</span></div><div class="bar-track"><div class="bar-fill" style="width:8.7%;background:var(--accent4)"></div></div></div>
-      <div class="bar-group"><div class="bar-label"><span>skill_manage</span><span>23 (3.8%)</span></div><div class="bar-track"><div class="bar-fill" style="width:7.7%;background:var(--accent3)"></div></div></div>
-      <div class="bar-group"><div class="bar-label"><span>skill_view</span><span>23 (3.8%)</span></div><div class="bar-track"><div class="bar-fill" style="width:7.7%;background:var(--accent3);opacity:0.7"></div></div></div>
-      <div class="bar-group"><div class="bar-label"><span>search_files</span><span>22 (3.6%)</span></div><div class="bar-track"><div class="bar-fill" style="width:7.3%;background:var(--accent)"></div></div></div>
-      <div class="bar-group"><div class="bar-label"><span>cronjob</span><span>18 (3.0%)</span></div><div class="bar-track"><div class="bar-fill" style="width:6%;background:var(--accent5)"></div></div></div>
-      <div class="bar-group"><div class="bar-label"><span>write_file</span><span>18 (3.0%)</span></div><div class="bar-track"><div class="bar-fill" style="width:6%;background:var(--accent2)"></div></div></div>
-      <div class="bar-group"><div class="bar-label"><span>session_search</span><span>16 (2.6%)</span></div><div class="bar-track"><div class="bar-fill" style="width:5.3%;background:var(--accent4)"></div></div></div>
+    <div style="margin-top:12px; padding:12px; background:rgba(255,204,102,0.08); border-radius:var(--radius-sm); font-size:13px; color:var(--yellow);">
+      ⚠️ 9 个 cron 任务中 6 个正常 · 1 个发送失败（真由美夜间汇报，微信频率限制）· 3 个待触发
     </div>
   </div>
 
-  <!-- CRON STATUS - FULL WIDTH -->
-  <div style="margin-top:20px"></div>
-  <div class="grid">
-    <div class="card full">
-      <div class="card-title">⏰ Cron 状态</div>
-      <table>
-        <tr><th>名称</th><th>调度</th><th>上次运行</th><th>状态</th></tr>
-        <tr><td>[通用] 记忆蒸馏</td><td>0 4 * * *</td><td>Jun 14 04:00</td><td><span class="badge ok">OK</span></td></tr>
-        <tr><td>[真由美] 夜间汇报</td><td>0 1 * * *</td><td>Jun 14 01:35</td><td><span class="badge ok">OK</span></td></tr>
-        <tr><td>[佐知子] Steam河马日报</td><td>0 12 * * *</td><td>Jun 14 13:10</td><td><span class="badge ok">OK</span></td></tr>
-        <tr><td>[通用] 网关健康巡检</td><td>every 5m</td><td>Jun 15 00:00</td><td><span class="badge ok">OK</span></td></tr>
-        <tr><td>[里美] 工作日早报</td><td>0 10 * * 1-5</td><td>Jun 13 19:49</td><td><span class="badge ok">OK</span></td></tr>
-        <tr><td>[里美] 工作日晚报</td><td>0 19 * * 1-5</td><td>Jun 13 19:50</td><td><span class="badge ok">OK</span></td></tr>
-        <tr><td>[佐知子] Hermes系统日报</td><td>0 0 * * *</td><td>Jun 14 01:40</td><td><span class="badge ok">OK</span></td></tr>
-        <tr><td>[运维] 日常备份+磁盘预警</td><td>0 3 * * *</td><td>Jun 14 03:00</td><td><span class="badge ok">OK</span></td></tr>
-        <tr><td>[运维] 周维护</td><td>30 3 * * 0</td><td>Jun 14 03:30</td><td><span class="badge ok">OK</span></td></tr>
-      </table>
-      <p style="font-size:12px;color:var(--text-dim);margin-top:12px">全部 9 个 cron 任务正常运行</p>
-    </div>
-
-    <!-- HOST SYSTEM -->
-    <div class="card full">
-      <div class="card-title">🖥️ 宿主机状态</div>
-      <div class="stat-row">
-        <div class="stat"><div class="stat-value" style="font-size:20px">i7-11800H</div><div class="stat-label">CPU · 8C/16T @2.30GHz</div></div>
-        <div class="stat"><div class="stat-value" style="font-size:20px">RTX 3060</div><div class="stat-label">GPU · 5% · 57°C · 1.1/6.0 GB</div></div>
-        <div class="stat"><div class="stat-value" style="font-size:20px">22.5 / 39.7 GB</div><div class="stat-label">内存 · 可用 / 总量</div></div>
-        <div class="stat"><div class="stat-value" style="font-size:20px">204 / 454 GB</div><div class="stat-label">C: 磁盘 · 可用 / 总量</div></div>
+  <!-- Today's Highlights & Recommendations -->
+  <div class="card full" style="margin-top:20px; animation-delay:0.45s">
+    <div class="card-title"><span class="icon">📌</span> 今日关注与建议</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent4);">
+          <div style="font-weight:600; font-size:14px; color:var(--accent4); margin-bottom:4px;">🚨 真由美夜间汇报发送失败：微信频率限制</div>
+          <div style="font-size:13px; color:var(--text-dim);">今日 01:03 的夜间汇报成功生成但微信发送失败（iLink rate limited）。根因：每 5 分钟的健康巡检占用微信发送配额，与汇报通知产生竞争。用户未收到真由美的汇报。此为连续第二日出现。</div>
+        </div>
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent);">
+          <div style="font-weight:600; font-size:14px; color:var(--accent); margin-bottom:4px;">🔄 24h 内 144 个 cron 会话，系统高密度自动化运转</div>
+          <div style="font-size:13px; color:var(--text-dim);">158 个会话中 144 个来自 cron 自动任务（91.1%）。网关健康巡检每 5 分钟触发一次，日产生约 288 个会话。微信 iLink 发送配额被大量 cron 通知占满，影响用户消息送达。</div>
+        </div>
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent2);">
+          <div style="font-weight:600; font-size:14px; color:var(--accent2); margin-bottom:4px;">💾 state.db 增长至 48MB · 周维护待触发</div>
+          <div style="font-size:13px; color:var(--text-dim);">状态数据库从 43MB 增至 48MB（+11.6%），增长速度加快（上期增幅 7.5%）。周日 03:30 周维护（vacuum+缓存+日志）将自动回收空间，但若持续此增速，每周 vacuum 压力将增加。</div>
+        </div>
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid #7c3aed;">
+          <div style="font-weight:600; font-size:14px; color:#a78bfa; margin-bottom:4px;">🎨 hippo-selfie 迭代密度继续领跑</div>
+          <div style="font-size:13px; color:var(--text-dim);">自拍技能 24h 内加载 32 次、编辑 27 次，连续多日位居技能活跃榜首。画廊归档、桌面渲染修复、网关适配等模块经密集修补已趋稳定。新问题：cron 会话中 image_generate 不可用需 fallback。</div>
+        </div>
       </div>
-    </div>
-
-    <!-- STORAGE -->
-    <div class="card">
-      <div class="card-title">💾 存储</div>
-      <div class="bar-group">
-        <div class="bar-label"><span>缓存</span><span>93 MB</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--accent5)"></div></div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent4);">
+          <div style="font-weight:600; font-size:14px; color:var(--accent4); margin-bottom:4px;">💡 建议 1：将健康巡检改为仅异常时微信通知</div>
+          <div style="font-size:13px; color:var(--text-dim);">当前每 5 分钟巡检每次都向微信发送结果，消耗 iLink 配额。建议：巡检结果默认仅 local 投递，仅在检测到断连/异常时触发微信推送。可立即缓解夜间汇报被限流问题。</div>
+        </div>
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent5);">
+          <div style="font-weight:600; font-size:14px; color:var(--accent5); margin-bottom:4px;">💡 建议 2：延长健康巡检间隔至 10-15 分钟</div>
+          <div style="font-size:13px; color:var(--text-dim);">每 5 分钟巡检日产生约 288 个 cron 会话，贡献约 50% 的日 token 消耗。当前网关已稳定连接超 8 小时，延长至 10-15 分钟可大幅降低系统开销和微信配额竞争。</div>
+        </div>
+        <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent3);">
+          <div style="font-weight:600; font-size:14px; color:var(--accent3); margin-bottom:4px;">💡 建议 3：关注 Ntfy 连接中断</div>
+          <div style="font-size:13px; color:var(--text-dim);">Ntfy 推送通道已断开超过 11 小时（最后更新 Jun 13 22:28 CST）。虽然微信和飞书为主要通信渠道，Ntfy 作为备用通知链建议排查恢复，或确认是否可移除。</div>
+        </div>
       </div>
-      <div class="bar-group">
-        <div class="bar-label"><span>State DB</span><span>65 MB</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:14%;background:var(--accent2)"></div></div>
-      </div>
-      <div class="bar-group">
-        <div class="bar-label"><span>Memories (USER.md)</span><span>3.9 KB</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:1%;background:var(--accent)"></div></div>
-      </div>
-    </div>
-
-    <!-- ACTIVITY -->
-    <div class="card">
-      <div class="card-title">📈 活跃模式</div>
-      <p style="font-size:13px;margin-bottom:8px">峰值时段: 12AM (13), 1AM (10), 12PM (2), 1PM (2)</p>
-      <p style="font-size:13px;margin-bottom:8px">活跃天数: 2</p>
-      <p style="font-size:13px;margin-bottom:8px">最长连续: 2 天</p>
-      <p style="font-size:12px;color:var(--text-dim);margin-top:8px">模型: deepseek-v4-pro (唯一)</p>
     </div>
   </div>
+
+  <!-- Host System Status -->
+  <div class="card full" style="margin-top:20px; animation-delay:0.45s">
+    <div class="card-title"><span class="icon">💻</span> 宿主机系统状态</div>
+    <div class="sys-grid">
+      <div class="sys-item">
+        <div class="sys-item-label">CPU</div>
+        <div class="sys-item-val" style="color:var(--accent);">i7-11800H</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">8 核 16 线程 @ 2.30 GHz · 负载 8%</div>
+      </div>
+      <div class="sys-item">
+        <div class="sys-item-label">GPU</div>
+        <div class="sys-item-val" style="color:var(--accent2);">RTX 3060</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">6GB VRAM · 使用 1.5GB (24%) · 7% 负载 · 54°C</div>
+      </div>
+      <div class="sys-item">
+        <div class="sys-item-label">内存</div>
+        <div class="sys-item-val" style="color:var(--accent3);">39.7 GB</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">可用 24.1 GB · 使用率 39.3%</div>
+      </div>
+      <div class="sys-item">
+        <div class="sys-item-label">磁盘 C:</div>
+        <div class="sys-item-val" style="color:var(--accent4);">453 GB</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">可用 198 GB · 使用率 56.3%</div>
+      </div>
+      <div class="sys-item">
+        <div class="sys-item-label">磁盘 D:</div>
+        <div class="sys-item-val" style="color:var(--accent5);">454 GB</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">可用 390 GB · 使用率 14.0%</div>
+      </div>
+      <div class="sys-item">
+        <div class="sys-item-label">系统事件</div>
+        <div class="sys-item-val" style="color:var(--yellow); font-size:16px;">⚠️ 需关注</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px;">Windows Update 失败 (KB5094126) · 非正常关机事件 · 多个驱动服务错误</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Storage -->
+  <div class="card full" style="margin-top:20px; animation-delay:0.5s">
+    <div class="card-title"><span class="icon">💾</span> 存储概况</div>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-value">80 MB</div>
+        <div class="stat-label">缓存目录</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">48 MB</div>
+        <div class="stat-label">状态数据库 (state.db)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">N/A</div>
+        <div class="stat-label">状态快照</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">N/A</div>
+        <div class="stat-label">Kanban 数据库</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">20 KB</div>
+        <div class="stat-label">记忆文件</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Pattern -->
+  <div class="card full" style="margin-top:20px; animation-delay:0.55s">
+    <div class="card-title"><span class="icon">📈</span> 活动模式</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+      <div>
+        <div class="stat" style="margin-bottom:12px;">
+          <div class="stat-value">137 / 158</div>
+          <div class="stat-label">周六活跃会话占比 (86.7%)</div>
+        </div>
+        <div style="font-size:13px;color:var(--text-dim);">
+          活跃天数：2 天 · 最长连续：2 天<br>
+          平均会话时长：2 分钟<br>
+          平均消息/会话：18.8
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--text-dim);margin-bottom:8px;">峰值时段</div>
+        <div class="platform-card" style="background:var(--surface2);">
+          <span style="font-weight:700;font-size:24px;color:var(--accent2);">19:00</span>
+          <span style="color:var(--text);">15 会话</span>
+        </div>
+        <div class="platform-card" style="background:var(--surface2);">
+          <span style="font-weight:700;font-size:24px;color:var(--accent4);">00:00</span>
+          <span style="color:var(--text);">14 会话</span>
+        </div>
+        <div class="platform-card" style="background:var(--surface2);">
+          <span style="font-weight:700;font-size:20px;color:var(--accent);">05:00</span>
+          <span style="color:var(--text);">14 会话</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="generated-by">佐知子 · Hermes 系统日报</span><br>
+    由 Hermes Agent 自动生成 · 归档于 hermes-reports/
+  </div>
 </div>
-<div class="footer">
-  <span class="generated-by">佐知子 · Hermes 系统日报</span><br>
-  由 Hermes Agent 自动生成 · 归档于 hermes-reports/2026-06-15.html
-</div>
+
 <script>
-(function(){
-  var c=document.getElementById('particles');
-  for(var i=0;i<30;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.top=Math.random()*100+'%';p.style.animationDelay=Math.random()*8+'s';p.style.animationDuration=(6+Math.random()*10)+'s';c.appendChild(p);}
-  var observer=new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting){en.target.querySelectorAll('.bar-fill').forEach(function(b){var w=b.style.width;b.style.width='0%';setTimeout(function(){b.style.width=w},50);});}})},{threshold:0.2});
-  document.querySelectorAll('.card').forEach(function(card){observer.observe(card);});
-})();
+// Generate floating particles
+const particlesContainer = document.getElementById('particles');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.top = Math.random() * 100 + '%';
+  p.style.animationDelay = Math.random() * 8 + 's';
+  p.style.animationDuration = (6 + Math.random() * 10) + 's';
+  particlesContainer.appendChild(p);
+}
+
+// Animate progress bars on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.querySelectorAll('.bar-fill').forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => { bar.style.width = w; }, 50);
+      });
+    }
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.card').forEach(card => observer.observe(card));
 </script>
 </body>
 </html>
