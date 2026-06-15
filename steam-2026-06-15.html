@@ -15,19 +15,25 @@
   .header .window { color:var(--text-dim); font-size:0.95em; }
   h2 { color:var(--accent); font-size:1.3em; margin:40px 0 16px; padding-bottom:8px; border-bottom:1px solid var(--border); }
   h3 { color:var(--accent2); font-size:1.1em; margin:24px 0 12px; }
+  h4 { color:var(--yellow); margin:16px 0 8px; font-size:1em; }
+  p, li { margin:4px 0; }
   table { width:100%; border-collapse:collapse; margin:16px 0; font-size:0.93em; }
   th { background:var(--surface2); color:var(--accent); padding:10px 12px; text-align:left; font-weight:600; border-bottom:2px solid var(--border); }
   td { padding:9px 12px; border-bottom:1px solid var(--border); }
   tr:hover td { background:var(--surface); }
   blockquote { border-left:3px solid var(--accent2); padding:8px 16px; margin:16px 0; color:var(--text-dim); background:var(--surface); border-radius:0 var(--radius-sm) var(--radius-sm) 0; }
   ul, ol { padding-left:24px; margin:8px 0; }
-  li { margin:4px 0; }
   strong { color:#fff; }
   .game-img { width:100%; max-width:460px; border-radius:var(--radius); margin:12px 0; border:1px solid var(--border); display:block; }
-  .hero-img { width:100%; max-width:800px; border-radius:var(--radius); margin:16px auto; border:1px solid var(--border); display:block; }
+  .game-detail { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; margin:16px 0; }
+  .game-detail .name { font-size:1.1em; color:var(--yellow); font-weight:600; }
+  .game-detail .meta { color:var(--text-dim); font-size:0.9em; margin:4px 0; }
+  .tag { display:inline-block; background:var(--surface2); color:var(--accent2); padding:2px 8px; border-radius:var(--radius-sm); font-size:0.85em; margin:2px; }
   .footer { margin-top:60px; padding-top:20px; border-top:1px solid var(--border); text-align:center; color:var(--text-dim); font-size:0.85em; }
   a { color:var(--accent); text-decoration:none; }
   a:hover { text-decoration:underline; }
+  hr { border:none; border-top:1px solid var(--border); margin:32px 0; }
+  .warn { color:var(--red); }
 </style>
 </head>
 <body>
@@ -41,8 +47,7 @@
 <h2>📊 今日大市场分析</h2>
 
 <h3>🔥 头条：Steam Next Fest 今日开跑（6/15–6/22）</h3>
-<p>Steam 上半年最重要的游戏发现活动——Next Fest 六月场于北京时间今日凌晨 1:00 正式启动。数百款即将发售的游戏放出了免费试玩 Demo。</p>
-<!-- Steam Next Fest banner: event page, no single game app ID available -->
+<p>Steam 上半年最重要的游戏发现活动——Next Fest 六月场于北京时间今日凌晨 1:00 正式启动。数百款即将发售的游戏放出了免费试玩 Demo，覆盖从独立小品到准 3A 的广泛范围。对主播/内容创作者而言，这是年度最佳的「挖宝」窗口：在游戏涨价前试玩、拟订选题、提前锁定社区关注。</p>
 
 <h3>📈 Steam 在线峰值 TOP 10</h3>
 <table>
@@ -62,62 +67,82 @@
 <h3>📈 近 7 日趋势上行</h3>
 <ul>
   <li><strong>Dune: Awakening</strong> — 沙丘IP MMORPG，早期测试持续升温</li>
-  <li><strong>DELTARUNE</strong> — Toby Fox 新章节热度高涨</li>
-  <li><strong>Rune Factory: Guardians of Azuma</strong> — 符文工房新作，日式种田+ARPG</li>
-  <li><strong>Lies of P</strong> — DLC 传闻推动老玩家回流</li>
+  <li><strong>DELTARUNE</strong> — Toby Fox 新章节热度高涨，Undertale 粉丝基数庞大</li>
+  <li><strong>Rune Factory: Guardians of Azuma</strong> — 符文工房新作，日区销量榜飙升</li>
+  <li><strong>Lies of P</strong> — DLC 传闻推动老玩家回流，类魂暗黑童话路线独特</li>
 </ul>
+
+<h3>💰 上周销量榜（6/2-6/9，不含 F2P）</h3>
+<ol>
+  <li><strong>Forza Horizon 6</strong> — 赛车霸主无悬念，首发周即登顶</li>
+  <li><strong>Gothic 1 Remake</strong> — 经典 RPG 重制，情怀拉满，好评率 87%</li>
+  <li><strong>Path of Exile 2</strong> — 刷子玩家永远的爱，持续更新维持热度</li>
+  <li><strong>007 First Light</strong> — 007 游戏 IP 新作，电影级画质引发讨论</li>
+</ol>
 
 <h3>🗓️ 本周重点新游（6/16-6/19）</h3>
 <table>
 <tr><th>日期</th><th>游戏</th><th>类型</th><th>看点</th></tr>
-<tr><td>6/16</td><td>City Car Driving 2.0</td><td>模拟/驾驶</td><td>驾考模拟器正统续作</td></tr>
-<tr><td>6/16</td><td>COPA CITY</td><td>体育/策略</td><td>足球管理新选择</td></tr>
-<tr><td>6/18</td><td><strong>🔥 The Adventures of Elliot</strong></td><td>ARPG</td><td>Square Enix 新IP，类塞尔达+日式RPG</td></tr>
-<tr><td>6/18</td><td>SAND: Raiders of Sophie</td><td>撤离射击</td><td>EA 开测、PvP 载具战</td></tr>
-<tr><td>6/19</td><td>Thank You For Your Application</td><td>像素RPG</td><td>点选式独立精品</td></tr>
+<tr><td>6/16</td><td>City Car Driving 2.0</td><td>模拟/驾驶</td><td>驾考模拟器正统续作，物理引擎全面升级</td></tr>
+<tr><td>6/16</td><td>COPA CITY</td><td>体育/策略</td><td>足球管理新选择，数据驱动深度模拟</td></tr>
+<tr><td>6/18</td><td><strong>🔥 The Adventures of Elliot</strong></td><td>ARPG</td><td>Square Enix 新IP，「HD-2D」首款动作 RPG</td></tr>
+<tr><td>6/18</td><td>SAND: Raiders of Sophie</td><td>撤离射击</td><td>EA 开测，类似「逃离塔科夫+战地」</td></tr>
+<tr><td>6/19</td><td>Thank You For Your Application</td><td>像素 RPG</td><td>点选式独立精品，叙事驱动职场生存 RPG</td></tr>
 </table>
-<!-- Elliot header: pre-release, CDN assets not yet available (404) -->
 
 <blockquote>窗口期正值周末，Steam 大盘平稳。<strong>Elliot（Square Enix）</strong>是本周最大看点，已有免费 Demo 可试玩；<strong>沙丘觉醒</strong>持续霸榜新游在线。</blockquote>
 
+<hr>
+
 <h2>🎁 今日限免汇报</h2>
+<blockquote><span class="warn">⚠️</span> 以下均为 Steam Free-to-Keep 限时免费，领取后永久入库。请尽快领取，过期恢复原价。</blockquote>
 
-<h3>⚠️ 限时免费入库（今日截止！）</h3>
+<div class="game-detail">
+  <div class="name">🥇 Gravity Circuit（重力回路）— 免费！原价 $16.99 → $0</div>
+  <div class="meta"><strong>截止</strong>：6 月 15 日 <span class="warn">（今天！）</span> · <strong>开发商</strong>：Domesticated Ant Games · <strong>评价</strong>：Metacritic 83 分，Steam 特别好评</div>
+  <p>「洛克人 Zero」精神续作。快节奏拳拳到肉的 2D 动作，主角 Kai 是一名独臂英雄，用抓钩和连招穿行于 12 个关卡。像素美术出色，BGM 由知名 Chiptune 作曲家操刀。动作区主播必领必玩——速通潜力大，观赏性强。</p>
+  <img class="game-img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/858710/header.jpg" alt="Gravity Circuit" referrerpolicy="no-referrer">
+</div>
+
+<div class="game-detail">
+  <div class="name">🥈 Happy's Humble Burger Farm — 免费！原价 $19.99 → $0</div>
+  <div class="meta"><strong>截止</strong>：6 月 15 日 <span class="warn">（今天！）</span> · <strong>开发商</strong>：Scythe Dev Team / 发行：tinyBuild · <strong>评价</strong>：95% 特别好评，Destructoid 9/10</div>
+  <p>「在龙卷风中的麦当劳打工，同时恶魔版麦当劳叔叔试图破坏你的一切」——第一人称快餐店经营 + 心理恐怖 + 探索。恐怖与搞笑并存，直播效果极佳。本周最值得领取的游戏。</p>
+  <img class="game-img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1433340/header_alt_assets_0.jpg" alt="Happy's Humble Burger Farm" referrerpolicy="no-referrer">
+</div>
+
+<div class="game-detail">
+  <div class="name">🥉 PICO PARK Classic Edition — 免费！原价 $4.99 → $0</div>
+  <div class="meta"><strong>截止</strong>：6 月 15 日 <span class="warn">（今天！）</span> · <strong>开发商</strong>：TECOPARK · <strong>评价</strong>：好评如潮，全球 50 万+ 玩家</div>
+  <p>2-8 人合作横版解谜的标杆作品。规则简单但配合要求高，经典的「友尽」神器。组水友局直播效果爆炸——互相坑、互相救，弹幕互动天然素材。</p>
+  <img class="game-img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1509960/header.jpg" alt="PICO PARK" referrerpolicy="no-referrer">
+</div>
+
+<h4>📊 限免总结</h4>
 <table>
-<tr><th>游戏</th><th>原价</th><th>好评</th><th>截止</th></tr>
-<tr><td><strong>Gravity Circuit</strong>（重力回路）</td><td>$16.99</td><td>特别好评</td><td>⚠️ 今天</td></tr>
-<tr><td><strong>PICO PARK Classic Edition</strong></td><td>$4.99</td><td>好评如潮</td><td>⚠️ 今天</td></tr>
-<tr><td><strong>Happy's Humble Burger Farm</strong></td><td>$19.99</td><td>特别好评</td><td>⚠️ 今天</td></tr>
-<tr><td><strong>Eets</strong>（Klei 20周年纪念）</td><td>$4.99</td><td>特别好评</td><td>6/16 截止</td></tr>
+<tr><th>游戏</th><th>原价</th><th>截止</th><th>好评</th><th>主播价值</th></tr>
+<tr><td>Gravity Circuit</td><td>$16.99</td><td>今天</td><td>MC 83</td><td>⭐⭐⭐⭐ 动作区速通神作</td></tr>
+<tr><td>Happy's Humble Burger Farm</td><td>$19.99</td><td>今天</td><td>95% 好评</td><td>⭐⭐⭐⭐⭐ 恐怖+搞笑双杀</td></tr>
+<tr><td>PICO PARK Classic</td><td>$4.99</td><td>今天</td><td>好评如潮</td><td>⭐⭐⭐⭐⭐ 多人直播必备</td></tr>
+<tr><td>Eets</td><td>$4.99</td><td>6/16</td><td>特别好评</td><td>⭐⭐⭐ Klei 情怀杀</td></tr>
 </table>
 
-<img class="game-img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/858710/header.jpg" alt="Gravity Circuit" referrerpolicy="no-referrer">
-<img class="game-img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1433340/header_alt_assets_0.jpg" alt="Happy's Humble Burger Farm" referrerpolicy="no-referrer">
-
-<h3>🎮 周末免费游玩（Free Weekend，今天最后一天）</h3>
-<table>
-<tr><th>游戏</th><th>类型</th><th>看点</th></tr>
-<tr><td><strong>Hearts of Iron IV</strong></td><td>大战略</td><td>Paradox 二战模拟，Metacritic 83</td></tr>
-<tr><td><strong>Rogue Point</strong></td><td>合作 FPS</td><td>Black Mesa 团队新作，4 人战术协作</td></tr>
-<tr><td><strong>Neon Abyss</strong></td><td>Roguelite 横版</td><td>无限道具叠加，爽快射击</td></tr>
-<tr><td><strong>Mechabellum</strong></td><td>机甲自走棋</td><td>大场面 3D 机甲对战</td></tr>
-<tr><td><strong>Goblin Cleanup</strong></td><td>合作清理</td><td>地城保洁模拟，特别好评</td></tr>
-<tr><td><strong>Next Stop Jianghu II</strong></td><td>武侠 RPG</td><td>国产武侠沙盒</td></tr>
-</table>
-<img class="game-img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/394360/header.jpg" alt="Hearts of Iron IV" referrerpolicy="no-referrer">
-
-<blockquote>限免大丰收日！Gravity Circuit + PICO PARK + Happy's Burger Farm 三款高口碑游戏最后一天免费领；6 款 Free Weekend 游戏也最后一天畅玩。</blockquote>
+<hr>
 
 <h2>🆕 今日新游戏 Demo</h2>
 <h3>Steam Next Fest 值得关注的 Demo</h3>
+
 <ol>
   <li><strong>Paperhead</strong> — 单人开发 9 年，第一人称纸片美学，心理惊悚向</li>
-  <li><strong>Replaced</strong> — 赛博朋克像素动作，E3 级关注度</li>
-  <li><strong>Edge of Memories</strong> — 法国工作室 JRPG，Demo 与 Next Fest 同步上线</li>
-  <li><strong>Wind Rose</strong> — 风格化航海冒险</li>
+  <li><strong>Replaced</strong> — 赛博朋克像素动作，2.5D 像素美术标杆，E3 级关注度</li>
+  <li><strong>Edge of Memories</strong> — 法国工作室 JRPG，美术由系列资深画师操刀</li>
+  <li><strong>Wind Rose</strong> — 风格化航海冒险，独立游戏黑马潜力</li>
   <li><strong>WitchSpire</strong> — Valheim 式生存 + 女巫养成</li>
 </ol>
-<img class="game-img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2485770/header.jpg" alt="Paperhead" referrerpolicy="no-referrer">
+
+<blockquote>Elliot 的 Demo 是目前最值得主播尝试的内容，Square Enix 新 IP + HD-2D 首款动作 RPG 自带话题。</blockquote>
+
+<hr>
 
 <h2>🧠 心理恐怖专题</h2>
 <h3>本周心理恐怖关注池</h3>
@@ -131,30 +156,35 @@
 
 <h3>2026 PC 心理恐怖第一梯队</h3>
 <ol>
-  <li><strong>Silent Hill 2</strong> — 重制版稳坐头把交椅</li>
+  <li><strong>Silent Hill 2</strong> — 重制版稳坐头把交椅，情感恐怖标杆</li>
   <li><strong>No, I'm Not a Human</strong> — 新锐生存恐怖黑马</li>
   <li><strong>The Outlast Trials</strong> — 合作恐怖持续更新</li>
-  <li><strong>SOMA</strong> — 存在主义科幻恐惧</li>
-  <li><strong>Slay the Princess</strong> — 选择驱动心理恐怖</li>
+  <li><strong>SOMA</strong> — 存在主义科幻恐惧，长尾常青</li>
+  <li><strong>Slay the Princess</strong> — 选择驱动心理恐怖，叙事系顶流</li>
 </ol>
 
 <blockquote>Lethal Company 依然是心理恐怖+多人直播的王者；单人向推荐 The Mortuary Assistant 或 Signalis。</blockquote>
+
+<hr>
 
 <h2>🎯 主播选题排序</h2>
 <table>
 <tr><th>优先级</th><th>选题</th><th>理由</th></tr>
 <tr><td>⭐⭐⭐⭐⭐</td><td><strong>Steam Next Fest Demo 扫雷</strong></td><td>年度最大 Demo 活动首日，流量红利最大</td></tr>
-<tr><td>⭐⭐⭐⭐⭐</td><td><strong>The Adventures of Elliot Demo</strong></td><td>Square Enix 新IP，类塞尔达自带话题</td></tr>
+<tr><td>⭐⭐⭐⭐⭐</td><td><strong>PICO PARK Classic（限免最后一天）</strong></td><td>多人友尽神器，组水友局直播效果核弹级</td></tr>
+<tr><td>⭐⭐⭐⭐⭐</td><td><strong>Happy's Humble Burger Farm（限免）</strong></td><td>95% 好评，恐怖+搞笑完美配比</td></tr>
 <tr><td>⭐⭐⭐⭐</td><td><strong>Hearts of Iron IV 限免最后一天</strong></td><td>2.6 万在线，战略区观众基数大</td></tr>
-<tr><td>⭐⭐⭐⭐</td><td><strong>Goblin Cleanup（免费周末）</strong></td><td>多人合作搞怪，直播效果极佳</td></tr>
-<tr><td>⭐⭐⭐</td><td><strong>Gravity Circuit（限免最后一天）</strong></td><td>类洛克人动作，提醒观众领+试玩</td></tr>
-<tr><td>⭐⭐⭐</td><td><strong>心理恐怖夜：BrokenLore + Paperhead</strong></td><td>恐怖区常青内容</td></tr>
-<tr><td>⭐⭐</td><td><strong>Fatekeeper EA 深度体验</strong></td><td>THQ 发行，暗黑奇幻 ARPG</td></tr>
+<tr><td>⭐⭐⭐⭐</td><td><strong>Gravity Circuit（限免最后一天）</strong></td><td>类洛克人动作神作，速通观赏性极强</td></tr>
+<tr><td>⭐⭐⭐</td><td><strong>The Adventures of Elliot Demo</strong></td><td>Square Enix 新IP，6/18 发售前预热</td></tr>
+<tr><td>⭐⭐⭐</td><td><strong>心理恐怖夜：BrokenLore + Paperhead</strong></td><td>恐怖区常青内容，Next Fest 双重恐怖 Demo</td></tr>
 </table>
+
+<h3>一句话总结</h3>
+<blockquote>Steam Next Fest 今日开幕是压倒性主旋律；<strong>PICO PARK + Happy's Burger Farm + Gravity Circuit 三款高口碑游戏今天最后一天免费领</strong>——先领后播，机不可失。</blockquote>
 
 <div class="footer">
   📬 本日报告由 佐知子 自动生成<br>
-  数据来源：SteamDB · Steam Charts · Steam 250 · GameGrin · ScreenRant<br>
+  数据来源：SteamDB · Steam Charts · Steam 250 · GameGrin · ScreenRant · Pinogamer<br>
   生成时间：2026-06-15 12:00
 </div>
 
