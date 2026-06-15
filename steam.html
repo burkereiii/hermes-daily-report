@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steam 河马日报 · 归档</title>
+<style>
+  :root { --bg:#0a0e14; --surface:#12171f; --surface2:#1a1f2b; --border:#1e2633; --text:#c8d6e5; --text-dim:#6b7384; --accent:#39bae6; --accent2:#ff8f40; --radius:10px; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.7; min-height:100vh; }
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(57,186,230,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(57,186,230,0.03) 1px,transparent 1px); background-size:60px 60px; pointer-events:none; z-index:0; }
+  .container { max-width:700px; margin:0 auto; padding:60px 24px; position:relative; z-index:1; }
+  h1 { color:var(--accent); font-size:1.6em; margin-bottom:8px; }
+  .subtitle { color:var(--text-dim); margin-bottom:32px; }
+  .report-list { list-style:none; padding:0; }
+  .report-list li { padding:14px 18px; margin:4px 0; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); transition:background 0.2s; }
+  .report-list li:hover { background:var(--surface2); }
+  .report-list a { color:var(--accent2); text-decoration:none; font-size:1.05em; }
+  .report-list a:hover { text-decoration:underline; }
+  .report-list .date { color:var(--text-dim); font-size:0.9em; margin-left:8px; }
+  .back { margin-top:32px; }
+  .back a { color:var(--text-dim); font-size:0.9em; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🎮 Steam 河马日报</h1>
+  <p class="subtitle">每日 Steam 限免、新游、Demo、心理恐怖专题 &amp; 主播选题推荐。由佐知子自动生成。</p>
+  <ul class="report-list">
+    <li><a href="steam-2026-06-15.html">2026-06-15</a><span class="date">Steam Next Fest 开幕 · 3 款限免到期</span></li>
+  </ul>
+  <p class="back"><a href="index.html">← 系统日报</a></p>
+</div>
+</body>
+</html>
