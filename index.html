@@ -326,12 +326,12 @@
       <h1>Hermes <span>系统日报</span></h1>
       <div class="hero-subtitle">
         2026年6月16日 · 00:00 CST · 全系统运行正常<br>
-        覆盖过去 24h 的全局系统画像——10 个会话，443 次工具调用，¥5.90 日耗
+        覆盖过去 24h 的全局系统画像——10 个会话，443 次工具调用，¥8.94 日耗
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><div class="hero-stat-val">10</div><div class="hero-stat-lbl">会话</div></div>
         <div class="hero-stat"><div class="hero-stat-val">42.13M</div><div class="hero-stat-lbl">Token（含缓存）</div></div>
-        <div class="hero-stat"><div class="hero-stat-val">¥5.90</div><div class="hero-stat-lbl">费用（估）</div></div>
+        <div class="hero-stat"><div class="hero-stat-val">¥8.94</div><div class="hero-stat-lbl">费用</div></div>
       </div>
     </div>
   </div>
@@ -343,7 +343,7 @@
       <div class="stat"><div class="stat-value">909</div><div class="stat-label">消息数</div></div>
       <div class="stat"><div class="stat-value">1.40M</div><div class="stat-label">日 Token (I+O)</div></div>
       <div class="stat"><div class="stat-value">42.13M</div><div class="stat-label">含缓存总量</div></div>
-      <div class="stat"><div class="stat-value">~¥5.90</div><div class="stat-label">今日费用（估）</div></div>
+      <div class="stat"><div class="stat-value">~¥8.94</div><div class="stat-label">今日费用</div></div>
       <div class="stat"><div class="stat-value">~5h 29m</div><div class="stat-label">活跃时间</div></div>
       <div class="stat"><div class="stat-value">443</div><div class="stat-label">工具调用</div></div>
       <div class="stat"><div class="stat-value">90.9</div><div class="stat-label">均值/会话</div></div>
@@ -396,10 +396,10 @@
       <div class="bar-group"><div class="bar-label"><span>日 Token 合计 (I+O)</span><span class="val">1.40M</span></div><div class="bar-track"><div class="bar-fill accent3" style="width:100%"></div></div></div>
       <div class="bar-group"><div class="bar-label"><span>含缓存 Token 总量</span><span class="val">42.13M</span></div><div class="bar-track"><div class="bar-fill accent5" style="width:100%"></div></div></div>
       <div style="margin-top:14px; padding:12px; background:var(--surface2); border-radius:var(--radius-sm); font-size:13px;">
-        📐 <strong>DeepSeek v4-pro 综合费率 ¥0.14/M</strong><br>
-        <span style="color:var(--text-dim)">含输入、输出、缓存命中/写入加权均价</span><br>
-        <span style="color:var(--accent); font-weight:600; font-size:15px;">估算费用 ¥5.90</span>
-        <span style="color:var(--text-dim);font-size:11px;">（42.13M × ¥0.14/M）</span>
+        📐 <strong>DeepSeek v4-pro · Cache Hit/Miss 分别计费</strong><br>
+        <span style="color:var(--text-dim)">Input $0.435/M (miss) / $0.004/M (hit) · Output $0.87/M</span><br>
+        <span style="color:var(--accent); font-weight:600; font-size:15px;">实际费用 ¥8.94</span>
+        <span style="color:var(--text-dim);font-size:11px;">（DeepSeek 账户实际扣费）</span>
       </div>
     </div>
     <div class="card" style="animation-delay:0.3s">
@@ -478,8 +478,8 @@
       </div>
       <div style="display:flex; flex-direction:column; gap:12px;">
       <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid var(--accent3);">
-        <div style="font-weight:600; font-size:14px; color:var(--accent3); margin-bottom:4px;">💰 Token 消费 ¥5.90 · 含缓存 42.13M</div>
-        <div style="font-size:13px; color:var(--text-dim);">按综合费率 ¥0.14/M 估算。主要消耗来自飞书和微信的人格外壳 prompt（含缓存命中），实际增量消耗远低于总数。</div>
+        <div style="font-weight:600; font-size:14px; color:var(--accent3); margin-bottom:4px;">💰 Token 消费 ¥8.94 · 含缓存 42.13M</div>
+        <div style="font-size:13px; color:var(--text-dim);">DeepSeek 账户实际扣费。缓存命中和未命中分别计费，费率非简单乘法。</div>
       </div>
       <div style="padding:14px; background:var(--surface2); border-radius:var(--radius-sm); border-left:3px solid #7c3aed;">
         <div style="font-weight:600; font-size:14px; color:#a78bfa; margin-bottom:4px;">🌐 gateway_state 上报滞后</div>
