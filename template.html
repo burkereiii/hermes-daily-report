@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hermes 系统日报 · 2026-06-27</title>
+<title>Hermes 系统日报 · {{REPORT_DATE}}</title>
 <style>
   :root {
     --bg: #08060d;
@@ -426,13 +426,13 @@
       </div>
       <h1>Hermes <span class="grad">系统日报</span></h1>
       <div class="hero-subtitle">
-        2026年6月27日（周六） · 06:35 CST · 全系统运行中<br>
-        覆盖过去 24h 的全局运行画像——9 个会话，873 次工具调用，129.45M Token（含缓存）
+        {{REPORT_DATE_FULL}} · {{REPORT_TIME}} CST · {{SYSTEM_STATUS}}<br>
+        {{HERO_SUBTITLE}}
       </div>
       <div class="hero-stats">
-        <div><div class="hero-stat-val">9</div><div class="hero-stat-lbl">会话</div></div>
-        <div><div class="hero-stat-val">129.45M</div><div class="hero-stat-lbl">Token（含缓存）</div></div>
-        <div><div class="hero-stat-val">待快照确认</div><div class="hero-stat-lbl">费用</div></div>
+        <div><div class="hero-stat-val">{{HERO_SESSIONS}}</div><div class="hero-stat-lbl">会话</div></div>
+        <div><div class="hero-stat-val">{{HERO_TOKENS}}</div><div class="hero-stat-lbl">Token（含缓存）</div></div>
+        <div><div class="hero-stat-val">{{HERO_COST}}</div><div class="hero-stat-lbl">费用</div></div>
       </div>
     </div>
   </div>
@@ -441,14 +441,14 @@
   <div class="card full" style="animation-delay:0.08s">
     <div class="card-title"><span class="icon">📊</span> 24h 总览</div>
     <div class="stat-row">
-      <div class="stat"><div class="stat-value">9</div><div class="stat-label">会话数</div></div>
-      <div class="stat"><div class="stat-value">1,789</div><div class="stat-label">消息数</div></div>
-      <div class="stat"><div class="stat-value">1.53M</div><div class="stat-label">日 Token (I+O)</div></div>
-      <div class="stat"><div class="stat-value">129.45M</div><div class="stat-label">含缓存总量</div></div>
-      <div class="stat"><div class="stat-value">待快照确认</div><div class="stat-label">今日费用</div></div>
-      <div class="stat"><div class="stat-value">~26h 24m</div><div class="stat-label">活跃时间</div></div>
-      <div class="stat"><div class="stat-value">873</div><div class="stat-label">工具调用</div></div>
-      <div class="stat"><div class="stat-value">198.8</div><div class="stat-label">均值/会话</div></div>
+      <div class="stat"><div class="stat-value">{{SESSIONS}}</div><div class="stat-label">会话数</div></div>
+      <div class="stat"><div class="stat-value">{{MESSAGES}}</div><div class="stat-label">消息数</div></div>
+      <div class="stat"><div class="stat-value">{{TOKENS_IO}}</div><div class="stat-label">日 Token (I+O)</div></div>
+      <div class="stat"><div class="stat-value">{{TOKENS_TOTAL}}</div><div class="stat-label">含缓存总量</div></div>
+      <div class="stat"><div class="stat-value">{{COST}}</div><div class="stat-label">今日费用</div></div>
+      <div class="stat"><div class="stat-value">{{ACTIVE_TIME}}</div><div class="stat-label">活跃时间</div></div>
+      <div class="stat"><div class="stat-value">{{TOOL_CALLS}}</div><div class="stat-label">工具调用</div></div>
+      <div class="stat"><div class="stat-value">{{AVG_MSGS}}</div><div class="stat-label">均值/会话</div></div>
     </div>
   </div>
 
@@ -456,9 +456,7 @@
   <div class="grid" style="margin-top:22px">
     <div class="card" style="animation-delay:0.12s">
       <div class="card-title"><span class="icon">📱</span> 平台分布</div>
-      <div class="pl-card"><div class="pl-icon" style="background:rgba(155,89,255,0.15);">🖥</div><div class="pl-info"><div class="pl-name">桌面终端 · 麻衣</div><div class="pl-meta">8 会话 · 1,768 消息 · 129.09M tokens</div></div></div>
-<div class="pl-card"><div class="pl-icon" style="background:rgba(255,140,64,0.15);">⚡</div><div class="pl-info"><div class="pl-name">Cron 任务</div><div class="pl-meta">1 会话 · 21 消息 · 365K tokens</div></div></div>
-<div class="pl-card" style="background:transparent;"><div class="pl-icon" style="background:rgba(124,58,237,0.15);">🔗</div><div class="pl-info"><div class="pl-name">网关 (微信/飞书/Ntfy)</div><div class="pl-meta">持续在线 · 零中断</div></div><div class="pl-status online"></div></div>
+      {{PLATFORM_CARDS}}
     </div>
 
     <div class="card" style="animation-delay:0.16s">
@@ -466,15 +464,13 @@
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
         <div style="width:14px;height:14px;border-radius:50%;background:var(--green);box-shadow:0 0 16px rgba(127,217,98,0.5);animation:pulse 2.5s ease-in-out infinite;"></div>
         <div>
-          <div style="font-weight:700;font-size:16px;color:var(--text-bright);">网关运行平稳</div>
-          <div style="font-size:12px;color:var(--text-dim);margin-top:2px;">微信/飞书/Ntfy 全平台在线 · PID 21560 · 零中断</div>
+          <div style="font-weight:700;font-size:16px;color:var(--text-bright);">{{GATEWAY_SUMMARY}}</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:2px;">{{GATEWAY_DETAIL}}</div>
         </div>
       </div>
-      <div class="bar-group"><div class="bar-label"><span>微信</span><span class="val">已连接</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:100%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>飞书</span><span class="val">已连接</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:100%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>Ntfy</span><span class="val">已连接</span></div><div class="bar-track"><div class="bar-fill bar-cyan" style="width:100%"></div></div></div>
+      {{GATEWAY_BARS}}
       <div style="margin-top:16px;padding:14px;background:var(--surface3);border-radius:var(--radius-sm);font-size:13px;color:var(--text-dim);">
-        ℹ️ 网关自 Jun 26 04:10 UTC 起持续运行 · PID 21560 · 0 活跃代理 · 零中断 · 各平台均在线
+        {{GATEWAY_NOTE}}
       </div>
     </div>
   </div>
@@ -483,50 +479,26 @@
   <div class="grid" style="margin-top:22px">
     <div class="card" style="animation-delay:0.2s">
       <div class="card-title"><span class="icon">💰</span> Token 与费用明细</div>
-      <div class="bar-group"><div class="bar-label"><span>输入 Token</span><span class="val">1,131,876 (1.13M)</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:100%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>输出 Token</span><span class="val">400,409 (400K)</span></div><div class="bar-track"><div class="bar-fill bar-pink" style="width:35%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>日 Token 合计 (I+O)</span><span class="val">1,532,285 (1.53M)</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:100%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>含缓存 Token 总量</span><span class="val">129,454,973 (129.45M)</span></div><div class="bar-track"><div class="bar-fill bar-orange" style="width:100%"></div></div></div>
+      {{TOKEN_BARS}}
       <div style="margin-top:14px;padding:16px;background:var(--surface3);border-radius:var(--radius-sm);font-size:13px;">
-        📐 <strong>DeepSeek v4-pro · Cache Hit/Miss 分别计费</strong><br>
-<span style="color:var(--text-dim)">Input $0.435/M (miss) / $0.004/M (hit) · Output $0.87/M</span><br>
-<span style="color:var(--purple-bright);font-weight:700;font-size:16px;">实际费用：待余额快照确认</span>
-<span style="color:var(--text-dim);font-size:11px;">（首次运行，尚未建立余额历史。明日 0 点快照后自动获取差值）</span>
+        {{TOKEN_PRICING}}
       </div>
-      
+      {{BALANCE_WARNING}}
     </div>
 
     <div class="card" style="animation-delay:0.24s">
       <div class="card-title"><span class="icon">🧠</span> 模型与记忆</div>
-      <div class="pl-card" style="background:var(--surface3);"><div style="width:42px;height:42px;border-radius:11px;background:rgba(155,89,255,0.15);display:flex;align-items:center;justify-content:center;font-size:18px;">🧠</div><div class="pl-info"><div class="pl-name">DeepSeek v4-pro</div><div class="pl-meta">9 会话 · 129.45M 含缓存 tokens</div></div><span class="badge badge-ok">唯一模型</span></div>
-<div style="margin-top:16px;padding:14px;background:rgba(127,217,98,0.08);border-radius:var(--radius-sm);font-size:13px;color:var(--green);">✅ 未触发 fallback · 主力模型全程稳定 · 无异常模型会话</div>
-      <div style="margin-top:16px;padding:14px;background:var(--surface3);border-radius:var(--radius-sm);">
-<div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">🧠 记忆使用率</div>
-<div class="bar-group"><div class="bar-label"><span>MEMORY.md</span><span class="val">4,660 / 6,600 (70.6%)</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:70.6%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>USER.md</span><span class="val">1,175 / 4,125 (28.5%)</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:28.5%"></div></div></div>
-<div style="font-size:11px;color:var(--text-dim);margin-top:4px;">⚠️ MEMORY 接近上限 (70.6%)，建议考虑蒸馏</div></div>
+      {{MODEL_CARDS}}
+      {{MEMORY_BARS}}
     </div>
   </div>
 
   <!-- ═══════════ TOOLS ═══════════ -->
   <div class="card full" style="margin-top:22px; animation-delay:0.28s">
-    <div class="card-title"><span class="icon">🔧</span> 工具调用分布（873 次）</div>
+    <div class="card-title"><span class="icon">🔧</span> 工具调用分布（{{TOOL_CALLS}} 次）</div>
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px;">
-      <div>
-<div class="bar-group"><div class="bar-label"><span>read_file</span><span class="val">241 (27.6%)</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:100%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>execute_code</span><span class="val">135 (15.5%)</span></div><div class="bar-track"><div class="bar-fill bar-pink" style="width:56%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>search_files</span><span class="val">126 (14.4%)</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:52%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>patch</span><span class="val">112 (12.8%)</span></div><div class="bar-track"><div class="bar-fill bar-orange" style="width:46%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>terminal</span><span class="val">107 (12.3%)</span></div><div class="bar-track"><div class="bar-fill bar-cyan" style="width:44%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>write_file</span><span class="val">73 (8.4%)</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:30%"></div></div></div>
-</div>
-      <div>
-<div class="bar-group"><div class="bar-label"><span>session_search</span><span class="val">19 (2.2%)</span></div><div class="bar-track"><div class="bar-fill bar-pink" style="width:8%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>cronjob</span><span class="val">17 (1.9%)</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:7%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>todo</span><span class="val">17 (1.9%)</span></div><div class="bar-track"><div class="bar-fill bar-orange" style="width:7%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>skill_view</span><span class="val">14 (1.6%)</span></div><div class="bar-track"><div class="bar-fill bar-cyan" style="width:6%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>image_generate + 其他</span><span class="val">12 (1.4%)</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:5%"></div></div></div>
-</div>
+      {{TOOL_BARS_LEFT}}
+      {{TOOL_BARS_RIGHT}}
     </div>
   </div>
 
@@ -536,22 +508,17 @@
     <div style="overflow-x:auto;">
       <table>
         <thead><tr><th>任务名称</th><th>计划</th><th>最后运行</th><th>状态</th></tr></thead>
-        <tbody><tr><td colspan="4" style="text-align:center;color:var(--text-dim);padding:24px;">无活跃 Cron 任务（三人格合并后全部暂停，待重建）</td></tr></tbody>
+        <tbody>{{CRON_ROWS}}</tbody>
       </table>
     </div>
-    <div class="alert alert-yellow" style="margin-top:12px;">⚠️ 当前无 Cron 任务在运行。之前的 13 个任务（日报、备份、巡检等）在人格合并重构期间全部暂停。建议逐步恢复关键任务。</div>
+    {{CRON_ALERT}}
   </div>
 
   <!-- ═══════════ HOST SYSTEM ═══════════ -->
   <div class="card full" style="margin-top:22px; animation-delay:0.36s">
     <div class="card-title"><span class="icon">💻</span> 宿主机系统状态</div>
     <div class="sys-grid">
-      <div class="sys-item"><div class="sys-item-label">CPU</div><div class="sys-item-val" style="color:var(--purple-bright);">i7-11800H</div><div class="sys-item-sub">8 核 16 线程 @ 2.30 GHz</div></div>
-<div class="sys-item"><div class="sys-item-label">GPU</div><div class="sys-item-val" style="color:var(--pink);">RTX 3060</div><div class="sys-item-sub">1.25GB/6GB (20.3%) · 1% 负载 · 52°C</div></div>
-<div class="sys-item"><div class="sys-item-label">内存</div><div class="sys-item-val" style="color:var(--green);">39.7 GB</div><div class="sys-item-sub">已用 16.7 GB · 42.0%</div></div>
-<div class="sys-item"><div class="sys-item-label">磁盘 C:</div><div class="sys-item-val" style="color:var(--orange);">486.9 GB</div><div class="sys-item-sub">已用 246.6 GB · 54.4%</div></div>
-<div class="sys-item"><div class="sys-item-label">磁盘 D:</div><div class="sys-item-val" style="color:var(--cyan);">487.3 GB</div><div class="sys-item-sub">已用 119.2 GB · 26.3%</div></div>
-<div class="sys-item"><div class="sys-item-label">运行状态</div><div class="sys-item-val" style="color:var(--purple-bright);font-size:18px;">稳定运行</div><div class="sys-item-sub">网关在线 · 三平台已连接</div></div>
+      {{HOST_ITEMS}}
     </div>
   </div>
 
@@ -559,12 +526,8 @@
   <div class="card full" style="margin-top:22px; animation-delay:0.4s">
     <div class="card-title"><span class="icon">📌</span> 关注事项与分析</div>
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px;">
-      <div style="display:flex;flex-direction:column;gap:14px;"><div class="insight-card purple"><h4>📅 周六 · 迁移后首个活跃日</h4><div class="desc">9 会话 · ~26h 活跃 · 1,789 消息。桌面终端 8 个会话贡献 129.09M tokens（99.7%），Cron 1 个会话 365K tokens。最长单会话 8h 7m，427K tokens — 系今日核心工作会话。</div></div>
-<div class="insight-card pink"><h4>🔄 人格合并后的第一份报告</h4><div class="desc">三人格（真由美/里美/佐知子）已合并为单一人格麻衣。所有旧 cron 暂停。本报告为麻衣接管系统后的首份日报。Obsidian 结构重组完成，技能体系重建中。</div></div>
-<div class="insight-card orange"><h4>💰 DeepSeek 费用待确认</h4><div class="desc">余额快照 cron 尚未恢复，今日费用待快照重建后确认。129.45M 含缓存总量中，缓存命中部分费用极低（$0.004/M vs $0.435/M）。预计实际日费在 ¥5-15 区间。</div></div></div>
-      <div style="display:flex;flex-direction:column;gap:14px;"><div class="insight-card green"><h4>🌐 全网关稳定运行</h4><div class="desc">微信/飞书/Ntfy 三平台持续在线。零中断、零 crash、零重启。PID 21560，自 Jun 26 04:10 UTC 启动后持续运行超过 26 小时。</div></div>
-<div class="insight-card cyan"><h4>🖥 GPU 低负载 · 系统健康</h4><div class="desc">RTX 3060 @1% · 1.25GB/6GB VRAM (20.3%) · 52°C。内存 16.7GB/39.7GB (42.0%)。C: 54.4% 已用。整体系统资源充裕。</div></div>
-<div class="insight-card purple"><h4>⚠️ MEMORY 使用率 70.6%</h4><div class="desc">MEMORY.md 4,660/6,600 字符。已接近上限。建议在合并完成后执行一次记忆蒸馏，释放过时和重复条目。USER.md 28.5% 健康。</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:14px;">{{INSIGHTS_LEFT}}</div>
+      <div style="display:flex;flex-direction:column;gap:14px;">{{INSIGHTS_RIGHT}}</div>
     </div>
   </div>
 
@@ -573,33 +536,20 @@
     <div class="card" style="animation-delay:0.44s">
       <div class="card-title"><span class="icon">💾</span> 存储概况</div>
       <div class="stat-row">
-        <div class="stat"><div class="stat-value">171 MB</div><div class="stat-label">缓存目录</div></div>
-<div class="stat"><div class="stat-value">252 MB</div><div class="stat-label">状态数据库</div></div>
-<div class="stat"><div class="stat-value">2.7 KB</div><div class="stat-label">USER 记忆</div></div>
-<div class="stat"><div class="stat-value">9.9 KB</div><div class="stat-label">MEMORY 记忆</div></div>
+        {{STORAGE_STATS}}
       </div>
     </div>
 
     <div class="card" style="animation-delay:0.48s">
       <div class="card-title"><span class="icon">📈</span> 活动模式</div>
-      <div class="stat" style="margin-bottom:12px;"><div class="stat-value">9</div><div class="stat-label">活跃会话</div></div>
-<div style="font-size:13px;color:var(--text-dim);line-height:1.8;">
-活跃天数：2 天 · 最长连续：2 天<br>
-平均会话时长：~3h 43m<br>
-均值：198.8 消息/会话<br>
-最长单会话：8h 7m · 957 消息 · 427K tokens<br><br>
-<span style="color:var(--purple-pale);">峰值时段（UTC+8）</span><br>
-12:00 — 4 会话<br>
-02:00 — 2 会话<br>
-05:00 — 1 会话 · 06:00 — 1 会话 · 14:00 — 1 会话
-</div>
+      {{ACTIVITY_PATTERNS}}
     </div>
   </div>
 
   <!-- ═══════════ FOOTER ═══════════ -->
   <div class="footer">
     由 <span>沙河麻衣</span> 自动生成 · 数据来源 hermes insights + 系统采集<br>
-    归档：hermes-reports/2026-06-27.html · 在线：burkereiii.github.io/hermes-daily-report
+    归档：hermes-reports/{{ARCHIVE_DATE}}.html · 在线：burkereiii.github.io/hermes-daily-report
   </div>
 
 </div>
