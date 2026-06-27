@@ -6,211 +6,281 @@
 <title>Hermes 系统日报 · 2026-06-27</title>
 <style>
   :root {
-    --bg: #0a0a0a;
-    --surface: #141414;
-    --surface2: #1c1c1c;
-    --card: #ffffff;
-    --card-bg: #f8f8f8;
-    --border: #2a2a2a;
-    --border-light: #e8e8e8;
-    --text: #1a1a1a;
-    --text-dim: #777777;
-    --text-white: #ffffff;
-    --text-white-dim: #999999;
-    --green: #b8ff3b;
-    --green-dark: #8ccc2e;
-    --red: #ff4d4d;
-    --yellow: #ffb84d;
-    --purple: #9b59ff;
-    --radius: 16px;
-    --radius-sm: 10px;
-    --radius-xs: 6px;
+    --bg: #05040a;
+    --surface: #0c0a16;
+    --surface2: #131024;
+    --surface3: #1a1533;
+    --border: #1f1940;
+    --text: #e8e0f0;
+    --text-dim: #7a6fa0;
+    --text-bright: #f5f0ff;
+    --purple: #8b5cf6;
+    --purple-bright: #a78bfa;
+    --purple-glow: #7c3aed;
+    --green: #4ade80;
+    --green-glow: #22c55e;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --radius: 18px;
+    --radius-sm: 12px;
+    --radius-xs: 8px;
   }
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @font-face {
+    font-family: 'Mono'; src: local('JetBrains Mono'), local('Consolas'), local('monospace');
+  }
 
   body {
     font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: var(--bg);
-    color: var(--text-white);
-    line-height: 1.6;
+    color: var(--text);
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 28px 80px; }
+  /* ── Ambient Glow Orbs ── */
+  .orb {
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+    filter: blur(120px); opacity: 0.25;
+  }
+  .orb-1 { width: 600px; height: 600px; top: -200px; right: -150px; background: rgba(139,92,246,0.15); animation: orbFloat 8s ease-in-out infinite; }
+  .orb-2 { width: 500px; height: 500px; bottom: -150px; left: -100px; background: rgba(74,222,128,0.08); animation: orbFloat 10s ease-in-out infinite reverse; }
+  .orb-3 { width: 400px; height: 400px; top: 50%; left: 40%; background: rgba(139,92,246,0.06); animation: orbFloat 12s ease-in-out infinite 3s; }
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -40px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
 
-  /* ── Hero ── */
+  /* ── Floating Particles ── */
+  .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+  .particle {
+    position: absolute; width: 2px; height: 2px; border-radius: 50%;
+    background: var(--purple-bright); opacity: 0;
+    animation: particleFloat 6s ease-in-out infinite;
+  }
+  @keyframes particleFloat {
+    0% { opacity: 0; transform: translateY(0) translateX(0); }
+    20% { opacity: 0.6; }
+    80% { opacity: 0.1; }
+    100% { opacity: 0; transform: translateY(-120px) translateX(40px); }
+  }
+
+  .container { max-width: 1240px; margin: 0 auto; padding: 0 28px 100px; position: relative; z-index: 2; }
+
+  /* ── HERO ── */
   .hero {
-    position: relative; width: 100%; height: 520px;
-    display: flex; align-items: flex-end;
-    border-radius: 24px; overflow: hidden;
-    margin: 32px 0 48px;
+    position: relative; width: 100%; min-height: 540px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; gap: 40px;
+    margin: 40px 0 60px; padding: 0 20px;
   }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background: url('maki-hero.png') center/cover no-repeat;
-    background-position: 40% 35%;
-  }
-  .hero-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(10,10,10,0.15) 0%, rgba(10,10,10,0) 40%, rgba(10,10,10,0.92) 75%, rgba(10,10,10,1) 100%);
-  }
-  .hero-content {
+  @media (max-width: 900px) { .hero { grid-template-columns: 1fr; min-height: auto; gap: 24px; } }
+  .hero-text {
     position: relative; z-index: 2;
-    padding: 48px 52px 40px;
-    width: 100%;
   }
-  .hero-badge {
+  .hero-tag {
     display: inline-flex; align-items: center; gap: 8px;
-    font-size: 11px; letter-spacing: 3px; font-weight: 600;
-    color: var(--green); text-transform: uppercase;
-    margin-bottom: 16px;
+    padding: 6px 16px; border-radius: 20px;
+    background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.25);
+    font-size: 11px; letter-spacing: 2px; font-weight: 600;
+    color: var(--purple-bright); text-transform: uppercase;
+    margin-bottom: 20px;
   }
-  .hero-badge .dot {
+  .hero-tag .dot {
     width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+    box-shadow: 0 0 8px var(--green-glow);
+    animation: pulse 2s ease-in-out infinite;
   }
-  .hero-content h1 {
-    font-size: 52px; font-weight: 800; color: #fff;
-    line-height: 1.05; margin-bottom: 12px; letter-spacing: -2px;
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 8px var(--green-glow); }
+    50% { box-shadow: 0 0 16px var(--green-glow), 0 0 24px rgba(74,222,128,0.3); }
   }
-  .hero-subtitle {
-    color: rgba(255,255,255,0.55); font-size: 15px;
-    max-width: 520px; line-height: 1.7;
+  .hero-text h1 {
+    font-size: 56px; font-weight: 900; color: var(--text-bright);
+    line-height: 1.05; margin-bottom: 14px; letter-spacing: -2px;
+  }
+  .hero-text h1 .grad {
+    background: linear-gradient(135deg, var(--purple-bright), #c084fc, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-text .sub {
+    color: var(--text-dim); font-size: 15px; max-width: 440px; line-height: 1.7;
+    margin-bottom: 28px;
   }
   .hero-stats {
-    display: flex; gap: 40px; margin-top: 28px;
+    display: flex; gap: 32px;
   }
   .hero-stat-val {
-    font-size: 36px; font-weight: 800; color: #fff; line-height: 1;
-    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 34px; font-weight: 900; color: var(--text-bright); line-height: 1;
+    font-family: 'Mono', monospace;
   }
   .hero-stat-lbl {
-    font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.4);
+    font-size: 10px; letter-spacing: 1.5px; color: var(--text-dim);
     text-transform: uppercase; margin-top: 6px;
   }
 
-  /* ── Stats Bar ── */
-  .stats-bar {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 1px; background: var(--border);
+  /* ── Hero Image Card ── */
+  .hero-image {
+    position: relative; z-index: 2;
     border-radius: var(--radius); overflow: hidden;
-    margin-bottom: 48px;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 60px rgba(139,92,246,0.08);
+    aspect-ratio: 3/2;
   }
-  .stats-bar .stat-item {
-    background: var(--surface); padding: 28px 24px;
-    text-align: center;
+  .hero-image img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
   }
-  .stats-bar .stat-item .val {
-    font-size: 28px; font-weight: 800; color: #fff; line-height: 1;
+  .hero-image .overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(5,4,10,0.9) 100%);
   }
-  .stats-bar .stat-item .lbl {
-    font-size: 10px; letter-spacing: 1.5px; color: var(--text-white-dim);
-    text-transform: uppercase; margin-top: 8px;
-  }
-  @media (max-width: 768px) { .stats-bar { grid-template-columns: 1fr 1fr; } .hero { height: 380px; } .hero-content h1 { font-size: 32px; } }
 
-  /* ── Section Headers ── */
+  /* ── Floating Metric Cards ── */
+  .hero-float {
+    position: absolute; z-index: 5;
+    background: rgba(19,16,36,0.9); backdrop-filter: blur(10px);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px 18px; font-size: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .hero-float.f1 { top: 5%; left: -8%; animation: floatCard 5s ease-in-out infinite; }
+  .hero-float.f2 { bottom: 15%; right: -10%; animation: floatCard 6s ease-in-out infinite 1s; }
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .hero-float .metric {
+    font-size: 20px; font-weight: 800; color: var(--purple-bright);
+    font-family: 'Mono', monospace;
+  }
+  .hero-float .label { color: var(--text-dim); font-size: 10px; margin-top: 2px; letter-spacing: 0.5px; }
+
+  /* ── Section Header ── */
   .section-header {
-    display: flex; align-items: center; gap: 16px;
-    margin-bottom: 28px; padding-top: 32px;
-    border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 14px;
+    margin: 64px 0 32px;
   }
   .section-num {
-    font-size: 13px; font-weight: 700; color: var(--green);
-    letter-spacing: 2px;
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; color: var(--purple-bright);
+    flex-shrink: 0;
   }
   .section-title {
-    font-size: 28px; font-weight: 800; letter-spacing: -1px;
+    font-size: 26px; font-weight: 800; letter-spacing: -1px;
   }
 
-  /* ── Cards (dark) ── */
-  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media (max-width: 768px) { .card-grid { grid-template-columns: 1fr; } }
+  /* ── Grids ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } .grid-4 { grid-template-columns: 1fr 1fr; } }
 
+  /* ── Cards ── */
   .card {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 28px;
+    border-radius: var(--radius); padding: 26px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
   }
-  .card.white {
-    background: var(--card); border: 1px solid var(--border-light);
-    color: var(--text);
+  .card:hover {
+    border-color: rgba(139,92,246,0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(139,92,246,0.06);
   }
-  .card.white .card-label { color: var(--text-dim); }
-  .card.white .val { color: var(--text); }
-
+  .card.glow::before {
+    content: ''; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 50% 0%, rgba(139,92,246,0.06), transparent 60%);
+    pointer-events: none;
+  }
   .card-label {
-    font-size: 10px; letter-spacing: 2.5px; color: var(--text-white-dim);
-    text-transform: uppercase; margin-bottom: 22px; font-weight: 600;
+    font-size: 10px; letter-spacing: 2.5px; color: var(--text-dim);
+    text-transform: uppercase; font-weight: 700; margin-bottom: 20px;
   }
 
-  /* ── Mini Stats ── */
-  .mini-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 16px; }
-  .mini-stat { text-align: center; }
-  .mini-stat .val {
-    font-size: 26px; font-weight: 700; line-height: 1;
-    font-family: 'JetBrains Mono', 'Consolas', monospace;
+  /* ── Stat Cards ── */
+  .stat-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 20px;
+    text-align: center; transition: all 0.3s;
   }
-  .mini-stat .lbl {
-    font-size: 10px; letter-spacing: 1px; color: var(--text-white-dim);
-    text-transform: uppercase; margin-top: 6px;
+  .stat-card:hover {
+    border-color: rgba(139,92,246,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139,92,246,0.05);
   }
-  .card.white .mini-stat .lbl { color: var(--text-dim); }
-
-  /* ── Bars ── */
-  .bar-group { margin-bottom: 18px; }
-  .bar-label {
-    display: flex; justify-content: space-between;
-    font-size: 13px; margin-bottom: 6px; font-weight: 500;
+  .stat-card .val {
+    font-size: 28px; font-weight: 800; color: var(--text-bright);
+    font-family: 'Mono', monospace; line-height: 1;
   }
-  .bar-label .val { color: var(--text-white-dim); font-size: 12px; font-family: 'JetBrains Mono', monospace; }
-  .card.white .bar-label .val { color: var(--text-dim); }
-  .bar-track { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
-  .card.white .bar-track { background: #eaeaea; }
-  .bar-fill { height: 100%; border-radius: 2px; transition: width 1.2s ease-out; }
-  .bar-green { background: var(--green); }
-  .bar-purple { background: var(--purple); }
-  .bar-red { background: var(--red); }
-  .bar-yellow { background: var(--yellow); }
+  .stat-card .lbl {
+    font-size: 10px; letter-spacing: 1.5px; color: var(--text-dim);
+    text-transform: uppercase; margin-top: 8px;
+  }
 
   /* ── Platform Pills ── */
-  .pl-pills { display: flex; flex-direction: column; gap: 10px; }
   .pl-pill {
     display: flex; align-items: center; gap: 14px;
-    padding: 16px; border-radius: var(--radius-sm);
+    padding: 14px 16px; border-radius: var(--radius-sm);
     background: var(--surface2); border: 1px solid transparent;
+    margin-bottom: 10px; transition: all 0.3s;
   }
-  .pl-pill:hover { border-color: var(--border); }
+  .pl-pill:hover { border-color: var(--border); transform: translateX(4px); }
   .pl-icon {
-    width: 44px; height: 44px; border-radius: 10px;
+    width: 42px; height: 42px; border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 20px; flex-shrink: 0;
+    font-size: 18px; flex-shrink: 0;
   }
   .pl-info { flex: 1; }
-  .pl-name { font-weight: 600; font-size: 14px; }
-  .pl-meta { font-size: 12px; color: var(--text-white-dim); margin-top: 2px; }
-  .pl-status {
-    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-  }
-  .pl-status.on { background: var(--green); }
+  .pl-name { font-weight: 700; font-size: 14px; }
+  .pl-meta { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .pl-status { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pl-status.on { background: var(--green); box-shadow: 0 0 10px var(--green-glow); }
 
-  /* ── Pricing Box ── */
+  /* ── Bars ── */
+  .bar-group { margin-bottom: 16px; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .bar-label .val { color: var(--text-dim); font-family: 'Mono', monospace; font-size: 12px; }
+  .bar-track { height: 4px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 2px; transition: width 1.5s ease-out; position: relative; }
+  .bar-fill::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    animation: shimmer 2s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(250%); }
+  }
+  .bar-p { background: linear-gradient(90deg, var(--purple-glow), var(--purple-bright)); }
+  .bar-g { background: linear-gradient(90deg, #22c55e, var(--green)); }
+
+  /* ── Price Box ── */
   .price-box {
     margin-top: 16px; padding: 18px; border-radius: var(--radius-sm);
     background: var(--surface2); font-size: 13px; line-height: 1.7;
+    border: 1px solid var(--border);
   }
   .price-box .big {
-    font-size: 20px; font-weight: 800; display: block;
+    font-size: 22px; font-weight: 800; display: block;
+    color: var(--text-bright);
   }
-  .card.white .price-box { background: var(--card-bg); }
 
   /* ── Table ── */
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th {
     text-align: left; padding: 12px 14px;
     font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--text-white-dim); font-weight: 600;
+    color: var(--text-dim); font-weight: 700;
     border-bottom: 1px solid var(--border);
   }
-  td { padding: 12px 14px; border-bottom: 1px solid rgba(42,42,42,0.5); }
+  td { padding: 12px 14px; border-bottom: 1px solid rgba(31,25,64,0.5); }
   tr:hover { background: var(--surface2); }
 
   /* ── Badges ── */
@@ -218,172 +288,187 @@
     display: inline-block; padding: 4px 10px; border-radius: 20px;
     font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
   }
-  .badge-ok { background: rgba(184,255,59,0.1); color: var(--green); }
-  .badge-warn { background: rgba(255,184,77,0.1); color: var(--yellow); }
-  .badge-err { background: rgba(255,77,77,0.1); color: var(--red); }
-  .badge-info { background: rgba(155,89,255,0.1); color: var(--purple); }
+  .badge-ok { background: rgba(74,222,128,0.12); color: var(--green); }
+  .badge-warn { background: rgba(251,191,36,0.12); color: var(--yellow); }
+  .badge-err { background: rgba(248,113,113,0.12); color: var(--red); }
+  .badge-info { background: rgba(139,92,246,0.12); color: var(--purple-bright); }
 
-  /* ── Alert ── */
+  /* ── Alerts ── */
   .alert {
     margin-top: 16px; padding: 16px 18px; border-radius: var(--radius-sm);
     font-size: 13px; line-height: 1.6;
   }
-  .alert-red { background: rgba(255,77,77,0.08); color: var(--red); border-left: 3px solid var(--red); }
-  .alert-green { background: rgba(184,255,59,0.06); color: var(--green); border-left: 3px solid var(--green); }
+  .alert-red { background: rgba(248,113,113,0.06); color: var(--red); border-left: 3px solid var(--red); }
 
   /* ── Host Grid ── */
-  .host-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  @media (max-width: 768px) { .host-grid { grid-template-columns: 1fr 1fr; } }
   .host-item {
-    background: var(--surface2); border-radius: var(--radius-sm);
-    padding: 18px; border: 1px solid transparent;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 20px;
+    transition: all 0.3s;
   }
+  .host-item:hover { border-color: rgba(139,92,246,0.25); }
   .host-item .lbl {
-    font-size: 10px; letter-spacing: 1.5px; color: var(--text-white-dim);
-    text-transform: uppercase; margin-bottom: 8px;
+    font-size: 10px; letter-spacing: 1.5px; color: var(--text-dim);
+    text-transform: uppercase; margin-bottom: 10px;
   }
-  .host-item .val { font-size: 22px; font-weight: 700; }
-  .host-item .sub { font-size: 12px; color: var(--text-white-dim); margin-top: 4px; }
+  .host-item .val { font-size: 22px; font-weight: 800; }
+  .host-item .sub { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+
+  /* ── Insight Cards ── */
+  .insight {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 20px;
+    transition: all 0.3s;
+  }
+  .insight:hover { border-color: rgba(139,92,246,0.25); }
+  .insight h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .insight .desc { font-size: 13px; color: var(--text-dim); line-height: 1.7; }
 
   /* ── Footer ── */
   .footer {
-    margin-top: 64px; padding-top: 32px;
+    margin-top: 80px; padding-top: 36px;
     border-top: 1px solid var(--border);
     display: flex; justify-content: space-between; align-items: center;
-    font-size: 12px; color: var(--text-white-dim);
+    font-size: 12px; color: var(--text-dim);
   }
   .footer .brand {
-    font-weight: 700; font-size: 14px; color: var(--green);
-    letter-spacing: -0.5px;
+    font-size: 16px; font-weight: 800;
+    background: linear-gradient(135deg, var(--purple-bright), #c084fc);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
+
+  /* ── Scroll Reveal ── */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
   @media (max-width: 640px) {
     .container { padding: 0 16px 60px; }
-    .hero { height: 340px; margin: 20px 0 32px; }
-    .hero-content { padding: 32px 24px 28px; }
-    .hero-content h1 { font-size: 28px; }
-    .hero-stats { gap: 24px; }
-    .hero-stat-val { font-size: 26px; }
-    .section-title { font-size: 22px; }
+    .hero { margin: 24px 0 40px; padding: 0; }
+    .hero-text h1 { font-size: 32px; }
+    .section-title { font-size: 20px; }
+    .hero-float { display: none; }
   }
 </style>
 </head>
 <body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="particles" id="particles"></div>
+
 <div class="container">
 
   <!-- ═══════════ HERO ═══════════ -->
-  <div class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="hero-badge"><span class="dot"></span>SYSTEM DAILY · 麻衣</div>
-      <h1>系统日报</h1>
-      <div class="hero-subtitle">
-        2026年6月27日（周六） · 17:30 CST · 运行中
-      </div>
+  <div class="hero reveal">
+    <div class="hero-text">
+      <div class="hero-tag"><span class="dot"></span>SYSTEM DAILY · 沙河麻衣</div>
+      <h1>Hermes<br><span class="grad">系统日报</span></h1>
+      <div class="sub">2026年6月27日（周六） · 17:45 CST · 运行中</div>
       <div class="hero-stats">
         <div><div class="hero-stat-val">4</div><div class="hero-stat-lbl">会话</div></div>
         <div><div class="hero-stat-val">23.85M</div><div class="hero-stat-lbl">Token</div></div>
         <div><div class="hero-stat-val">待确认</div><div class="hero-stat-lbl">费用</div></div>
       </div>
     </div>
+    <div class="hero-image">
+      <img src="maki-hero.png" alt="">
+      <div class="overlay"></div>
+    </div>
   </div>
 
-  <!-- ═══════════ STATS BAR ═══════════ -->
-  <div class="stats-bar">
-    <div class="stat-item"><div class="val">4</div><div class="lbl">会话</div></div>
-    <div class="stat-item"><div class="val">592</div><div class="lbl">消息</div></div>
-    <div class="stat-item"><div class="val">295</div><div class="lbl">工具调用</div></div>
-    <div class="stat-item"><div class="val">7h 21m</div><div class="lbl">活跃时间</div></div>
+  <!-- ═══════════ Stats Row ═══════════ -->
+  <div class="grid-4 reveal" style="margin-bottom:40px;">
+    <div class="stat-card"><div class="val">4</div><div class="lbl">会话</div></div>
+    <div class="stat-card"><div class="val">592</div><div class="lbl">消息</div></div>
+    <div class="stat-card"><div class="val">295</div><div class="lbl">工具调用</div></div>
+    <div class="stat-card"><div class="val">7h 21m</div><div class="lbl">活跃时间</div></div>
   </div>
 
-  <!-- ═══════════ PLATFORMS ═══════════ -->
-  <div class="section-header">
-    <span class="section-num">01</span>
-    <span class="section-title">平台 & 网关</span>
+  <!-- ═══════════ 01 PLATFORMS ═══════════ -->
+  <div class="section-header reveal">
+    <div class="section-num">01</div>
+    <div class="section-title">平台 & 网关</div>
   </div>
-  <div class="card-grid">
+  <div class="grid-2 reveal">
     <div class="card">
       <div class="card-label">平台分布</div>
-      <div class="pl-pills"><div class="pl-pill"><div class="pl-icon" style="background:rgba(155,89,255,0.12);">🖥</div><div class="pl-info"><div class="pl-name">桌面终端 · 麻衣</div><div class="pl-meta">4 会话 · 592 消息 · 23.85M tokens</div></div></div>
-<div class="pl-pill"><div class="pl-icon" style="background:rgba(184,255,59,0.1);">💬</div><div class="pl-info"><div class="pl-name">微信</div><div class="pl-meta">已连接 · 零中断</div></div><div class="pl-status on"></div></div>
-<div class="pl-pill"><div class="pl-icon" style="background:rgba(155,89,255,0.1);">📋</div><div class="pl-info"><div class="pl-name">飞书</div><div class="pl-meta">已连接 · 零中断</div></div><div class="pl-status on"></div></div></div>
+      <div><div class="pl-pill"><div class="pl-icon" style="background:rgba(139,92,246,0.12);">🖥</div><div class="pl-info"><div class="pl-name">桌面终端</div><div class="pl-meta">4 会话 · 592 消息 · 23.85M tokens</div></div></div>
+<div class="pl-pill"><div class="pl-icon" style="background:rgba(74,222,128,0.1);">💬</div><div class="pl-info"><div class="pl-name">微信</div><div class="pl-meta">已连接</div></div><div class="pl-status on"></div></div>
+<div class="pl-pill"><div class="pl-icon" style="background:rgba(139,92,246,0.1);">📋</div><div class="pl-info"><div class="pl-name">飞书</div><div class="pl-meta">已连接</div></div><div class="pl-status on"></div></div></div>
     </div>
     <div class="card">
-      <div class="card-label">网关状态</div>
+      <div class="card-label">网关运行状态</div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-        <div style="width:10px;height:10px;border-radius:50%;background:var(--green);"></div>
-        <div><div style="font-weight:700;font-size:15px;">运行平稳</div><div style="font-size:11px;color:var(--text-white-dim);margin-top:2px;">微信/飞书双平台在线 · PID 21560 · 运行超 37h</div></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green-glow);animation:pulse 2s ease-in-out infinite;"></div>
+        <div><div style="font-weight:700;font-size:15px;">运行平稳</div><div style="font-size:11px;color:var(--text-dim);margin-top:2px;">微信/飞书双平台在线 · PID 21560 · 已运行 37h+</div></div>
       </div>
-      <div class="bar-group"><div class="bar-label"><span>微信</span><span class="val">已连接</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:100%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>飞书</span><span class="val">已连接</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:100%"></div></div></div>
-      <div class="price-box">网关自 Jun 26 04:10 UTC 启动，持续运行无中断。0 活跃代理。微信/飞书均在线。</div>
+      <div class="bar-group"><div class="bar-label"><span>微信</span><span class="val">Connected</span></div><div class="bar-track"><div class="bar-fill bar-g" style="width:100%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>飞书</span><span class="val">Connected</span></div><div class="bar-track"><div class="bar-fill bar-p" style="width:100%"></div></div></div>
+      <div class="price-box" style="font-size:12px;">Jun 26 04:10 UTC 启动 · 0 活跃代理 · 零中断 · 双平台持续在线</div>
     </div>
   </div>
 
-  <!-- ═══════════ TOKEN & MODEL ═══════════ -->
-  <div class="section-header">
-    <span class="section-num">02</span>
-    <span class="section-title">Token & 模型</span>
+  <!-- ═══════════ 02 TOKEN & MODEL ═══════════ -->
+  <div class="section-header reveal">
+    <div class="section-num">02</div>
+    <div class="section-title">Token & 模型</div>
   </div>
-  <div class="card-grid">
-    <div class="card white">
+  <div class="grid-2 reveal">
+    <div class="card glow">
       <div class="card-label">Token 明细</div>
-      <div class="bar-group"><div class="bar-label"><span>输入</span><span class="val">365,431</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:100%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>输出</span><span class="val">126,873</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:35%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>I+O 合计</span><span class="val">492,304</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:100%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>含缓存总量</span><span class="val">23,845,776</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:100%"></div></div></div>
-      <div class="price-box"><span class="big" style="color:var(--text);">昨日费用：待快照确认</span>
-<span style="color:var(--text-dim);font-size:11px;">当前余额 <strong>¥109.63</strong> · DeepSeek v4-pro · Cache Hit/Miss 分别计费</span></div>
+      <div class="bar-group"><div class="bar-label"><span>输入 Token</span><span class="val">365,431</span></div><div class="bar-track"><div class="bar-fill bar-p" style="width:100%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>输出 Token</span><span class="val">126,873</span></div><div class="bar-track"><div class="bar-fill bar-g" style="width:35%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>I+O 合计</span><span class="val">492,304</span></div><div class="bar-track"><div class="bar-fill bar-p" style="width:100%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>含缓存总量</span><span class="val">23,845,776</span></div><div class="bar-track"><div class="bar-fill bar-g" style="width:100%"></div></div></div>
+      <div class="price-box"><span class="big">昨日费用：待快照确认</span>
+<span style="color:var(--text-dim);font-size:12px;">余额 <strong style="color:var(--green);">¥109.63</strong> · DeepSeek v4-pro</span></div>
       
     </div>
-    <div class="card white">
+    <div class="card glow">
       <div class="card-label">模型 & 记忆</div>
-      <div class="pl-pill" style="background:var(--card-bg);margin-bottom:10px;"><div class="pl-icon" style="background:rgba(155,89,255,0.1);">🧠</div><div class="pl-info"><div class="pl-name">DeepSeek v4-pro</div><div class="pl-meta" style="color:var(--text-dim);">4 会话 · 23.85M tokens</div></div><span class="badge badge-ok">唯一模型</span></div>
-<div style="font-size:12px;color:var(--text-dim);margin-top:8px;">未触发 fallback · 全程稳定</div>
-      <div style="margin-top:18px;padding:14px;background:var(--card-bg);border-radius:var(--radius-sm);">
+      <div class="pl-pill" style="margin-bottom:10px;"><div class="pl-icon" style="background:rgba(139,92,246,0.12);">🧠</div><div class="pl-info"><div class="pl-name">DeepSeek v4-pro</div><div class="pl-meta">4 会话 · 23.85M tokens</div></div><span class="badge badge-ok">唯一模型</span></div>
+<div style="font-size:12px;color:var(--text-dim);">未触发 fallback · 全程稳定</div>
+      <div style="margin-top:18px;padding:14px;background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--border);">
 <div style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">记忆使用率</div>
-<div class="bar-group"><div class="bar-label"><span>MEMORY</span><span class="val">4,660 / 6,600</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:70.6%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>USER</span><span class="val">1,175 / 4,125</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:28.5%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>MEMORY</span><span class="val">4,660 / 6,600</span></div><div class="bar-track"><div class="bar-fill bar-p" style="width:70.6%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>USER</span><span class="val">1,175 / 4,125</span></div><div class="bar-track"><div class="bar-fill bar-g" style="width:28.5%"></div></div></div>
 <div style="font-size:11px;color:var(--text-dim);margin-top:6px;">MEMORY 70.6% · 建议近期蒸馏</div></div>
     </div>
   </div>
 
-  <!-- ═══════════ TOOLS ═══════════ -->
-  <div class="section-header">
-    <span class="section-num">03</span>
-    <span class="section-title">工具调用</span>
-    <span style="font-size:12px;color:var(--text-white-dim);">共 295 次</span>
+  <!-- ═══════════ 03 TOOLS ═══════════ -->
+  <div class="section-header reveal">
+    <div class="section-num">03</div>
+    <div class="section-title">工具调用</div>
+    <span style="font-size:11px;color:var(--text-dim);">共 295 次</span>
   </div>
-  <div class="card-grid">
-    <div class="card">
-      <div class="card-label">主要工具</div>
-      <div>
-<div class="bar-group"><div class="bar-label"><span>read_file</span><span class="val">77</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:100%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>terminal</span><span class="val">58</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:75%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>patch</span><span class="val">43</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:56%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>search_files</span><span class="val">43</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:56%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>execute_code</span><span class="val">18</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:23%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>write_file</span><span class="val">16</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:21%"></div></div></div>
-</div>
-    </div>
-    <div class="card">
-      <div class="card-label">其他工具</div>
-      <div>
-<div class="bar-group"><div class="bar-label"><span>todo / skill_view</span><span class="val">23</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:30%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>skill_manage</span><span class="val">9</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:12%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>image_generate</span><span class="val">4</span></div><div class="bar-track"><div class="bar-fill bar-purple" style="width:5%"></div></div></div>
-<div class="bar-group"><div class="bar-label"><span>其他</span><span class="val">4</span></div><div class="bar-track"><div class="bar-fill bar-green" style="width:5%"></div></div></div>
-</div>
-    </div>
+  <div class="grid-2 reveal">
+    <div class="card"><div>
+<div class="bar-group"><div class="bar-label"><span>read_file</span><span class="val">77 (26.1%)</span></div><div class="bar-track"><div class="bar-fill bar-p" style="width:100%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>terminal</span><span class="val">58 (19.7%)</span></div><div class="bar-track"><div class="bar-fill bar-g" style="width:75%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>patch</span><span class="val">43 (14.6%)</span></div><div class="bar-track"><div class="bar-fill bar-p" style="width:56%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>search_files</span><span class="val">43 (14.6%)</span></div><div class="bar-track"><div class="bar-fill bar-g" style="width:56%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>execute_code</span><span class="val">18 (6.1%)</span></div><div class="bar-track"><div class="bar-fill bar-p" style="width:23%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>write_file</span><span class="val">16 (5.4%)</span></div><div class="bar-track"><div class="bar-fill bar-g" style="width:21%"></div></div></div>
+</div></div>
+    <div class="card"><div>
+<div class="bar-group"><div class="bar-label"><span>todo / skill_view</span><span class="val">23 (7.8%)</span></div><div class="bar-track"><div class="bar-fill bar-p" style="width:30%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>skill_manage</span><span class="val">9 (3.1%)</span></div><div class="bar-track"><div class="bar-fill bar-g" style="width:12%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>image_generate</span><span class="val">4 (1.4%)</span></div><div class="bar-track"><div class="bar-fill bar-p" style="width:5%"></div></div></div>
+<div class="bar-group"><div class="bar-label"><span>其他</span><span class="val">4 (1.4%)</span></div><div class="bar-track"><div class="bar-fill bar-g" style="width:5%"></div></div></div>
+</div></div>
   </div>
 
-  <!-- ═══════════ CRON ═══════════ -->
-  <div class="section-header">
-    <span class="section-num">04</span>
-    <span class="section-title">Cron 任务</span>
+  <!-- ═══════════ 04 CRON ═══════════ -->
+  <div class="section-header reveal">
+    <div class="section-num">04</div>
+    <div class="section-title">Cron 任务</div>
   </div>
-  <div class="card" style="overflow-x:auto;">
+  <div class="card reveal" style="overflow-x:auto;">
     <table>
       <thead><tr><th>任务</th><th>计划</th><th>最后运行</th><th>状态</th></tr></thead>
       <tbody><tr><td><strong>[麻衣] Hermes系统日报</strong></td><td>每日 00:00</td><td>待首次运行</td><td><span class="badge badge-info">就绪</span></td></tr></tbody>
@@ -391,52 +476,52 @@
     
   </div>
 
-  <!-- ═══════════ HOST ═══════════ -->
-  <div class="section-header">
-    <span class="section-num">05</span>
-    <span class="section-title">宿主机</span>
+  <!-- ═══════════ 05 HOST ═══════════ -->
+  <div class="section-header reveal">
+    <div class="section-num">05</div>
+    <div class="section-title">宿主机</div>
   </div>
-  <div class="host-grid"><div class="host-item"><div class="lbl">CPU</div><div class="val" style="color:var(--purple);">i7-11800H</div><div class="sub">8 核 16 线程 @ 2.30 GHz</div></div>
+  <div class="grid-3 reveal"><div class="host-item"><div class="lbl">CPU</div><div class="val" style="color:var(--purple-bright);">i7-11800H</div><div class="sub">8 核 16 线程 · 2.30 GHz</div></div>
 <div class="host-item"><div class="lbl">GPU</div><div class="val" style="color:var(--green);">RTX 3060</div><div class="sub">1.19GB/6GB · 1% · 52°C</div></div>
 <div class="host-item"><div class="lbl">内存</div><div class="val">39.7 GB</div><div class="sub">已用 16.7 GB · 42%</div></div>
 <div class="host-item"><div class="lbl">磁盘 C</div><div class="val">486.9 GB</div><div class="sub">已用 246.6 GB · 54%</div></div>
 <div class="host-item"><div class="lbl">磁盘 D</div><div class="val">487.3 GB</div><div class="sub">已用 119.2 GB · 26%</div></div>
-<div class="host-item"><div class="lbl">运行状态</div><div class="val" style="color:var(--green);font-size:18px;">稳定</div><div class="sub">网关在线 · 双平台</div></div></div>
+<div class="host-item"><div class="lbl">运行状态</div><div class="val" style="color:var(--green);">稳定</div><div class="sub">网关在线 · 双平台</div></div></div>
 
-  <!-- ═══════════ INSIGHTS ═══════════ -->
-  <div class="section-header">
-    <span class="section-num">06</span>
-    <span class="section-title">关注事项</span>
+  <!-- ═══════════ 06 INSIGHTS ═══════════ -->
+  <div class="section-header reveal">
+    <div class="section-num">06</div>
+    <div class="section-title">关注事项</div>
   </div>
-  <div class="card-grid">
-    <div style="display:flex;flex-direction:column;gap:12px;"><div class="card"><div class="card-label" style="margin-bottom:12px;">活跃概况</div><div style="font-size:13px;line-height:1.7;color:var(--text-white-dim);">4 个会话全部来自桌面终端，集中在凌晨 2-6 点。最长单会话 3h 44m，237 消息，173K tokens。日均消息 148 条/会话。</div></div>
-<div class="card"><div class="card-label" style="margin-bottom:12px;">系统重建</div><div style="font-size:13px;line-height:1.7;color:var(--text-white-dim);">hermes-daily-report v3.0 重建完成。skill 迭代 7 次。模板大改版——从紫色玻璃拟态切换到干净的黑白绿编辑风格。</div></div>
-<div class="card"><div class="card-label" style="margin-bottom:12px;">费用追踪</div><div style="font-size:13px;line-height:1.7;color:var(--text-white-dim);">余额 ¥109.63 健康。6/26 快照缺失导致昨日费用暂时无法拆分。今晚 0 点 cron 跑完第二次快照后恢复正常日费计算。</div></div></div>
-    <div style="display:flex;flex-direction:column;gap:12px;"><div class="card"><div class="card-label" style="margin-bottom:12px;">网关</div><div style="font-size:13px;line-height:1.7;color:var(--text-white-dim);">微信/飞书持续在线 37h+。零中断、零 crash。PID 21560 稳定。</div></div>
-<div class="card"><div class="card-label" style="margin-bottom:12px;">系统健康</div><div style="font-size:13px;line-height:1.7;color:var(--text-white-dim);">GPU 1% · VRAM 20% · 52°C。内存 42%。C 盘 54% 已用。各项指标正常。</div></div>
-<div class="card"><div class="card-label" style="margin-bottom:12px;">提醒</div><div style="font-size:13px;line-height:1.7;color:var(--text-white-dim);">MEMORY 70.6% 接近上限。Cron 仅有 1 个任务（日报），运维类任务全部待恢复。</div></div></div>
+  <div class="grid-2 reveal">
+    <div style="display:flex;flex-direction:column;gap:12px;"><div class="insight"><h4 style="color:var(--purple-bright);">活跃概况</h4><div class="desc">4 个会话全部来自桌面终端，集中在凌晨 2-6 点。最长单会话 3h 44m，237 消息，173K tokens。日均消息 148 条/会话。</div></div>
+<div class="insight"><h4 style="color:var(--purple-bright);">系统重建</h4><div class="desc">日报系统完成第三次大改版，从紫色玻璃拟态迭代至当前的暗色 SaaS 风格。skill 迭代 7 次，模板完全重写。</div></div>
+<div class="insight"><h4 style="color:var(--purple-bright);">费用追踪</h4><div class="desc">余额 ¥109.63 健康。6/26 快照缺失致昨日费用暂时无法拆分。今晚 0 点 cron 跑完第二次快照后恢复正常日费。</div></div></div>
+    <div style="display:flex;flex-direction:column;gap:12px;"><div class="insight"><h4 style="color:var(--green);">网关 37h+ 无中断</h4><div class="desc">微信/飞书持续在线。零 crash、零重启。PID 21560 自 Jun 26 04:10 UTC 启动后稳定运行至今。</div></div>
+<div class="insight"><h4 style="color:var(--green);">系统健康</h4><div class="desc">GPU 1% 负载 · VRAM 20% · 52°C。内存 42%。C 盘 54%。各项指标正常，无异常系统事件。</div></div>
+<div class="insight"><h4 style="color:var(--yellow);">提醒</h4><div class="desc">MEMORY 70.6% 接近上限。Cron 仅 1 个任务（日报），运维类任务全部待恢复。Ntfy 已正式停用并清理配置。</div></div></div>
   </div>
 
-  <!-- ═══════════ STORAGE ═══════════ -->
-  <div class="section-header">
-    <span class="section-num">07</span>
-    <span class="section-title">存储 & 活动</span>
+  <!-- ═══════════ 07 STORAGE ═══════════ -->
+  <div class="section-header reveal">
+    <div class="section-num">07</div>
+    <div class="section-title">存储 & 活动</div>
   </div>
-  <div class="card-grid">
+  <div class="grid-2 reveal">
     <div class="card">
       <div class="card-label">存储</div>
-      <div class="mini-stats"><div class="mini-stat"><div class="val">171 MB</div><div class="lbl">缓存</div></div>
-<div class="mini-stat"><div class="val">255 MB</div><div class="lbl">state.db</div></div>
-<div class="mini-stat"><div class="val">2.7 KB</div><div class="lbl">USER</div></div>
-<div class="mini-stat"><div class="val">10.7 KB</div><div class="lbl">MEMORY</div></div></div>
+      <div class="grid-4" style="gap:12px;"><div class="stat-card"><div class="val">171M</div><div class="lbl">缓存</div></div>
+<div class="stat-card"><div class="val">255M</div><div class="lbl">state.db</div></div>
+<div class="stat-card"><div class="val">2.7K</div><div class="lbl">USER</div></div>
+<div class="stat-card"><div class="val">10.7K</div><div class="lbl">MEMORY</div></div></div>
     </div>
     <div class="card">
       <div class="card-label">活动模式</div>
-      <div style="font-size:13px;line-height:1.8;color:var(--text-white-dim);">
-活跃天数：<strong style="color:#fff;">1</strong> 天<br>
-平均会话：<strong style="color:#fff;">3h 40m</strong><br>
-均值消息：<strong style="color:#fff;">148.0</strong> / 会话<br><br>
-<span style="color:var(--green);">峰值时段</span><br>
+      <div style="font-size:13px;line-height:1.9;color:var(--text-dim);">
+活跃天数：<strong style="color:var(--text-bright);">1</strong> 天<br>
+平均会话：<strong style="color:var(--text-bright);">3h 40m</strong><br>
+均值消息：<strong style="color:var(--text-bright);">148.0</strong> / 会话<br><br>
+<span style="color:var(--purple-bright);font-weight:600;font-size:11px;">峰值时段 UTC+8</span><br>
 02:00 — 2 会话<br>
 05:00 — 1 · 06:00 — 1
 </div>
@@ -444,16 +529,47 @@
   </div>
 
   <!-- ═══════════ FOOTER ═══════════ -->
-  <div class="footer">
+  <div class="footer reveal">
     <div>
       <div class="brand">沙河麻衣</div>
-      <div style="margin-top:4px;">2026-06-27 · Hermes 系统日报</div>
+      <div style="margin-top:4px;">2026-06-27 · 系统日报 · 自动生成</div>
     </div>
-    <div style="text-align:right;">
+    <div style="text-align:right;line-height:1.8;">
       burkereiii.github.io<br>hermes-daily-report
     </div>
   </div>
 
 </div>
+
+<script>
+// Particles
+(function(){
+  const c = document.getElementById('particles');
+  for(let i=0;i<50;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100+'%';
+    p.style.top = 20 + Math.random()*80+'%';
+    p.style.animationDelay = Math.random()*6+'s';
+    p.style.animationDuration = 5+Math.random()*7+'s';
+    c.appendChild(p);
+  }
+})();
+
+// Scroll Reveal
+(function(){
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  // Trigger above-fold immediately
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if(rect.top < window.innerHeight) el.classList.add('visible');
+    });
+  }, 150);
+})();
+</script>
 </body>
 </html>
