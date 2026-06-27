@@ -432,7 +432,7 @@
       <div class="hero-stats">
         <div><div class="hero-stat-val">9</div><div class="hero-stat-lbl">会话</div></div>
         <div><div class="hero-stat-val">129.45M</div><div class="hero-stat-lbl">Token（含缓存）</div></div>
-        <div><div class="hero-stat-val">待快照确认</div><div class="hero-stat-lbl">费用</div></div>
+        <div><div class="hero-stat-val">¥27.07</div><div class="hero-stat-lbl">费用</div></div>
       </div>
     </div>
   </div>
@@ -445,7 +445,7 @@
       <div class="stat"><div class="stat-value">1,789</div><div class="stat-label">消息数</div></div>
       <div class="stat"><div class="stat-value">1.53M</div><div class="stat-label">日 Token (I+O)</div></div>
       <div class="stat"><div class="stat-value">129.45M</div><div class="stat-label">含缓存总量</div></div>
-      <div class="stat"><div class="stat-value">待快照确认</div><div class="stat-label">今日费用</div></div>
+      <div class="stat"><div class="stat-value">¥27.07</div><div class="stat-label">今日费用</div></div>
       <div class="stat"><div class="stat-value">~26h 24m</div><div class="stat-label">活跃时间</div></div>
       <div class="stat"><div class="stat-value">873</div><div class="stat-label">工具调用</div></div>
       <div class="stat"><div class="stat-value">198.8</div><div class="stat-label">均值/会话</div></div>
@@ -490,8 +490,9 @@
       <div style="margin-top:14px;padding:16px;background:var(--surface3);border-radius:var(--radius-sm);font-size:13px;">
         📐 <strong>DeepSeek v4-pro · Cache Hit/Miss 分别计费</strong><br>
 <span style="color:var(--text-dim)">Input $0.435/M (miss) / $0.004/M (hit) · Output $0.87/M</span><br>
-<span style="color:var(--purple-bright);font-weight:700;font-size:16px;">实际费用：待余额快照确认</span>
-<span style="color:var(--text-dim);font-size:11px;">（首次运行，尚未建立余额历史。明日 0 点快照后自动获取差值）</span>
+<span style="color:var(--purple-bright);font-weight:700;font-size:16px;">实际费用 ¥27.07（两日合计）</span>
+<span style="color:var(--text-dim);font-size:11px;">（余额 ¥36.90 → ¥9.83，跨度 6/26-6/27。6/26 快照缺失，无法拆分单日）</span>
+<div class="alert alert-red" style="margin-top:12px;">⚠️ <strong>余额严重不足：¥9.83</strong> — 低于 ¥20 预警线。按当前消耗速度，余额仅能支撑不到 1 天。请尽快充值。</div>
       </div>
       
     </div>
@@ -561,7 +562,7 @@
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:18px;">
       <div style="display:flex;flex-direction:column;gap:14px;"><div class="insight-card purple"><h4>📅 周六 · 迁移后首个活跃日</h4><div class="desc">9 会话 · ~26h 活跃 · 1,789 消息。桌面终端 8 个会话贡献 129.09M tokens（99.7%），Cron 1 个会话 365K tokens。最长单会话 8h 7m，427K tokens — 系今日核心工作会话。</div></div>
 <div class="insight-card pink"><h4>🔄 人格合并后的第一份报告</h4><div class="desc">三人格（真由美/里美/佐知子）已合并为单一人格麻衣。所有旧 cron 暂停。本报告为麻衣接管系统后的首份日报。Obsidian 结构重组完成，技能体系重建中。</div></div>
-<div class="insight-card orange"><h4>💰 DeepSeek 费用待确认</h4><div class="desc">余额快照 cron 尚未恢复，今日费用待快照重建后确认。129.45M 含缓存总量中，缓存命中部分费用极低（$0.004/M vs $0.435/M）。预计实际日费在 ¥5-15 区间。</div></div></div>
+<div class="insight-card orange"><h4>💰 DeepSeek 余额 ¥9.83 · 紧急</h4><div class="desc">余额从 6/25 的 ¥36.90 降至今日 ¥9.83，两日消耗 ¥27.07。6/26 快照缺失无法拆分单日。当前余额严重不足（<¥20），需尽快充值。129.45M 含缓存总量。</div></div></div>
       <div style="display:flex;flex-direction:column;gap:14px;"><div class="insight-card green"><h4>🌐 全网关稳定运行</h4><div class="desc">微信/飞书/Ntfy 三平台持续在线。零中断、零 crash、零重启。PID 21560，自 Jun 26 04:10 UTC 启动后持续运行超过 26 小时。</div></div>
 <div class="insight-card cyan"><h4>🖥 GPU 低负载 · 系统健康</h4><div class="desc">RTX 3060 @1% · 1.25GB/6GB VRAM (20.3%) · 52°C。内存 16.7GB/39.7GB (42.0%)。C: 54.4% 已用。整体系统资源充裕。</div></div>
 <div class="insight-card purple"><h4>⚠️ MEMORY 使用率 70.6%</h4><div class="desc">MEMORY.md 4,660/6,600 字符。已接近上限。建议在合并完成后执行一次记忆蒸馏，释放过时和重复条目。USER.md 28.5% 健康。</div></div></div>
