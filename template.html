@@ -78,18 +78,27 @@
   /* === 1. OVERVIEW CARDS — compact with gradient decoration === */
   .kpi-card {
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 16px 14px; position: relative; overflow: hidden; transition: all 0.3s;
+    padding: 14px 12px; position: relative; overflow: hidden; transition: all 0.3s;
+    display: flex; flex-direction: column; justify-content: center; min-height: 90px;
   }
   .kpi-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
   .kpi-card::after {
-    content: ''; position: absolute; top: 0; right: 0; width: 60px; height: 60px;
-    background: radial-gradient(circle at top right, rgba(124,58,237,0.08), transparent 70%);
-    border-radius: 0 0 0 60px;
+    content: ''; position: absolute; top: -10px; right: -10px; width: 70px; height: 70px;
+    background: radial-gradient(circle at center, rgba(124,58,237,0.1), transparent 70%);
+    border-radius: 50%;
   }
-  .kpi-icon { font-size: 1.1rem; margin-bottom: 4px; }
-  .kpi-value { font-size: 1.6rem; font-weight: 750; color: var(--text-bright); line-height: 1.15; }
-  .kpi-label { font-size: 0.72rem; color: var(--text-dim); }
-  .kpi-sub { font-size: 0.66rem; color: var(--text-dim); opacity: 0.7; margin-top: 1px; }
+  .kpi-card::before {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .kpi-card:hover::before { opacity: 1; }
+  .kpi-icon { font-size: 1rem; margin-bottom: 2px; position: relative; z-index: 1; }
+  .kpi-value { font-size: 1.5rem; font-weight: 750; color: var(--text-bright); line-height: 1.1; position: relative; z-index: 1; }
+  .kpi-label { font-size: 0.7rem; color: var(--text-dim); position: relative; z-index: 1; }
+  .kpi-sub { font-size: 0.64rem; color: var(--text-dim); opacity: 0.7; margin-top: 1px; position: relative; z-index: 1; }
+  .kpi-change { font-size: 0.62rem; margin-top: 2px; position: relative; z-index: 1; }
+  .kpi-change.up { color: var(--green); } .kpi-change.down { color: var(--red); }
 
   /* === 2. CHANNEL STRIPS — compact horizontal bars === */
   .channel-strip {
