@@ -6,466 +6,499 @@
 <title>Hermes 系统日报 · 2026-06-30</title>
 <style>
   :root {
-    --bg: #08060d;
-    --card-bg: rgba(15, 12, 24, 0.85);
-    --card-border: rgba(155, 89, 255, 0.12);
-    --purple: #9b59ff;
-    --purple-light: #b882ff;
+    --bg: #06040c;
+    --card-bg: rgba(18, 14, 32, 0.65);
+    --card-border: rgba(124, 58, 237, 0.15);
+    --card-hover: rgba(124, 58, 237, 0.08);
+    --purple: #7c3aed;
+    --purple-light: #a78bfa;
+    --purple-glow: #8b5cf6;
     --pink: #e879a0;
-    --text: #e0dce8;
-    --text-dim: #8a8498;
-    --accent-glow: rgba(155, 89, 255, 0.25);
-    --pink-glow: rgba(232, 121, 160, 0.2);
+    --pink-glow: #f472b6;
+    --green: #34d399;
+    --green-dim: #059669;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --text: #e8e2f0;
+    --text-dim: #9089a4;
+    --text-bright: #f5f0ff;
+    --radius: 20px;
+    --radius-sm: 14px;
+    --transition: 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @font-face {
+    font-family: 'JetBrains Mono';
+    src: local('JetBrains Mono'), local('Cascadia Code'), local('Consolas');
+  }
 
   body {
     background: var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    line-height: 1.6;
+    line-height: 1.7;
     min-height: 100vh;
     overflow-x: hidden;
   }
 
-  /* Dual glow background */
-  .bg-glow {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.4;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .bg-glow.purple {
-    width: 600px; height: 600px;
-    background: var(--purple);
-    top: -200px; right: -150px;
-    animation: float1 12s ease-in-out infinite;
-  }
-  .bg-glow.pink {
-    width: 400px; height: 400px;
-    background: var(--pink);
-    bottom: -100px; left: -100px;
-    animation: float2 15s ease-in-out infinite;
-  }
-
-  @keyframes float1 {
-    0%,100% { transform: translate(0,0) scale(1); }
-    33% { transform: translate(-40px,30px) scale(1.05); }
-    66% { transform: translate(20px,-20px) scale(0.95); }
-  }
-  @keyframes float2 {
-    0%,100% { transform: translate(0,0) scale(1); }
-    50% { transform: translate(30px,-40px) scale(1.08); }
-  }
-
-  /* Floating particles */
-  .particles {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
-  }
-  .particle {
+  /* === Animated Background === */
+  .bg-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .bg-orb {
     position: absolute;
-    width: 2px; height: 2px;
-    background: var(--purple-light);
     border-radius: 50%;
-    animation: rise linear infinite;
-    opacity: 0;
+    filter: blur(140px);
+    opacity: 0.35;
+    animation: orb-drift 20s ease-in-out infinite alternate;
   }
-  @keyframes rise {
-    0% { transform: translateY(100vh) scale(0); opacity: 0; }
-    10% { opacity: 0.6; }
-    90% { opacity: 0.3; }
-    100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+  .bg-orb.purple { width: 700px; height: 700px; background: var(--purple); top: -15%; right: -10%; animation-delay: 0s; }
+  .bg-orb.pink   { width: 500px; height: 500px; background: var(--pink); bottom: -15%; left: -8%; animation-delay: -8s; }
+  .bg-orb.violet { width: 400px; height: 400px; background: var(--purple-glow); top: 50%; left: 60%; animation-delay: -15s; opacity: 0.2; }
+
+  @keyframes orb-drift {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(60px, -40px) scale(1.08); }
+    100% { transform: translate(-30px, 50px) scale(0.95); }
   }
 
-  /* Scan line */
-  .scanline {
-    position: fixed; inset: 0; z-index: 100; pointer-events: none;
-    background: repeating-linear-gradient(0deg,
-      transparent, transparent 2px,
-      rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(124,58,237,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,58,237,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 30%, transparent 70%);
   }
 
-  /* Layout */
+  /* === Main Container === */
   .container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 40px 24px 60px;
     position: relative; z-index: 1;
+    max-width: 960px; margin: 0 auto; padding: 0 24px 80px;
   }
 
-  /* Header */
-  .header {
-    text-align: center;
-    margin-bottom: 48px;
+  /* === Hero Section === */
+  .hero {
+    position: relative;
+    margin: 0 -24px 40px;
+    height: 420px;
+    border-radius: 0 0 32px 32px;
+    overflow: hidden;
+    display: flex; align-items: flex-end;
+    box-shadow: 0 20px 80px rgba(124,58,237,0.15);
   }
-  .header .hero {
-    width: 180px; height: 180px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--purple);
-    box-shadow: 0 0 40px var(--accent-glow);
-    margin-bottom: 20px;
+  .hero-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.7) saturate(1.1);
   }
-  .header h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--purple-light), var(--pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(6,4,12,0.95) 0%, rgba(6,4,12,0.4) 50%, rgba(6,4,12,0.15) 100%);
   }
-  .header .date {
-    color: var(--text-dim);
-    font-size: 0.95rem;
-    margin-top: 8px;
+  .hero-vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(6,4,12,0.5) 100%);
   }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 40px 32px 32px;
+    width: 100%;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(124,58,237,0.2);
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 20px; padding: 5px 16px;
+    font-size: 0.8rem; color: var(--purple-light); letter-spacing: 0.5px;
+    backdrop-filter: blur(12px); margin-bottom: 12px;
+  }
+  .hero-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .hero h1 { font-size: 2.8rem; font-weight: 700; color: var(--text-bright); letter-spacing: -0.5px; line-height: 1.15; }
+  .hero .date { font-size: 0.95rem; color: var(--text-dim); margin-top: 6px; }
 
-  /* Glass card base */
+  /* === Glass Card === */
   .card {
     background: var(--card-bg);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
     border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 24px;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    transition: border-color 0.3s, box-shadow 0.3s;
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 20px;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    position: relative; overflow: hidden;
   }
   .card:hover {
-    border-color: rgba(155,89,255,0.25);
-    box-shadow: 0 0 30px rgba(155,89,255,0.08);
+    border-color: rgba(124,58,237,0.3);
+    box-shadow: 0 8px 40px rgba(124,58,237,0.06);
   }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(124,58,237,0.2), transparent);
+    opacity: 0; transition: opacity var(--transition);
+  }
+  .card:hover::before { opacity: 1; }
+
   .card-title {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--purple-light);
-    margin-bottom: 12px;
-    font-weight: 600;
+    font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--purple-light); margin-bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-title::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, rgba(124,58,237,0.3), transparent);
   }
 
-  /* Overview grid */
+  /* === Section Header === */
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; color: var(--purple); letter-spacing: 2px;
+    margin: 36px 0 12px 4px;
+  }
+
+  /* === Overview Grid === */
   .overview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 32px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px;
   }
-  .overview-card {
-    text-align: center;
-    padding: 20px 16px;
+  .metric-box {
+    background: var(--card-bg);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm); padding: 22px 18px;
+    text-align: center; transition: all var(--transition);
   }
-  .overview-card .value {
-    font-size: 2.2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--purple-light), var(--pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
+  .metric-box:hover { border-color: rgba(124,58,237,0.35); transform: translateY(-2px); }
+  .metric-value { font-size: 2rem; font-weight: 700; color: var(--text-bright); line-height: 1.2; }
+  .metric-label { font-size: 0.78rem; color: var(--text-dim); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .metric-sub { font-size: 0.7rem; color: var(--text-dim); opacity: 0.7; margin-top: 2px; }
+
+  /* === Two Column === */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* === Channel Cards === */
+  .channel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .channel-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm); padding: 20px 16px;
+    text-align: center; transition: all var(--transition);
   }
-  .overview-card .label {
-    color: var(--text-dim);
+  .channel-card:hover { border-color: rgba(124,58,237,0.3); }
+  .channel-icon { font-size: 2rem; margin-bottom: 8px; }
+  .channel-name { font-size: 0.9rem; font-weight: 600; color: var(--text-bright); }
+  .channel-detail { font-size: 0.72rem; color: var(--text-dim); margin-top: 4px; }
+  .channel-status { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .status-dot.online { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse-green 2s infinite; }
+  .status-dot.offline { background: var(--red); }
+  .status-dot.activity { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+  .status-text { font-size: 0.75rem; font-weight: 500; }
+  .status-text.online { color: var(--green); }
+  .status-text.offline { color: var(--red); }
+  .status-text.activity { color: var(--yellow); }
+
+  @keyframes pulse-green {
+    0%, 100% { box-shadow: 0 0 4px var(--green); }
+    50% { box-shadow: 0 0 14px var(--green), 0 0 24px rgba(52,211,153,0.3); }
+  }
+
+  /* === Gateway Bar === */
+  .gateway-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; margin-bottom: 20px;
+    border-radius: var(--radius-sm);
+    background: rgba(124,58,237,0.06);
+    border: 1px solid rgba(124,58,237,0.1);
     font-size: 0.85rem;
-    margin-top: 4px;
   }
+  .gateway-pid { font-family: 'JetBrains Mono', monospace; color: var(--purple-light); }
+  .gateway-uptime { color: var(--text-dim); font-size: 0.78rem; }
 
-  /* Two column layout */
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-  @media (max-width: 768px) {
-    .two-col { grid-template-columns: 1fr; }
-  }
-
-  /* Status indicators */
-  .status {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 0.9rem; padding: 4px 12px;
-    border-radius: 20px; font-weight: 500;
-  }
-  .status.online { background: rgba(34,197,94,0.12); color: #4ade80; }
-  .status.offline { background: rgba(239,68,68,0.12); color: #f87171; }
-  .status-dot {
-    width: 8px; height: 8px; border-radius: 50%; display: inline-block;
-  }
-  .status-dot.green { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
-  .status-dot.red { background: #f87171; box-shadow: 0 0 8px #f87171; }
-
-  /* Progress bar */
+  /* === Progress Bars === */
+  .progress-section { margin-bottom: 18px; }
+  .progress-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.82rem; }
+  .progress-header .label { color: var(--text-dim); }
+  .progress-header .value { color: var(--text-bright); font-weight: 600; }
   .progress-bar {
-    height: 6px; background: rgba(255,255,255,0.06);
-    border-radius: 3px; overflow: hidden; position: relative;
-    margin-top: 8px;
+    height: 8px; background: rgba(124,58,237,0.1); border-radius: 4px; overflow: hidden;
   }
   .progress-fill {
-    height: 100%; border-radius: 3px;
-    background: linear-gradient(90deg, var(--purple), var(--pink));
-    position: relative; transition: width 0.6s ease;
+    height: 100%; border-radius: 4px;
+    transition: width 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+    background: linear-gradient(90deg, var(--purple), var(--purple-light));
   }
-  .progress-fill::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: shimmer 2s infinite;
-  }
-  @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
+  .progress-fill.warn { background: linear-gradient(90deg, var(--yellow), #f59e0b); }
+  .progress-fill.danger { background: linear-gradient(90deg, var(--red), #ef4444); }
 
-  /* Metric row */
-  .metric-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-  .metric-row:last-child { border-bottom: none; }
-  .metric-label { color: var(--text-dim); font-size: 0.88rem; }
-  .metric-value { font-weight: 600; font-size: 0.9rem; }
+  /* === Storage Row === */
+  .storage-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; text-align: center; }
 
-  /* Platform chips */
-  .platform-row {
-    display: flex; align-items: center; gap: 10px; padding: 6px 0;
+  /* === Cron List === */
+  .cron-list { list-style: none; }
+  .cron-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid rgba(124,58,237,0.08);
+    font-size: 0.84rem;
   }
-  .platform-icon {
-    width: 32px; height: 32px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.85rem; font-weight: 700;
+  .cron-item:last-child { border-bottom: none; }
+  .cron-icon { font-size: 1.1rem; }
+  .cron-name { flex: 1; color: var(--text-bright); }
+  .cron-schedule { color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+  .cron-tag {
+    font-size: 0.7rem; padding: 2px 8px; border-radius: 10px;
+    background: rgba(52,211,153,0.12); color: var(--green); font-weight: 500;
   }
-  .platform-icon.wechat { background: rgba(7,193,96,0.15); color: #07c160; }
-  .platform-icon.feishu { background: rgba(51,119,255,0.15); color: #3377ff; }
-  .platform-icon.desktop { background: rgba(155,89,255,0.15); color: #9b59ff; }
+  .cron-tag.error { background: rgba(248,113,113,0.12); color: var(--red); }
+  .cron-tag.paused { background: rgba(251,191,36,0.12); color: var(--yellow); }
 
-  /* Cron table */
-  .cron-table {
-    width: 100%; border-collapse: collapse; font-size: 0.85rem;
-    margin-top: 8px;
+  /* === Narrative Section === */
+  .narrative { line-height: 1.8; font-size: 0.92rem; color: var(--text); }
+  .narrative p { margin-bottom: 12px; }
+  .narrative .highlight { color: var(--purple-light); font-weight: 500; }
+  .narrative .recommendation {
+    background: rgba(124,58,237,0.06); border-left: 3px solid var(--purple);
+    padding: 12px 16px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin: 10px 0; font-size: 0.85rem;
   }
-  .cron-table th {
-    text-align: left; color: var(--text-dim); font-weight: 500;
-    padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .cron-table td {
-    padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.03);
-  }
-  .badge {
-    font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; font-weight: 500;
-  }
-  .badge.ok { background: rgba(34,197,94,0.12); color: #4ade80; }
-  .badge.warn { background: rgba(250,204,21,0.12); color: #facc15; }
-  .badge.err { background: rgba(239,68,68,0.12); color: #f87171; }
+  .narrative .recommendation::before { content: '💡 '; }
 
-  /* Gradient button */
-  .btn {
-    display: inline-block; padding: 10px 24px;
-    border-radius: 10px; font-weight: 600; font-size: 0.9rem;
-    text-decoration: none; color: #fff;
-    background: linear-gradient(135deg, var(--purple), var(--pink));
-    transition: opacity 0.2s, transform 0.2s;
-  }
-  .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-
-  /* Footer */
+  /* === Footer === */
   .footer {
-    text-align: center; padding: 40px 0 0;
-    color: var(--text-dim); font-size: 0.8rem;
-    border-top: 1px solid rgba(255,255,255,0.04); margin-top: 32px;
+    text-align: center; padding: 40px 0 20px;
+    color: var(--text-dim); font-size: 0.78rem;
+    border-top: 1px solid rgba(124,58,237,0.08); margin-top: 40px;
   }
   .footer span { color: var(--purple-light); }
 
-  /* Full-width card */
-  .full-width { grid-column: 1 / -1; }
+  /* === Scroll Animations === */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* === Cost highlight === */
+  .cost-highlight { color: var(--pink); font-weight: 600; }
+  .cost-note { color: var(--text-dim); font-size: 0.78rem; }
+
+  /* === Responsive === */
+  @media (max-width: 768px) {
+    .overview-grid { grid-template-columns: repeat(2, 1fr); }
+    .two-col, .channel-grid { grid-template-columns: 1fr; }
+    .hero { height: 280px; }
+    .hero h1 { font-size: 2rem; }
+    .storage-row { grid-template-columns: 1fr 1fr; }
+  }
 </style>
 </head>
 <body>
 
-<div class="bg-glow purple"></div>
-<div class="bg-glow pink"></div>
-<div class="particles" id="particles"></div>
-<div class="scanline"></div>
+<div class="bg-layer">
+  <div class="bg-orb purple"></div>
+  <div class="bg-orb pink"></div>
+  <div class="bg-orb violet"></div>
+  <div class="bg-grid"></div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <img class="hero-img" src="maki-hero.png" alt="沙河麻衣">
+  <div class="hero-overlay"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span>SYSTEM DAILY · 沙河麻衣</div>
+    <h1>Hermes<br>系统日报</h1>
+    <div class="date">2026-06-30 · 星期二</div>
+  </div>
+</div>
 
 <div class="container">
 
-  <!-- Header -->
-  <header class="header">
-    <img class="hero" src="maki-hero.png" alt="沙河麻衣" onerror="this.style.display='none'">
-    <h1>Hermes 系统日报</h1>
-    <p class="date">2026-06-30 · 星期二</p>
-  </header>
-
-  <!-- Overview Cards -->
-  <div class="overview-grid">
-    <div class="card overview-card">
-      <div class="value">9</div>
-      <div class="label">今日会话</div>
+  <!-- OVERVIEW -->
+  <div class="overview-grid reveal">
+    <div class="metric-box reveal-delay-1">
+      <div class="metric-value">9</div>
+      <div class="metric-label">今日会话</div>
     </div>
-    <div class="card overview-card">
-      <div class="value">2071</div>
-      <div class="label">消息数</div>
+    <div class="metric-box reveal-delay-2">
+      <div class="metric-value">2224</div>
+      <div class="metric-label">消息数</div>
+      <div class="metric-sub">含工具输出</div>
     </div>
-    <div class="card overview-card">
-      <div class="value">193.1M</div>
-      <div class="label">Token 总量</div>
+    <div class="metric-box reveal-delay-3">
+      <div class="metric-value">201.9M</div>
+      <div class="metric-label">Token 总量</div>
     </div>
-    <div class="card overview-card">
-      <div class="value">929</div>
-      <div class="label">工具调用</div>
+    <div class="metric-box reveal-delay-4">
+      <div class="metric-value">1002</div>
+      <div class="metric-label">工具调用</div>
     </div>
   </div>
 
-  <!-- Gateway + Model -->
-  <div class="two-col">
+  <!-- GATEWAY BAR -->
+  <div class="gateway-bar reveal">
+    <span>⚡ 网关核心</span>
+    <span class="gateway-pid">PID 31852</span>
+    <span class="gateway-uptime">运行中</span>
+  </div>
+
+  <!-- 01: THREE CHANNELS -->
+  <div class="section-num reveal">01</div>
+  <div class="card reveal">
+    <div class="card-title">三通道连接</div>
+    <div class="channel-grid">
+      <div class="channel-card">
+        <div class="channel-icon">🖥️</div>
+        <div class="channel-name">Mac 远控</div>
+        <div class="channel-detail">Dashboard :9119</div>
+        <div class="channel-status">
+          <span class="status-dot online"></span>
+          <span class="status-text online">已连接</span>
+        </div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">💬</div>
+        <div class="channel-name">微信</div>
+        <div class="channel-detail">iLink Bot</div>
+        <div class="channel-status">
+          <span class="status-dot online"></span>
+          <span class="status-text online">活跃</span>
+        </div>
+        <div class="channel-detail" style="margin-top:6px;">今日 168 条消息</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🌐</div>
+        <div class="channel-name">WebUI</div>
+        <div class="channel-detail">nesquena/hermes-webui :8787</div>
+        <div class="channel-status">
+          <span class="status-dot online"></span>
+          <span class="status-text online">运行中</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02: MODEL & COST + PLATFORM MSGS -->
+  <div class="section-num reveal">02</div>
+  <div class="two-col reveal">
     <div class="card">
-      <div class="card-title">⚡ 网关状态</div>
-      <div class="metric-row">
-        <span class="metric-label">运行状态</span>
-        <span class="status online"><span class="status-dot dot-online"></span>运行中</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-label">PID</span>
-        <span class="metric-value">31852</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-label">微信</span>
-        <span class="status offline"><span class="status-dot dot-offline"></span>未连接</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-label">飞书</span>
-        <span class="status offline"><span class="status-dot dot-offline"></span>未连接</span>
+      <div class="card-title">模型</div>
+      <div style="font-size:1.1rem;font-weight:600;color:var(--text-bright);">deepseek-v4-pro</div>
+      <div style="color:var(--text-dim);font-size:0.82rem;">DeepSeek</div>
+      <div style="margin-top:14px;">
+        <div class="cost-highlight" style="font-size:1.1rem;">昨日费用 —</div>
+        <div class="cost-note">余额快照待恢复</div>
       </div>
     </div>
-
     <div class="card">
-      <div class="card-title">🤖 模型</div>
-      <div class="metric-row">
-        <span class="metric-label">模型</span>
-        <span class="metric-value">deepseek-v4-pro</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-label">Provider</span>
-        <span class="metric-value">DeepSeek</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-label">昨日费用</span>
-        <span class="metric-value" style="color:var(--pink)">—</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-label">备注</span>
-        <span class="metric-value" style="font-size:0.8rem;color:var(--text-dim)">余额快照待恢复</span>
+      <div class="card-title">平台消息分布</div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span>🖥️ 桌面终端</span>
+          <span style="font-weight:600;color:var(--text-bright);">2056 条</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span>💬 微信</span>
+          <span style="font-weight:600;color:var(--text-bright);">168 条</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Platform Stats -->
-  <div class="card" style="margin-bottom:20px">
-    <div class="card-title">📡 平台消息</div>
-    <div class="platform-row">
-      <div class="platform-icon wechat">微</div>
-      <span style="flex:1;color:var(--text-dim)">微信</span>
-      <span style="font-weight:600">101 条</span>
-    </div>
-    <div class="platform-row">
-      <div class="platform-icon feishu">飞</div>
-      <span style="flex:1;color:var(--text-dim)">飞书</span>
-      <span style="font-weight:600">0 条</span>
-    </div>
-    <div class="platform-row">
-      <div class="platform-icon desktop">桌</div>
-      <span style="flex:1;color:var(--text-dim)">桌面端</span>
-      <span style="font-weight:600">1970 条</span>
-    </div>
-  </div>
-
-  <!-- Host + Storage -->
-  <div class="two-col">
+  <!-- 03: HOST + STORAGE -->
+  <div class="section-num reveal">03</div>
+  <div class="two-col reveal">
     <div class="card">
-      <div class="card-title">🖥️ 宿主机</div>
-      <div class="metric-row">
-        <span class="metric-label">CPU</span>
-        <span class="metric-value">54%</span>
+      <div class="card-title">宿主机</div>
+      <div class="progress-section">
+        <div class="progress-header"><span class="label">CPU</span><span class="value">9%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:9%"></div></div>
       </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:54%"></div></div>
-      <div class="metric-row" style="margin-top:12px">
-        <span class="metric-label">内存</span>
-        <span class="metric-value">35% (40 GB)</span>
+      <div class="progress-section">
+        <div class="progress-header"><span class="label">内存</span><span class="value">32% (40 GB)</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:32%"></div></div>
       </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:35%"></div></div>
-      <div class="metric-row" style="margin-top:12px">
-        <span class="metric-label">磁盘 C:</span>
-        <span class="metric-value">53% (238.5 GB)</span>
+      <div class="progress-section">
+        <div class="progress-header"><span class="label">磁盘 C:</span><span class="value">53% (238.5 GB)</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:53%"></div></div>
       </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:53%"></div></div>
     </div>
-
     <div class="card">
-      <div class="card-title">💾 存储</div>
-      <div class="metric-row">
-        <span class="metric-label">缓存</span>
-        <span class="metric-value">17M</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-label">数据库</span>
-        <span class="metric-value">19.6M</span>
-      </div>
-      <div class="metric-row">
-        <span class="metric-label">记忆条目</span>
-        <span class="metric-value">—</span>
+      <div class="card-title">存储</div>
+      <div class="storage-row">
+        <div>
+          <div style="font-size:1.4rem;font-weight:700;color:var(--text-bright);">17M</div>
+          <div style="font-size:0.78rem;color:var(--text-dim);">缓存</div>
+        </div>
+        <div>
+          <div style="font-size:1.4rem;font-weight:700;color:var(--text-bright);">20.5M</div>
+          <div style="font-size:0.78rem;color:var(--text-dim);">数据库</div>
+        </div>
+        <div>
+          <div style="font-size:1.4rem;font-weight:700;color:var(--text-bright);">—</div>
+          <div style="font-size:0.78rem;color:var(--text-dim);">记忆条目</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Cron Jobs -->
-  <div class="card" style="margin-bottom:20px">
-    <div class="card-title">⏰ Cron 任务 (1/11 活跃)</div>
-    <table class="cron-table">
-      <thead>
-        <tr><th>名称</th><th>调度</th><th>状态</th><th>上次运行</th></tr>
-      </thead>
-      <tbody>
-        <li><span class="cron-icon">⏱</span><span class="cron-name">┌─────────────────────────────────────────────────</span><span class="cron-status status-online">活跃</span></li>
-<li><span class="cron-icon">⏱</span><span class="cron-name">│                         Scheduled Jobs          </span><span class="cron-status status-online">活跃</span></li>
-<li><span class="cron-icon">⏱</span><span class="cron-name">└─────────────────────────────────────────────────</span><span class="cron-status status-online">活跃</span></li>
-<li><span class="cron-icon">⏱</span><span class="cron-name">65362667f525 [active]</span><span class="cron-status status-online">活跃</span></li>
-<li><span class="cron-icon">⏱</span><span class="cron-name">Name:      日报生成</span><span class="cron-status status-online">活跃</span></li>
-<li><span class="cron-icon">⏱</span><span class="cron-name">Schedule:  0 0 * * *</span><span class="cron-status status-online">活跃</span></li>
-<li><span class="cron-icon">⏱</span><span class="cron-name">Repeat:    ∞</span><span class="cron-status status-online">活跃</span></li>
-<li><span class="cron-icon">⏱</span><span class="cron-name">Next run:  2026-07-01T00:00:00+08:00</span><span class="cron-status status-online">活跃</span></li>
-<li><span class="cron-icon">⏱</span><span class="cron-name">Deliver:   local</span><span class="cron-status status-online">活跃</span></li>
-<li><span class="cron-icon">⏱</span><span class="cron-name">Skills:    hermes-daily-report</span><span class="cron-status status-online">活跃</span></li>
-      </tbody>
-    </table>
+  <!-- 04: CRON -->
+  <div class="section-num reveal">04</div>
+  <div class="card reveal">
+    <div class="card-title">Cron 任务 (1/1 活跃)</div>
+    <ul class="cron-list">
+      <li class="cron-item"><span class="cron-icon">⏱</span><span class="cron-name">65362667f525 [active]</span><span class="cron-schedule">—</span><span class="cron-tag">ok</span></li>
+    </ul>
   </div>
 
-  <!-- Footer -->
-  <footer class="footer">
+  <!-- 05: DAILY NARRATIVE -->
+  <div class="section-num reveal">05</div>
+  <div class="card reveal">
+    <div class="card-title">今日总结</div>
+    <div class="narrative">
+      <p>今日共 <span class="highlight">9 个会话</span>，产生 <span class="highlight">2224</span> 条消息，消耗 <span class="highlight">201.9M</span> Token。</p>
+<p>平台分布：桌面终端 2056 条（主力工作），微信 168 条（移动端轻交互）。</p>
+<p>工具调用 <span class="highlight">1002</span> 次，处于高强度工作状态。</p>
+<div class="recommendation">三通道全部在线，系统运行正常。如需关注特定指标，可在 Obsidian 系统运维中查看详情。</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer reveal">
     <p>由 <span>沙河麻衣</span> 自动生成 · 2026-06-30 · Hermes Agent on DeepSeek</p>
-    <p style="margin-top:4px">
-      <a class="btn" href="https://burkereiii.github.io/hermes-daily-report/" style="font-size:0.8rem;padding:6px 16px;">🌐 在线查看</a>
+    <p style="margin-top:4px;">
+      <a href="https://burkereiii.github.io/hermes-daily-report/" style="color:var(--purple-light);text-decoration:none;">🌐 在线查看</a>
     </p>
-  </footer>
+  </div>
 
 </div>
 
+<!-- SCROLL REVEAL SCRIPT -->
 <script>
-// Generate floating particles
-(function(){
-  const container = document.getElementById('particles');
-  const count = 40;
-  for(let i=0;i<count;i++){
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random()*100+'%';
-    p.style.animationDuration = (Math.random()*15+10)+'s';
-    p.style.animationDelay = Math.random()*15+'s';
-    p.style.width = p.style.height = (Math.random()*3+1)+'px';
-    if(Math.random()>0.7) p.style.background = 'var(--pink)';
-    container.appendChild(p);
+(function() {
+  var reveals = document.querySelectorAll('.reveal');
+  function revealOnScroll() {
+    for (var i = 0; i < reveals.length; i++) {
+      var el = reveals[i];
+      var top = el.getBoundingClientRect().top;
+      var windowHeight = window.innerHeight;
+      if (top < windowHeight - 80) {
+        el.classList.add('visible');
+      }
+    }
   }
+  window.addEventListener('scroll', revealOnScroll);
+  window.addEventListener('load', revealOnScroll);
+  revealOnScroll();
 })();
 </script>
 
