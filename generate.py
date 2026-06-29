@@ -305,12 +305,9 @@ def gen_week_bars(counts):
     mx=max(counts) if counts and max(counts)>0 else 1
     bars=[]
     for c in counts:
-        h=max(3,int(c/mx*68))
-        cls_s='week-bar-s' if c>0 else 'week-bar-s inactive'
-        cls_t='week-bar-t' if c>0 else 'week-bar-t inactive'
-        # Token bar: proportional to session count, scaled smaller
-        th=max(2,int(c/mx*40))
-        bars.append(f'<div class="week-col"><div class="{cls_s}" style="height:{h}px"></div><div class="{cls_t}" style="height:{th}px"></div></div>')
+        h=max(3,int(c/mx*64))
+        cls='week-bar-s' if c>0 else 'week-bar-s inactive'
+        bars.append(f'<div class="week-col"><div class="{cls}" style="height:{h}px"></div></div>')
     return "\n".join(bars)
 
 def gen_week_nums(counts):
