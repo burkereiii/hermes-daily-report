@@ -178,56 +178,63 @@ def collect_gateway():
     }
 
 def collect_cron():
-    data={"CRON_TOTAL":"0","CRON_ACTIVE":"0","CRON_LIST":"","CRON_FAILED_TEXT":""}
-    try:
-        out,_,_=run("hermes cron list --json 2>/dev/null",timeout=10)
-        if out:
-            cron_data=json.loads(out)
-            jobs=cron_data.get("jobs",cron_data) if isinstance(cron_data,dict) else []
-            if isinstance(jobs,list):
-                data["CRON_TOTAL"]=str(len(jobs))
-                active=[j for j in jobs if j.get("enabled") and j.get("state")!="paused"]
-                data["CRON_ACTIVE"]=str(len(active))
-                failed=[j for j in jobs if j.get("last_status")=="error"]
-                if failed: data["CRON_FAILED_TEXT"]=f" ⚠️ {len(failed)} 异常"
-                items=[]
-                for j in active[:10]:
-                    jid=j.get("job_id","?")[:12]
-                    name=j.get("name",jid)
-                    sched=j.get("schedule","?")
-                    status=j.get("last_status","ok")
-                    desc=CRON_DESC.get(name,"")
-                    if not desc: desc=j.get("prompt_preview","")[:60] if j.get("prompt_preview") else ""
-                    tag_cls="error" if status=="error" else "ok"
-                    tag_txt="异常" if status=="error" else "正常"
-                    items.append(
-                        f'<div class="cron-card">'
-                        f'<span class="cron-status-icon">{ "⚠️" if status=="error" else "✅" }</span>'
-                        f'<div class="cron-info">'
-                        f'<div class="cron-name">{name}</div>'
-                        f'<div class="cron-desc">{desc}</div>'
-                        f'</div>'
-                        f'<div class="cron-meta">'
-                        f'<div class="cron-sched">{sched}</div>'
-                        f'<span class="cron-status-tag {tag_cls}">{tag_txt}</span>'
-                        f'</div></div>'
-                    )
-                data["CRON_LIST"]="\n".join(items) if items else '<div class="cron-card"><div class="cron-info"><div class="cron-name">暂无活跃任务</div></div></div>'
-                return data
-    except: pass
-    # Fallback
-    out,_,_=run("hermes cron list",timeout=10)
-    ids=set()
-    for l in out.split("\n"):
-        m=re.match(r'^[a-f0-9]{10,}',l.strip())
-        if m: ids.add(m.group())
-    data["CRON_TOTAL"]=str(len(ids)) if ids else "1"
-    data["CRON_ACTIVE"]=data["CRON_TOTAL"]
-    items=[]
-    for l in out.split("\n"):
-        if re.match(r'^[a-f0-9]{10,}',l.strip()):
-            items.append(f'<div class="cron-card"><span class="cron-status-icon">⏱</span><div class="cron-info"><div class="cron-name">{l.strip()[:30]}</div></div><div class="cron-meta"><span class="cron-status-tag ok">正常</span></div></div>')
-    data["CRON_LIST"]="\n".join(items) if items else '<div class="cron-card"><div class="cron-info"><div class="cron-name">暂无活跃任务</div></div></div>'
+    """Parse hermes cron list CLI output for job names, schedules, and status."""
+    data = {"CRON_TOTAL": "0", "CRON_ACTIVE": "0", "CRON_LIST": "", "CRON_FAILED_TEXT": ""}
+    out, _, _ = run("hermes cron list", timeout=10)
+    
+    # Parse CLI format: each job starts with hex ID [state], then indented fields
+    jobs = []
+    current = None
+    for line in out.split("\n"):
+        s = line.strip()
+        if not s: continue
+        # New job entry: hex ID [state]
+        m = re.match(r'^([a-f0-9]{10,})\s*\[(\w+)\]', s)
+        if m:
+            if current: jobs.append(current)
+            current = {"id": m.group(1), "state": m.group(2), "name": "", "schedule": "?", "status": "ok"}
+            continue
+        if current is None: continue
+        # Indented fields
+        m = re.match(r'^Name:\s+(.+)', s)
+        if m: current["name"] = m.group(1).strip(); continue
+        m = re.match(r'^Schedule:\s+(.+)', s)
+        if m: current["schedule"] = m.group(1).strip(); continue
+        m = re.match(r'^Last run:.*?\s+(ok|error)\b', s)
+        if m: current["status"] = m.group(1); continue
+    
+    if current: jobs.append(current)
+    
+    data["CRON_TOTAL"] = str(len(jobs))
+    active = [j for j in jobs if j["state"] == "active"]
+    data["CRON_ACTIVE"] = str(len(active))
+    
+    failed = [j for j in jobs if j["status"] == "error"]
+    if failed:
+        data["CRON_FAILED_TEXT"] = f" ⚠️ {len(failed)} 个异常"
+    
+    items = []
+    for j in jobs[:10]:
+        name = j["name"] if j["name"] else j["id"][:12]
+        sched = j["schedule"]
+        status = j["status"]
+        desc = CRON_DESC.get(name, "")
+        icon = "⚠️" if status == "error" else "✅"
+        tag_cls = "error" if status == "error" else "ok"
+        tag_txt = "异常" if status == "error" else "正常"
+        items.append(
+            f'<div class="cron-card">'
+            f'<span class="cron-status-icon">{icon}</span>'
+            f'<div class="cron-info">'
+            f'<div class="cron-name">{name}</div>'
+            f'<div class="cron-desc">{desc}</div>'
+            f'</div>'
+            f'<div class="cron-meta">'
+            f'<div class="cron-sched">{sched}</div>'
+            f'<span class="cron-status-tag {tag_cls}">{tag_txt}</span>'
+            f'</div></div>'
+        )
+    data["CRON_LIST"] = "\n".join(items) if items else '<div class="cron-card"><div class="cron-info"><div class="cron-name">暂无活跃任务</div></div></div>'
     return data
 
 def collect_host():
