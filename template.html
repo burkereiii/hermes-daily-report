@@ -55,18 +55,19 @@
 
   /* === HERO === */
   .hero {
-    position: relative; margin: 0 -28px 0; height: 380px; border-radius: 0 0 40px 40px;
+    position: relative; margin: 0 -28px 0; height: 320px; border-radius: 0 0 40px 40px;
     overflow: hidden; display: flex; align-items: flex-end;
     box-shadow: 0 30px 100px rgba(124,58,237,0.12);
   }
   .hero-bg {
     position: absolute; inset: 0;
     width: 100%; height: 100%; object-fit: cover;
+    object-position: center 15%;
     filter: brightness(0.55) saturate(1.15);
   }
   .hero-fade {
     position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(5,3,8,0.97) 0%, rgba(5,3,8,0.35) 55%, rgba(5,3,8,0.1) 100%);
+    background: linear-gradient(to top, rgba(5,3,8,0.97) 0%, rgba(5,3,8,0.3) 50%, rgba(5,3,8,0.05) 100%);
   }
   .hero-content { position: relative; z-index: 2; padding: 40px 36px 32px; width: 100%; }
   .hero-breadcrumb { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 10px; letter-spacing: 0.3px; }
@@ -106,17 +107,17 @@
   .section-label .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 
   .section-head {
-    position: relative; margin: 48px 0 24px;
+    position: relative; margin: 28px 0 18px;
   }
   .section-head h2 {
-    font-size: 2rem; font-weight: 700; color: var(--text-bright);
+    font-size: 1.6rem; font-weight: 700; color: var(--text-bright);
     position: relative; z-index: 1;
   }
   .section-head .ghost {
-    position: absolute; top: -28px; left: -4px;
-    font-size: 4.5rem; font-weight: 900; color: rgba(124,58,237,0.03);
+    position: absolute; top: -22px; left: -4px;
+    font-size: 3.5rem; font-weight: 900; color: rgba(124,58,237,0.025);
     pointer-events: none; z-index: 0; white-space: nowrap;
-    letter-spacing: 4px;
+    letter-spacing: 3px;
   }
 
   /* === CARD === */
@@ -150,7 +151,7 @@
 
   /* === GRIDS === */
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-4c { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
 
@@ -260,8 +261,8 @@
 
   /* === Responsive === */
   @media (max-width: 768px) {
-    .grid-4, .grid-6 { grid-template-columns: repeat(2, 1fr); }
-    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .grid-4, .grid-6, .grid-4c { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
     .notable-grid { grid-template-columns: 1fr; }
     .hero { height: 240px; }
     .hero h1 { font-size: 2rem; }
@@ -347,10 +348,10 @@
   <div class="section-head">
     <div class="ghost">CHANNELS</div>
     <div class="section-label"><span class="dot"></span>连接状态</div>
-    <h2>三通道</h2>
+    <h2>服务通道</h2>
   </div>
 
-  <div class="grid-3">
+  <div class="grid-4c">
     <div class="channel-card">
       <div class="ch-icon">🖥️</div>
       <div class="ch-name">Mac 远控</div>
@@ -363,7 +364,7 @@
     <div class="channel-card">
       <div class="ch-icon">💬</div>
       <div class="ch-name">微信</div>
-      <div class="ch-detail">iLink Bot · 今日 {{WECHAT_MSGS}} 条</div>
+      <div class="ch-detail">iLink · {{WECHAT_MSGS}} 条</div>
       <div class="ch-status">
         <span class="ch-dot {{WECHAT_STATUS_CLASS}}"></span>
         <span class="ch-text {{WECHAT_STATUS_CLASS}}">{{WECHAT_STATUS_TEXT}}</span>
@@ -372,10 +373,19 @@
     <div class="channel-card">
       <div class="ch-icon">🌐</div>
       <div class="ch-name">WebUI</div>
-      <div class="ch-detail">nesquena/hermes-webui :8787</div>
+      <div class="ch-detail">:8787</div>
       <div class="ch-status">
         <span class="ch-dot {{WEBUI_STATUS_CLASS}}"></span>
         <span class="ch-text {{WEBUI_STATUS_CLASS}}">{{WEBUI_STATUS_TEXT}}</span>
+      </div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-icon">📁</div>
+      <div class="ch-name">Preview</div>
+      <div class="ch-detail">:8899</div>
+      <div class="ch-status">
+        <span class="ch-dot {{PREVIEW_STATUS_CLASS}}"></span>
+        <span class="ch-text {{PREVIEW_STATUS_CLASS}}">{{PREVIEW_STATUS_TEXT}}</span>
       </div>
     </div>
   </div>

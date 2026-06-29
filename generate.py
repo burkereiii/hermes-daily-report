@@ -248,16 +248,49 @@ def generate_notable_sessions(notable):
 
 
 def collect_channels():
+    """Check three-channel + Preview service status with CLOSE_WAIT detection."""
     data = {}
-    if check_port(9119):
-        data["MAC_STATUS_CLASS"] = "online"; data["MAC_STATUS_TEXT"] = "已连接"
+
+    # Dashboard 9119 — check port + CLOSE_WAIT connections
+    dash_ok = check_port(9119)
+    close_wait = 0
+    if dash_ok:
+        out, _, _ = run('bash -c "netstat -ano 2>/dev/null | grep :9119 | grep CLOSE_WAIT | wc -l"', timeout=5)
+        try: close_wait = int(out.strip() or "0")
+        except: pass
+
+    if dash_ok:
+        if close_wait > 10:
+            data["MAC_STATUS_CLASS"] = "activity"
+            data["MAC_STATUS_TEXT"] = f"已连接 · {close_wait} CLOSE_WAIT ⚠️"
+        else:
+            data["MAC_STATUS_CLASS"] = "online"
+            data["MAC_STATUS_TEXT"] = f"已连接 ({close_wait} CW)"
     else:
-        data["MAC_STATUS_CLASS"] = "offline"; data["MAC_STATUS_TEXT"] = "未响应"
+        data["MAC_STATUS_CLASS"] = "offline"
+        data["MAC_STATUS_TEXT"] = "未响应"
+    data["_close_wait_count"] = close_wait
+
+    # WebUI 8787
     if check_port(8787):
-        data["WEBUI_STATUS_CLASS"] = "online"; data["WEBUI_STATUS_TEXT"] = "运行中"
+        data["WEBUI_STATUS_CLASS"] = "online"
+        data["WEBUI_STATUS_TEXT"] = "运行中"
     else:
-        data["WEBUI_STATUS_CLASS"] = "offline"; data["WEBUI_STATUS_TEXT"] = "未响应"
-    data["WECHAT_STATUS_CLASS"] = "offline"; data["WECHAT_STATUS_TEXT"] = "无活动"
+        data["WEBUI_STATUS_CLASS"] = "offline"
+        data["WEBUI_STATUS_TEXT"] = "未响应"
+
+    # Preview 8899
+    if check_port(8899):
+        data["PREVIEW_STATUS_CLASS"] = "online"
+        data["PREVIEW_STATUS_TEXT"] = "运行中"
+    else:
+        data["PREVIEW_STATUS_CLASS"] = "offline"
+        data["PREVIEW_STATUS_TEXT"] = "未响应"
+
+    # WeChat — check gateway logs for recent iLink activity
+    data["WECHAT_STATUS_CLASS"] = "offline"
+    data["WECHAT_STATUS_TEXT"] = "无活动"
+
     return data
 
 
@@ -337,7 +370,7 @@ def collect_host():
             pct = round((1-f/t)*100)
             data["MEM_GB"] = str(int(t)); data["MEM_USAGE"] = str(pct)
             if pct > 90: data["MEM_WARN"] = " danger"
-            elif pct > 75: data["MEM_WARN"] = " warn"
+            elif pct > 80: data["MEM_WARN"] = " warn"
         except: pass
     out, _, _ = run_ps("$d=Get-PSDrive C;$u=[math]::Round($d.Used/1GB,1);$t=[math]::Round(($d.Used+$d.Free)/1GB,1);Write-Output \"$u|$t\"")
     if "|" in out:
@@ -347,7 +380,7 @@ def collect_host():
             pct = round(u/t*100)
             data["DISK_GB"] = str(u); data["DISK_USAGE"] = str(pct)
             if pct > 90: data["DISK_WARN"] = " danger"
-            elif pct > 75: data["DISK_WARN"] = " warn"
+            elif pct > 80: data["DISK_WARN"] = " warn"
         except: pass
     return data
 

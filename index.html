@@ -55,18 +55,19 @@
 
   /* === HERO === */
   .hero {
-    position: relative; margin: 0 -28px 0; height: 380px; border-radius: 0 0 40px 40px;
+    position: relative; margin: 0 -28px 0; height: 320px; border-radius: 0 0 40px 40px;
     overflow: hidden; display: flex; align-items: flex-end;
     box-shadow: 0 30px 100px rgba(124,58,237,0.12);
   }
   .hero-bg {
     position: absolute; inset: 0;
     width: 100%; height: 100%; object-fit: cover;
+    object-position: center 15%;
     filter: brightness(0.55) saturate(1.15);
   }
   .hero-fade {
     position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(5,3,8,0.97) 0%, rgba(5,3,8,0.35) 55%, rgba(5,3,8,0.1) 100%);
+    background: linear-gradient(to top, rgba(5,3,8,0.97) 0%, rgba(5,3,8,0.3) 50%, rgba(5,3,8,0.05) 100%);
   }
   .hero-content { position: relative; z-index: 2; padding: 40px 36px 32px; width: 100%; }
   .hero-breadcrumb { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 10px; letter-spacing: 0.3px; }
@@ -106,17 +107,17 @@
   .section-label .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 
   .section-head {
-    position: relative; margin: 48px 0 24px;
+    position: relative; margin: 28px 0 18px;
   }
   .section-head h2 {
-    font-size: 2rem; font-weight: 700; color: var(--text-bright);
+    font-size: 1.6rem; font-weight: 700; color: var(--text-bright);
     position: relative; z-index: 1;
   }
   .section-head .ghost {
-    position: absolute; top: -28px; left: -4px;
-    font-size: 4.5rem; font-weight: 900; color: rgba(124,58,237,0.03);
+    position: absolute; top: -22px; left: -4px;
+    font-size: 3.5rem; font-weight: 900; color: rgba(124,58,237,0.025);
     pointer-events: none; z-index: 0; white-space: nowrap;
-    letter-spacing: 4px;
+    letter-spacing: 3px;
   }
 
   /* === CARD === */
@@ -150,7 +151,7 @@
 
   /* === GRIDS === */
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-4c { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
 
@@ -260,8 +261,8 @@
 
   /* === Responsive === */
   @media (max-width: 768px) {
-    .grid-4, .grid-6 { grid-template-columns: repeat(2, 1fr); }
-    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .grid-4, .grid-6, .grid-4c { grid-template-columns: repeat(2, 1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
     .notable-grid { grid-template-columns: 1fr; }
     .hero { height: 240px; }
     .hero h1 { font-size: 2rem; }
@@ -293,7 +294,7 @@
     <span>Dashboard</span><span class="sep">★</span>
     <span>deepseek-v4-pro</span><span class="sep">★</span>
     <span>PID 31852</span><span class="sep">★</span>
-    <span>217.9M</span><span class="sep">★</span>
+    <span>221.7M</span><span class="sep">★</span>
     <span>Cron 3/3</span><span class="sep">★</span>
     <span>DeepSeek</span><span class="sep">★</span>
     <span>终端</span><span class="sep">★</span>
@@ -302,7 +303,7 @@
     <span>Dashboard</span><span class="sep">★</span>
     <span>deepseek-v4-pro</span><span class="sep">★</span>
     <span>PID 31852</span><span class="sep">★</span>
-    <span>217.9M</span><span class="sep">★</span>
+    <span>221.7M</span><span class="sep">★</span>
     <span>Cron 3/3</span><span class="sep">★</span>
   </div>
 </div>
@@ -326,20 +327,20 @@
     <div class="card">
       <div class="card-icon">📨</div>
       <div class="card-title">消息</div>
-      <div class="card-value">2448</div>
-      <div class="card-sub">用户 217 条</div>
+      <div class="card-value">2521</div>
+      <div class="card-sub">用户 219 条</div>
     </div>
     <div class="card">
       <div class="card-icon">⚡</div>
       <div class="card-title">Token</div>
-      <div class="card-value">217.9M</div>
-      <div class="card-sub">I/O 1.9M / 407.9K</div>
+      <div class="card-value">221.7M</div>
+      <div class="card-sub">I/O 2.0M / 419.9K</div>
     </div>
     <div class="card">
       <div class="card-icon">🔧</div>
       <div class="card-title">工具调用</div>
-      <div class="card-value">1110</div>
-      <div class="card-sub">均会话 45m</div>
+      <div class="card-value">1153</div>
+      <div class="card-sub">均会话 37m</div>
     </div>
   </div>
 
@@ -347,23 +348,23 @@
   <div class="section-head">
     <div class="ghost">CHANNELS</div>
     <div class="section-label"><span class="dot"></span>连接状态</div>
-    <h2>三通道</h2>
+    <h2>服务通道</h2>
   </div>
 
-  <div class="grid-3">
+  <div class="grid-4c">
     <div class="channel-card">
       <div class="ch-icon">🖥️</div>
       <div class="ch-name">Mac 远控</div>
       <div class="ch-detail">Dashboard :9119</div>
       <div class="ch-status">
         <span class="ch-dot online"></span>
-        <span class="ch-text online">已连接</span>
+        <span class="ch-text online">已连接 (0 CW)</span>
       </div>
     </div>
     <div class="channel-card">
       <div class="ch-icon">💬</div>
       <div class="ch-name">微信</div>
-      <div class="ch-detail">iLink Bot · 今日 230 条</div>
+      <div class="ch-detail">iLink · 275 条</div>
       <div class="ch-status">
         <span class="ch-dot online"></span>
         <span class="ch-text online">活跃</span>
@@ -372,7 +373,16 @@
     <div class="channel-card">
       <div class="ch-icon">🌐</div>
       <div class="ch-name">WebUI</div>
-      <div class="ch-detail">nesquena/hermes-webui :8787</div>
+      <div class="ch-detail">:8787</div>
+      <div class="ch-status">
+        <span class="ch-dot online"></span>
+        <span class="ch-text online">运行中</span>
+      </div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-icon">📁</div>
+      <div class="ch-name">Preview</div>
+      <div class="ch-detail">:8899</div>
       <div class="ch-status">
         <span class="ch-dot online"></span>
         <span class="ch-text online">运行中</span>
@@ -397,13 +407,13 @@
     <div class="card-plain">
       <div class="card-title" style="font-size:0.78rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:14px;">🔧 Top 工具</div>
       <ul class="rank-list">
-        <li class="rank-item"><span class="rank-pos">01</span><span class="rank-name">terminal</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:100%"></div></div><span class="rank-count">541</span></li>
-<li class="rank-item"><span class="rank-pos">02</span><span class="rank-name">read_file</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:23%"></div></div><span class="rank-count">129</span></li>
+        <li class="rank-item"><span class="rank-pos">01</span><span class="rank-name">terminal</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:100%"></div></div><span class="rank-count">566</span></li>
+<li class="rank-item"><span class="rank-pos">02</span><span class="rank-name">read_file</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:23%"></div></div><span class="rank-count">132</span></li>
 <li class="rank-item"><span class="rank-pos">03</span><span class="rank-name">search_files</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:15%"></div></div><span class="rank-count">85</span></li>
-<li class="rank-item"><span class="rank-pos">04</span><span class="rank-name">patch</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:10%"></div></div><span class="rank-count">59</span></li>
+<li class="rank-item"><span class="rank-pos">04</span><span class="rank-name">patch</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:12%"></div></div><span class="rank-count">69</span></li>
 <li class="rank-item"><span class="rank-pos">05</span><span class="rank-name">process</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:10%"></div></div><span class="rank-count">57</span></li>
-<li class="rank-item"><span class="rank-pos">06</span><span class="rank-name">browser_navigate</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:6%"></div></div><span class="rank-count">35</span></li>
-<li class="rank-item"><span class="rank-pos">07</span><span class="rank-name">execute_code</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:6%"></div></div><span class="rank-count">33</span></li>
+<li class="rank-item"><span class="rank-pos">06</span><span class="rank-name">browser_navigate</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:6%"></div></div><span class="rank-count">37</span></li>
+<li class="rank-item"><span class="rank-pos">07</span><span class="rank-name">execute_code</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:5%"></div></div><span class="rank-count">33</span></li>
 <li class="rank-item"><span class="rank-pos">08</span><span class="rank-name">write_file</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:4%"></div></div><span class="rank-count">26</span></li>
 <li class="rank-item"><span class="rank-pos">09</span><span class="rank-name">skill_view</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:4%"></div></div><span class="rank-count">24</span></li>
 <li class="rank-item"><span class="rank-pos">10</span><span class="rank-name">session_search</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:3%"></div></div><span class="rank-count">18</span></li>
@@ -435,12 +445,12 @@
   <div class="grid-2">
     <div class="card-plain">
       <div class="progress-item">
-        <div class="progress-head"><span class="label">CPU</span><span class="val">12%</span></div>
-        <div class="progress-track"><div class="progress-fill" style="width:12%"></div></div>
+        <div class="progress-head"><span class="label">CPU</span><span class="val">13%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:13%"></div></div>
       </div>
       <div class="progress-item">
-        <div class="progress-head"><span class="label">内存</span><span class="val">35% · 40 GB</span></div>
-        <div class="progress-track"><div class="progress-fill" style="width:35%"></div></div>
+        <div class="progress-head"><span class="label">内存</span><span class="val">32% · 40 GB</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:32%"></div></div>
       </div>
       <div class="progress-item">
         <div class="progress-head"><span class="label">磁盘 C:</span><span class="val">53% · 238.6 GB</span></div>
@@ -456,7 +466,7 @@
         </div>
         <div>
           <div class="card-icon" style="margin:0 auto 8px;">🗄️</div>
-          <div class="card-value" style="font-size:1.3rem;">22.4M</div>
+          <div class="card-value" style="font-size:1.3rem;">22.9M</div>
           <div class="card-title">数据库</div>
         </div>
         <div>
@@ -494,7 +504,7 @@
     <div class="card-plain">
       <div class="card-title" style="font-size:0.78rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:14px;">⏰ 峰值时段</div>
       <div class="card-value" style="font-size:1.1rem;text-align:center;padding:20px 0;">4AM (4), 2AM (3), 3AM (2), 1PM (1), 4PM (1)</div>
-      <div class="card-sub" style="text-align:center;">平台: 桌面 2175 条 · 微信 230 条</div>
+      <div class="card-sub" style="text-align:center;">平台: 桌面 2175 条 · 微信 275 条</div>
     </div>
   </div>
 
@@ -548,7 +558,7 @@
   </div>
 
   <div class="narrative-card">
-    <p>今日共 11 个会话，2448 条消息（用户 217 条），活跃 3h，消耗 217.9M Token。 主力工具：terminal, read_file, search_files。 高频技能：hippo-selfie, hermes-daily-report, hermes-agent。</p>
+    <p>今日共 11 个会话，2521 条消息（用户 219 条），活跃 3h，消耗 221.7M Token。 主力工具：terminal, read_file, search_files。 高频技能：hippo-selfie, hermes-daily-report, hermes-agent。</p>
     <div class="narrative-rec">今日高强度工作，建议检查是否有冗余工具调用。</div>
   </div>
 
@@ -568,15 +578,15 @@
       <span>沙河麻衣</span><span class="sep">★</span>
       <span>2026-06-30</span><span class="sep">★</span>
       <span>11 会话</span><span class="sep">★</span>
-      <span>2448 消息</span><span class="sep">★</span>
-      <span>1110 工具</span><span class="sep">★</span>
+      <span>2521 消息</span><span class="sep">★</span>
+      <span>1153 工具</span><span class="sep">★</span>
       <span>Hermes</span><span class="sep">★</span>
       <span>系统日报</span><span class="sep">★</span>
       <span>沙河麻衣</span><span class="sep">★</span>
       <span>2026-06-30</span><span class="sep">★</span>
       <span>11 会话</span><span class="sep">★</span>
-      <span>2448 消息</span><span class="sep">★</span>
-      <span>1110 工具</span><span class="sep">★</span>
+      <span>2521 消息</span><span class="sep">★</span>
+      <span>1153 工具</span><span class="sep">★</span>
     </div>
   </div>
 
