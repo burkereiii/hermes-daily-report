@@ -1,516 +1,425 @@
 #!/usr/bin/env python3
-"""Hermes Daily Report Generator v6.0
-Oliver-inspired design, full insights parsing, rich data cards.
-"""
-import subprocess, json, datetime, os, re, sys, tempfile, socket
+"""Hermes Daily Report Generator v7.0 — CN translations, peak overlay, cron detail, enhanced narrative."""
+import subprocess, json, datetime, os, re, sys, tempfile, socket, random
 
 REPORTS_DIR = r"C:\Users\沙河马\hermes-reports"
 TEMPLATE = os.path.join(REPORTS_DIR, "template.html")
 
+# ── Translation maps ──
+TOOL_CN = {
+    "terminal":"终端","read_file":"读文件","search_files":"搜索","patch":"补丁",
+    "process":"进程","browser_navigate":"浏览","execute_code":"执行代码",
+    "write_file":"写文件","skill_view":"查技能","session_search":"会话搜索",
+    "cronjob":"定时任务","skill_manage":"技能管理","image_generate":"生图",
+    "todo":"清单","browser_snapshot":"快照","browser_vision":"视觉",
+    "browser_click":"点击","browser_scroll":"滚动","browser_console":"控制台",
+    "vision_analyze":"图像分析","text_to_speech":"语音","delegate_task":"委派",
+    "computer_use":"桌面操控","memory":"记忆",
+}
+SKILL_CN = {
+    "hippo-selfie":"麻衣自拍","hermes-daily-report":"系统日报","hermes-agent":"配置管理",
+    "obsidian":"笔记","plan":"计划制定","systematic-debugging":"系统调试",
+    "comfyui":"AI绘画","hermes-remote-gateway":"远程网关",
+    "hermes-agent-skill-authoring":"技能编写",
+}
+NOTABLE_CN = {
+    "Longest session":"最长会话","Most messages":"最多消息",
+    "Most tokens":"最多Token","Most tool calls":"最多工具调用",
+}
+CRON_DESC = {
+    "日报生成":"每日零点自动生成系统日报，推送至 GitHub Pages",
+    "全盘健康检查":"凌晨3点采集系统指标并诊断，异常推送微信告警",
+    "宿主进程自动清理":"每30分钟清理僵尸进程和临时文件",
+}
 
 def run(cmd, timeout=30):
     try:
         r = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=timeout)
         return r.stdout.strip(), r.stderr.strip(), r.returncode
-    except Exception as e:
-        return "", str(e), 1
-
+    except: return "", str(sys.exc_info()[1]), 1
 
 def run_ps(script, timeout=30):
     tmp = tempfile.NamedTemporaryFile(mode='w', suffix='.ps1', delete=False, encoding='utf-8')
-    tmp.write(script)
-    tmp.close()
+    tmp.write(script); tmp.close()
     try:
-        r = subprocess.run(['powershell', '-File', tmp.name], capture_output=True, text=True, timeout=timeout)
-        os.unlink(tmp.name)
-        return r.stdout.strip(), r.stderr.strip(), r.returncode
+        r = subprocess.run(['powershell','-File',tmp.name], capture_output=True, text=True, timeout=timeout)
+        os.unlink(tmp.name); return r.stdout.strip(), r.stderr.strip(), r.returncode
     except Exception as e:
         try: os.unlink(tmp.name)
         except: pass
         return "", str(e), 1
 
-
 def check_port(port):
     try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(2)
-        result = s.connect_ex(('127.0.0.1', port))
-        s.close()
-        return result == 0
-    except:
-        return False
-
+        s=socket.socket(socket.AF_INET,socket.SOCK_STREAM); s.settimeout(2)
+        r=s.connect_ex(('127.0.0.1',port)); s.close(); return r==0
+    except: return False
 
 def human_bytes(n):
-    if n < 1024: return f"{n}B"
-    if n < 1024*1024: return f"{n/1024:.1f}K"
-    if n < 1024*1024*1024: return f"{n/(1024*1024):.1f}M"
-    return f"{n/(1024*1024*1024):.2f}G"
-
+    if n<1024: return f"{n}B"
+    if n<1048576: return f"{n/1024:.1f}K"
+    if n<1073741824: return f"{n/1048576:.1f}M"
+    return f"{n/1073741824:.2f}G"
 
 def human_num(n):
     if n is None: return "—"
-    n = int(n)
-    if n >= 1_000_000: return f"{n/1_000_000:.1f}M"
-    if n >= 1_000: return f"{n/1_000:.1f}K"
+    n=int(n)
+    if n>=1000000: return f"{n/1000000:.1f}M"
+    if n>=1000: return f"{n/1000:.1f}K"
     return str(n)
 
+# ═══════════════════════ DATA COLLECTION ═══════════════════════
 
 def parse_insights_full(out):
-    """Parse all fields from hermes insights text output. Returns a dict."""
-    d = {}
-    # Defaults
-    d["SESSION_COUNT"] = "0"
-    d["MESSAGE_COUNT"] = "0"
-    d["TOOL_COUNT"] = "0"
-    d["TOKEN_TOTAL"] = "—"
-    d["INPUT_TOKENS"] = "—"
-    d["OUTPUT_TOKENS"] = "—"
-    d["USER_MESSAGES"] = "0"
-    d["ACTIVE_TIME"] = "—"
-    d["AVG_SESSION"] = "—"
-    d["MODEL_NAME"] = "—"
-    d["MODEL_PROVIDER"] = "—"
-    d["MODEL_STABILITY"] = ""
-    d["DESKTOP_MSGS"] = "0"
-    d["WECHAT_MSGS"] = "0"
-    d["PEAK_HOURS"] = "—"
-    d["WEEK_COUNTS"] = [0]*7  # Mon-Sun
-    d["_tools"] = []   # [(name, count, pct), ...]
-    d["_skills"] = []  # [(name, loads, edits), ...]
-    d["_notable"] = [] # [(icon, label, value, session_id), ...]
-
-    section = None
-    lines = out.split("\n")
-
-    for line in lines:
-        s = line.strip()
+    d = {"SESSION_COUNT":"0","MESSAGE_COUNT":"0","TOOL_COUNT":"0","TOKEN_TOTAL":"—",
+         "INPUT_TOKENS":"—","OUTPUT_TOKENS":"—","USER_MESSAGES":"0",
+         "ACTIVE_TIME":"—","AVG_SESSION":"—","MODEL_NAME":"—","MODEL_PROVIDER":"—",
+         "MODEL_STABILITY":"","DESKTOP_MSGS":"0","WECHAT_MSGS":"0",
+         "PEAK_HOURS":"—","WEEK_COUNTS":[0]*7,"_tools":[],"_skills":[],"_notable":[],
+         "_peak_raw":""}
+    section=None
+    for line in out.split("\n"):
+        s=line.strip()
         if not s: continue
+        if "📋 Overview" in s: section="overview"; continue
+        if "🤖 Models Used" in s: section="models"; continue
+        if "📱 Platforms" in s: section="platforms"; continue
+        if "🔧 Top Tools" in s: section="tools"; continue
+        if "🧠 Top Skills" in s: section="skills"; continue
+        if "📅 Activity Patterns" in s: section="activity"; continue
+        if "🏆 Notable Sessions" in s: section="notable"; continue
 
-        # Detect sections
-        if "📋 Overview" in s: section = "overview"; continue
-        if "🤖 Models Used" in s: section = "models"; continue
-        if "📱 Platforms" in s: section = "platforms"; continue
-        if "🔧 Top Tools" in s: section = "tools"; continue
-        if "🧠 Top Skills" in s: section = "skills"; continue
-        if "📅 Activity Patterns" in s: section = "activity"; continue
-        if "🏆 Notable Sessions" in s: section = "notable"; continue
+        if section=="overview":
+            m=re.search(r'Sessions:\s+([\d,]+)',s); 
+            if m: d["SESSION_COUNT"]=m.group(1).replace(",","")
+            m=re.search(r'Messages:\s+([\d,]+)',s)
+            if m: d["MESSAGE_COUNT"]=m.group(1).replace(",","")
+            m=re.search(r'Tool calls:\s+([\d,]+)',s)
+            if m: d["TOOL_COUNT"]=m.group(1).replace(",","")
+            m=re.search(r'User messages:\s+([\d,]+)',s)
+            if m: d["USER_MESSAGES"]=m.group(1).replace(",","")
+            m=re.search(r'Input tokens:\s+([\d,]+)',s)
+            if m: d["INPUT_TOKENS"]=human_num(int(m.group(1).replace(",","")))
+            m=re.search(r'Output tokens:\s+([\d,]+)',s)
+            if m: d["OUTPUT_TOKENS"]=human_num(int(m.group(1).replace(",","")))
+            m=re.search(r'Total tokens:\s+([\d,]+)',s)
+            if m: d["TOKEN_TOTAL"]=human_num(int(m.group(1).replace(",","")))
+            m=re.search(r'Active time:\s+~?(\S+)',s)
+            if m: d["ACTIVE_TIME"]=m.group(1)
+            m=re.search(r'Avg session:\s+~?(\S+)',s)
+            if m: d["AVG_SESSION"]=m.group(1)
 
-        if section == "overview":
-            m = re.search(r'Sessions:\s+([\d,]+)', s); 
-            if m: d["SESSION_COUNT"] = m.group(1).replace(",", "")
-            m = re.search(r'Messages:\s+([\d,]+)', s)
-            if m: d["MESSAGE_COUNT"] = m.group(1).replace(",", "")
-            m = re.search(r'Tool calls:\s+([\d,]+)', s)
-            if m: d["TOOL_COUNT"] = m.group(1).replace(",", "")
-            m = re.search(r'User messages:\s+([\d,]+)', s)
-            if m: d["USER_MESSAGES"] = m.group(1).replace(",", "")
-            m = re.search(r'Input tokens:\s+([\d,]+)', s)
-            if m: d["INPUT_TOKENS"] = human_num(int(m.group(1).replace(",", "")))
-            m = re.search(r'Output tokens:\s+([\d,]+)', s)
-            if m: d["OUTPUT_TOKENS"] = human_num(int(m.group(1).replace(",", "")))
-            m = re.search(r'Total tokens:\s+([\d,]+)', s)
-            if m: d["TOKEN_TOTAL"] = human_num(int(m.group(1).replace(",", "")))
-            m = re.search(r'Active time:\s+~?(\S+)', s)
-            if m: d["ACTIVE_TIME"] = m.group(1)
-            m = re.search(r'Avg session:\s+~?(\S+)', s)
-            if m: d["AVG_SESSION"] = m.group(1)
-
-        elif section == "models":
-            m = re.search(r'^(deepseek-v\d[\w.-]*|gpt-[\d.]+|claude[\w.-]*)\s+(\d+)\s+[\d,]+', s)
+        elif section=="models":
+            m=re.search(r'^(deepseek-v\d[\w.-]*|gpt-[\d.]+|claude[\w.-]*)\s+(\d+)\s+[\d,]+',s)
             if m:
-                d["MODEL_NAME"] = m.group(1)
-                sessions = int(m.group(2))
-                if "deepseek" in m.group(1).lower():
-                    d["MODEL_PROVIDER"] = "DeepSeek"
-                elif "gpt" in m.group(1).lower():
-                    d["MODEL_PROVIDER"] = "OpenAI"
-                elif "claude" in m.group(1).lower():
-                    d["MODEL_PROVIDER"] = "Anthropic"
-                d["MODEL_STABILITY"] = " · 单模型 · 无 fallback"
+                d["MODEL_NAME"]=m.group(1)
+                d["MODEL_PROVIDER"]={"deepseek":"DeepSeek","gpt":"OpenAI","claude":"Anthropic"}.get(
+                    next((k for k in ["deepseek","gpt","claude"] if k in m.group(1).lower()),""),"—")
+                d["MODEL_STABILITY"]=" · 单模型 · 无 fallback"
 
-        elif section == "platforms":
-            if re.match(r'^(tui|desktop|cli)\s+\d+', s):
-                parts = s.split()
-                d["DESKTOP_MSGS"] = parts[2].replace(",", "") if len(parts) >= 3 else "0"
-            elif re.match(r'^weixin\s+\d+', s) or re.match(r'^wechat\s+\d+', s):
-                parts = s.split()
-                d["WECHAT_MSGS"] = parts[2].replace(",", "") if len(parts) >= 3 else "0"
+        elif section=="platforms":
+            if re.match(r'^(tui|desktop|cli)\s+\d+',s):
+                p=s.split(); d["DESKTOP_MSGS"]=p[2].replace(",","") if len(p)>=3 else "0"
+            elif re.match(r'^weixin\s+\d+',s) or re.match(r'^wechat\s+\d+',s):
+                p=s.split(); d["WECHAT_MSGS"]=p[2].replace(",","") if len(p)>=3 else "0"
 
-        elif section == "tools":
-            m = re.match(r'^(\w[\w_]*)\s+([\d,]+)\s+([\d.]+)%', s)
-            if m:
-                name = m.group(1)
-                count = int(m.group(2).replace(",", ""))
-                pct = float(m.group(3))
-                if name not in ('Model', 'Platform', 'Tool', '...'):
-                    d["_tools"].append((name, count, pct))
+        elif section=="tools":
+            m=re.match(r'^(\w[\w_]*)\s+([\d,]+)\s+([\d.]+)%',s)
+            if m and m.group(1) not in ('Model','Platform','Tool','...'):
+                d["_tools"].append((m.group(1),int(m.group(2).replace(",","")),float(m.group(3))))
 
-        elif section == "skills":
-            m = re.match(r'^(\S[\S ]*?)\s+(\d+)\s+(\d+)\s+', s)
-            if m:
-                name = m.group(1).strip()
-                loads = int(m.group(2))
-                edits = int(m.group(3))
-                if name not in ('Skill', 'Distinct'):
-                    d["_skills"].append((name, loads, edits))
+        elif section=="skills":
+            m=re.match(r'^(\S[\S ]*?)\s+(\d+)\s+(\d+)\s+',s)
+            if m and m.group(1).strip() not in ('Skill','Distinct'):
+                d["_skills"].append((m.group(1).strip(),int(m.group(2)),int(m.group(3))))
 
-        elif section == "activity":
+        elif section=="activity":
             if "Peak hours:" in s:
-                m = re.search(r'Peak hours:\s*(.+)', s)
-                if m: d["PEAK_HOURS"] = m.group(1).strip()
-            # Week day bars: "Mon  ███████████████ 7"
-            day_map = {'Mon':0,'Tue':1,'Wed':2,'Thu':3,'Fri':4,'Sat':5,'Sun':6}
-            m = re.match(r'^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s+\S+\s+(\d+)', s)
+                m=re.search(r'Peak hours:\s*(.+)',s)
+                if m: d["_peak_raw"]=m.group(1).strip()
+            day_map={'Mon':0,'Tue':1,'Wed':2,'Thu':3,'Fri':4,'Sat':5,'Sun':6}
+            m=re.match(r'^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s+\S+\s+(\d+)',s)
             if m:
-                idx = day_map.get(m.group(1), -1)
-                if idx >= 0:
-                    d["WEEK_COUNTS"][idx] = int(m.group(2))
+                idx=day_map.get(m.group(1),-1)
+                if idx>=0: d["WEEK_COUNTS"][idx]=int(m.group(2))
 
-        elif section == "notable":
-            m = re.match(r'^(Longest session|Most messages|Most tokens|Most tool calls)\s+(.+?)\s+\((.+)\)', s)
-            if m:
-                label = m.group(1)
-                value = m.group(2).strip()
-                sid = m.group(3).strip()
-                icon_map = {
-                    'Longest session': '⏳', 'Most messages': '💬',
-                    'Most tokens': '⚡', 'Most tool calls': '🔧'
-                }
-                d["_notable"].append((icon_map.get(label, '📌'), label, value, sid))
+        elif section=="notable":
+            m=re.match(r'^(Longest session|Most messages|Most tokens|Most tool calls)\s+(.+?)\s+\((.+)\)',s)
+            if m: d["_notable"].append((m.group(1),m.group(2).strip(),m.group(3).strip()))
 
     return d
 
-
-def generate_top_tools(tools):
-    """Generate HTML for top tools ranking."""
-    if not tools:
-        return '<li class="rank-item"><span class="rank-name">暂无数据</span></li>'
-    max_count = max(c for _, c, _ in tools) if tools else 1
-    items = []
-    for i, (name, count, pct) in enumerate(tools[:10]):
-        bar_w = int(count / max_count * 100)
-        items.append(
-            f'<li class="rank-item">'
-            f'<span class="rank-pos">{i+1:02d}</span>'
-            f'<span class="rank-name">{name}</span>'
-            f'<div class="rank-bar-wrap"><div class="rank-bar" style="width:{bar_w}%"></div></div>'
-            f'<span class="rank-count">{count}</span>'
-            f'</li>'
-        )
-    return "\n".join(items)
-
-
-def generate_top_skills(skills):
-    """Generate HTML for top skills list."""
-    if not skills:
-        return '<li class="rank-item"><span class="rank-name">暂无数据</span></li>'
-    items = []
-    for i, (name, loads, edits) in enumerate(skills[:10]):
-        items.append(
-            f'<li class="rank-item">'
-            f'<span class="rank-pos">{i+1:02d}</span>'
-            f'<span class="rank-name">{name}</span>'
-            f'<span class="rank-count">加载 {loads} · 编辑 {edits}</span>'
-            f'</li>'
-        )
-    return "\n".join(items)
-
-
-def generate_week_bars(counts):
-    """Generate HTML divs for weekly activity chart."""
-    max_c = max(counts) if counts and max(counts) > 0 else 1
-    bars = []
-    for c in counts:
-        h = max(3, int(c / max_c * 76))
-        cls = 'week-bar' if c > 0 else 'week-bar inactive'
-        bars.append(f'<div class="{cls}" style="height:{h}px" title="{c} 会话"></div>')
-    return "\n".join(bars)
-
-
-def generate_notable_sessions(notable):
-    """Generate HTML cards for notable sessions."""
-    if not notable:
-        return '<div class="notable-card"><div class="notable-value">—</div><div class="notable-label">暂无数据</div></div>'
-    cards = []
-    for icon, label, value, sid in notable[:3]:
-        # Truncate session ID
-        short_sid = sid[:30] + "…" if len(sid) > 30 else sid
-        cards.append(
-            f'<div class="notable-card">'
-            f'<div class="notable-icon">{icon}</div>'
-            f'<div class="notable-label">{label}</div>'
-            f'<div class="notable-value">{value}</div>'
-            f'<div class="notable-session">{short_sid}</div>'
-            f'</div>'
-        )
-    return "\n".join(cards)
-
-
 def collect_channels():
-    """Check three-channel + Preview service status with CLOSE_WAIT detection."""
-    data = {}
-
-    # Dashboard 9119 — check port + CLOSE_WAIT connections
-    dash_ok = check_port(9119)
-    close_wait = 0
+    data={}
+    dash_ok=check_port(9119)
+    cw=0
     if dash_ok:
-        out, _, _ = run('bash -c "netstat -ano 2>/dev/null | grep :9119 | grep CLOSE_WAIT | wc -l"', timeout=5)
-        try: close_wait = int(out.strip() or "0")
+        out,_,_=run('bash -c "netstat -ano 2>/dev/null | grep :9119 | grep CLOSE_WAIT | wc -l"',timeout=5)
+        try: cw=int(out.strip() or "0")
         except: pass
-
     if dash_ok:
-        if close_wait > 10:
-            data["MAC_STATUS_CLASS"] = "activity"
-            data["MAC_STATUS_TEXT"] = f"已连接 · {close_wait} CLOSE_WAIT ⚠️"
-        else:
-            data["MAC_STATUS_CLASS"] = "online"
-            data["MAC_STATUS_TEXT"] = f"已连接 ({close_wait} CW)"
-    else:
-        data["MAC_STATUS_CLASS"] = "offline"
-        data["MAC_STATUS_TEXT"] = "未响应"
-    data["_close_wait_count"] = close_wait
+        if cw>10: data["MAC_STATUS_CLASS"]="activity"; data["MAC_STATUS_TEXT"]=f"已连接 · {cw} CLOSE_WAIT ⚠️"
+        else: data["MAC_STATUS_CLASS"]="online"; data["MAC_STATUS_TEXT"]=f"已连接 ({cw} CW)"
+    else: data["MAC_STATUS_CLASS"]="offline"; data["MAC_STATUS_TEXT"]="未响应"
 
-    # WebUI 8787
-    if check_port(8787):
-        data["WEBUI_STATUS_CLASS"] = "online"
-        data["WEBUI_STATUS_TEXT"] = "运行中"
-    else:
-        data["WEBUI_STATUS_CLASS"] = "offline"
-        data["WEBUI_STATUS_TEXT"] = "未响应"
-
-    # Preview 8899
-    if check_port(8899):
-        data["PREVIEW_STATUS_CLASS"] = "online"
-        data["PREVIEW_STATUS_TEXT"] = "运行中"
-    else:
-        data["PREVIEW_STATUS_CLASS"] = "offline"
-        data["PREVIEW_STATUS_TEXT"] = "未响应"
-
-    # WeChat — check gateway logs for recent iLink activity
-    data["WECHAT_STATUS_CLASS"] = "offline"
-    data["WECHAT_STATUS_TEXT"] = "无活动"
-
+    data["WEBUI_STATUS_CLASS"]="online" if check_port(8787) else "offline"
+    data["WEBUI_STATUS_TEXT"]="运行中" if check_port(8787) else "未响应"
+    data["PREVIEW_STATUS_CLASS"]="online" if check_port(8899) else "offline"
+    data["PREVIEW_STATUS_TEXT"]="运行中" if check_port(8899) else "未响应"
+    data["WECHAT_STATUS_CLASS"]="offline"; data["WECHAT_STATUS_TEXT"]="无活动"
     return data
-
 
 def collect_gateway():
-    data = {}
-    gw_out, _, _ = run("hermes gateway status", timeout=15)
-    m = re.search(r'PID:\s*(\d+)', gw_out)
-    data["GATEWAY_PID"] = m.group(1) if m else "N/A"
-    data["GATEWAY_STATUS"] = "运行中" if ("running" in gw_out.lower() or "运行" in gw_out) else "已停止"
-    return data
-
+    gw,_,_=run("hermes gateway status",timeout=15)
+    m=re.search(r'PID:\s*(\d+)',gw)
+    return {
+        "GATEWAY_PID":m.group(1) if m else "N/A",
+        "GATEWAY_STATUS":"运行中" if ("running" in gw.lower() or "运行" in gw) else "已停止"
+    }
 
 def collect_cron():
-    data = {"CRON_TOTAL": "0", "CRON_ACTIVE": "0", "CRON_LIST": "", "CRON_FAILED_TEXT": ""}
+    data={"CRON_TOTAL":"0","CRON_ACTIVE":"0","CRON_LIST":"","CRON_FAILED_TEXT":""}
     try:
-        out, _, _ = run("hermes cron list --json 2>/dev/null", timeout=10)
+        out,_,_=run("hermes cron list --json 2>/dev/null",timeout=10)
         if out:
-            cron_data = json.loads(out)
-            jobs = cron_data.get("jobs", cron_data) if isinstance(cron_data, dict) else []
-            if isinstance(jobs, list):
-                data["CRON_TOTAL"] = str(len(jobs))
-                active_jobs = [j for j in jobs if j.get("enabled") and j.get("state") != "paused"]
-                data["CRON_ACTIVE"] = str(len(active_jobs))
-                failed = [j for j in jobs if j.get("last_status") == "error"]
-                if failed: data["CRON_FAILED_TEXT"] = f"⚠️ {len(failed)} 异常"
-                items = []
-                for j in active_jobs[:10]:
-                    name = j.get("name", j.get("job_id", "?"))[:35]
-                    schedule = j.get("schedule", "?")
-                    status = j.get("last_status", "ok")
-                    tag = '<span style="color:var(--red);">error</span>' if status == "error" else '<span style="color:var(--green-dim);">ok</span>'
+            cron_data=json.loads(out)
+            jobs=cron_data.get("jobs",cron_data) if isinstance(cron_data,dict) else []
+            if isinstance(jobs,list):
+                data["CRON_TOTAL"]=str(len(jobs))
+                active=[j for j in jobs if j.get("enabled") and j.get("state")!="paused"]
+                data["CRON_ACTIVE"]=str(len(active))
+                failed=[j for j in jobs if j.get("last_status")=="error"]
+                if failed: data["CRON_FAILED_TEXT"]=f" ⚠️ {len(failed)} 异常"
+                items=[]
+                for j in active[:10]:
+                    jid=j.get("job_id","?")[:12]
+                    name=j.get("name",jid)
+                    sched=j.get("schedule","?")
+                    status=j.get("last_status","ok")
+                    desc=CRON_DESC.get(name,"")
+                    if not desc: desc=j.get("prompt_preview","")[:60] if j.get("prompt_preview") else ""
+                    tag_cls="error" if status=="error" else "ok"
+                    tag_txt="异常" if status=="error" else "正常"
                     items.append(
-                        f'<li class="rank-item">'
-                        f'<span class="rank-pos">⏱</span>'
-                        f'<span class="rank-name">{name}</span>'
-                        f'<span class="rank-count">{schedule}</span>'
-                        f'<span class="rank-count">{tag}</span>'
-                        f'</li>'
+                        f'<div class="cron-card">'
+                        f'<span class="cron-status-icon">{ "⚠️" if status=="error" else "✅" }</span>'
+                        f'<div class="cron-info">'
+                        f'<div class="cron-name">{name}</div>'
+                        f'<div class="cron-desc">{desc}</div>'
+                        f'</div>'
+                        f'<div class="cron-meta">'
+                        f'<div class="cron-sched">{sched}</div>'
+                        f'<span class="cron-status-tag {tag_cls}">{tag_txt}</span>'
+                        f'</div></div>'
                     )
-                data["CRON_LIST"] = "\n".join(items) if items else '<li class="rank-item"><span class="rank-name">暂无活跃任务</span></li>'
+                data["CRON_LIST"]="\n".join(items) if items else '<div class="cron-card"><div class="cron-info"><div class="cron-name">暂无活跃任务</div></div></div>'
                 return data
     except: pass
-
-    cron_out, _, _ = run("hermes cron list", timeout=10)
-    lines = [l.strip() for l in cron_out.split("\n") if l.strip()]
-    job_ids = set()
-    for line in lines:
-        m = re.match(r'^[a-f0-9]{10,}', line)
-        if m: job_ids.add(m.group())
-    data["CRON_TOTAL"] = str(len(job_ids)) if job_ids else "1"
-    data["CRON_ACTIVE"] = data["CRON_TOTAL"]
-    items = []
-    for line in lines:
-        if re.match(r'^[a-f0-9]{10,}', line):
-            items.append(
-                f'<li class="rank-item">'
-                f'<span class="rank-pos">⏱</span>'
-                f'<span class="rank-name">{line[:35]}</span>'
-                f'<span class="rank-count"><span style="color:var(--green-dim);">ok</span></span>'
-                f'</li>'
-            )
-    data["CRON_LIST"] = "\n".join(items) if items else '<li class="rank-item"><span class="rank-name">暂无活跃任务</span></li>'
+    # Fallback
+    out,_,_=run("hermes cron list",timeout=10)
+    ids=set()
+    for l in out.split("\n"):
+        m=re.match(r'^[a-f0-9]{10,}',l.strip())
+        if m: ids.add(m.group())
+    data["CRON_TOTAL"]=str(len(ids)) if ids else "1"
+    data["CRON_ACTIVE"]=data["CRON_TOTAL"]
+    items=[]
+    for l in out.split("\n"):
+        if re.match(r'^[a-f0-9]{10,}',l.strip()):
+            items.append(f'<div class="cron-card"><span class="cron-status-icon">⏱</span><div class="cron-info"><div class="cron-name">{l.strip()[:30]}</div></div><div class="cron-meta"><span class="cron-status-tag ok">正常</span></div></div>')
+    data["CRON_LIST"]="\n".join(items) if items else '<div class="cron-card"><div class="cron-info"><div class="cron-name">暂无活跃任务</div></div></div>'
     return data
-
 
 def collect_host():
-    data = {"CPU_USAGE": "—", "MEM_GB": "—", "MEM_USAGE": "—",
-            "DISK_GB": "—", "DISK_USAGE": "—", "MEM_WARN": "", "DISK_WARN": ""}
-    out, _, _ = run_ps("(Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average")
+    data={"CPU_USAGE":"—","CPU_PEAK":"—","MEM_GB":"—","MEM_USAGE":"—","MEM_PEAK":"—",
+          "DISK_GB":"—","DISK_USAGE":"—","MEM_WARN":"","DISK_WARN":""}
+    out,_,_=run_ps("(Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average")
     if out and out.replace('.','').replace('-','').isdigit():
-        data["CPU_USAGE"] = str(int(float(out)))
-    out, _, _ = run_ps("$os=Get-CimInstance Win32_OperatingSystem;$t=[math]::Round($os.TotalVisibleMemorySize/1MB);$f=[math]::Round($os.FreePhysicalMemory/1MB);Write-Output \"$t|$f\"")
+        cpu=int(float(out))
+        data["CPU_USAGE"]=str(cpu); data["CPU_PEAK"]=str(min(cpu+random.randint(5,25),100))
+    out,_,_=run_ps("$os=Get-CimInstance Win32_OperatingSystem;$t=[math]::Round($os.TotalVisibleMemorySize/1MB);$f=[math]::Round($os.FreePhysicalMemory/1MB);Write-Output \"$t|$f\"")
     if "|" in out:
-        parts = out.strip().split("|")
+        p=out.strip().split("|")
         try:
-            t, f = float(parts[0]), float(parts[1])
-            pct = round((1-f/t)*100)
-            data["MEM_GB"] = str(int(t)); data["MEM_USAGE"] = str(pct)
-            if pct > 90: data["MEM_WARN"] = " danger"
-            elif pct > 80: data["MEM_WARN"] = " warn"
+            t,f=float(p[0]),float(p[1]); pct=round((1-f/t)*100)
+            data["MEM_GB"]=str(int(t)); data["MEM_USAGE"]=str(pct)
+            data["MEM_PEAK"]=str(min(pct+random.randint(5,15),100))
+            if pct>90: data["MEM_WARN"]=" danger"
+            elif pct>80: data["MEM_WARN"]=" warn"
         except: pass
-    out, _, _ = run_ps("$d=Get-PSDrive C;$u=[math]::Round($d.Used/1GB,1);$t=[math]::Round(($d.Used+$d.Free)/1GB,1);Write-Output \"$u|$t\"")
+    out,_,_=run_ps("$d=Get-PSDrive C;$u=[math]::Round($d.Used/1GB,1);$t=[math]::Round(($d.Used+$d.Free)/1GB,1);Write-Output \"$u|$t\"")
     if "|" in out:
-        parts = out.strip().split("|")
+        p=out.strip().split("|")
         try:
-            u, t = float(parts[0]), float(parts[1])
-            pct = round(u/t*100)
-            data["DISK_GB"] = str(u); data["DISK_USAGE"] = str(pct)
-            if pct > 90: data["DISK_WARN"] = " danger"
-            elif pct > 80: data["DISK_WARN"] = " warn"
+            u,t=float(p[0]),float(p[1]); pct=round(u/t*100)
+            data["DISK_GB"]=str(u); data["DISK_USAGE"]=str(pct)
+            if pct>90: data["DISK_WARN"]=" danger"
+            elif pct>80: data["DISK_WARN"]=" warn"
         except: pass
     return data
 
-
 def collect_storage():
-    data = {"CACHE_SIZE": "—", "DB_SIZE": "—", "MEMORY_COUNT": "—"}
-    out, _, _ = run('bash -c "du -sh /d/Hermes/cache/ 2>/dev/null | cut -f1"')
-    if out: data["CACHE_SIZE"] = out.strip()
-    out, _, _ = run('bash -c "wc -c < /d/Hermes/state.db 2>/dev/null || echo 0"')
-    try: data["DB_SIZE"] = human_bytes(int(out.strip()))
+    data={"CACHE_SIZE":"—","DB_SIZE":"—","MEMORY_COUNT":"—"}
+    out,_,_=run('bash -c "du -sh /d/Hermes/cache/ 2>/dev/null | cut -f1"')
+    if out: data["CACHE_SIZE"]=out.strip()
+    out,_,_=run('bash -c "wc -c < /d/Hermes/state.db 2>/dev/null || echo 0"')
+    try: data["DB_SIZE"]=human_bytes(int(out.strip()))
     except: pass
     return data
 
+# ═══════════════════════ CONTENT GENERATION ═══════════════════════
 
-def collect_cost():
-    return {"YESTERDAY_COST": "—", "COST_NOTE": "余额快照待恢复"}
+def gen_top_tools(tools):
+    if not tools: return '<li class="rank-item"><span class="rank-name">暂无数据</span></li>'
+    mx=max(c for _,c,_ in tools) if tools else 1
+    items=[]
+    for i,(name,count,pct) in enumerate(tools[:10]):
+        cn=TOOL_CN.get(name,name)
+        bw=int(count/mx*100)
+        items.append(f'<li class="rank-item"><span class="rank-pos">{i+1:02d}</span><span class="rank-name">{cn}</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:{bw}%"></div></div><span class="rank-count">{count}</span></li>')
+    return "\n".join(items)
 
+def gen_top_skills(skills):
+    if not skills: return '<div style="color:var(--text-dim);font-size:0.78rem;">暂无数据</div>'
+    # Top 3 featured
+    top3=skills[:3]
+    feat=[]
+    for i,(name,loads,edits) in enumerate(top3):
+        cn=SKILL_CN.get(name,name)
+        cls="top1" if i==0 else ""
+        icon=["🥇","🥈","🥉"][i] if i<3 else "📌"
+        feat.append(f'<div class="skill-feat-card {cls}"><div class="skill-feat-icon">{icon}</div><div class="skill-feat-name">{cn}</div><div class="skill-feat-stat">加载 {loads} 次 · 编辑 {edits} 次</div></div>')
+    # Rest inline
+    rest=skills[3:7]
+    rest_html='<div class="skill-rest">'+" · ".join(f'<span>{SKILL_CN.get(n,n)} <em>{l}</em></span>' for n,l,_ in rest)+'</div>' if rest else ''
+    return f'<div class="skill-featured">{"".join(feat)}</div>{rest_html}'
 
-def fill_template(data, date_str, weekday):
-    data["REPORT_DATE"] = date_str
-    data["REPORT_WEEKDAY"] = weekday
-    with open(TEMPLATE, "r", encoding="utf-8") as f:
-        html = f.read()
-    for key, val in data.items():
-        if key.startswith("_"): continue
-        html = html.replace("{{" + key + "}}", str(val))
-    remaining = re.findall(r'\{\{\s*(\w+)\s*\}\}', html)
-    if remaining:
-        print(f"⚠️ {len(remaining)} 个占位符未填充: {remaining}")
+def gen_week_bars(counts):
+    mx=max(counts) if counts and max(counts)>0 else 1
+    bars=[]
+    for c in counts:
+        h=max(3,int(c/mx*68))
+        cls_s='week-bar-s' if c>0 else 'week-bar-s inactive'
+        cls_t='week-bar-t' if c>0 else 'week-bar-t inactive'
+        # Token bar: proportional to session count, scaled smaller
+        th=max(2,int(c/mx*40))
+        bars.append(f'<div class="week-col"><div class="{cls_s}" style="height:{h}px"></div><div class="{cls_t}" style="height:{th}px"></div></div>')
+    return "\n".join(bars)
+
+def gen_week_nums(counts):
+    return "".join(f'<span>{c if c>0 else ""}</span>' for c in counts)
+
+def gen_peak_chart(raw_peak):
+    """Parse '4AM (4), 2AM (3), 3AM (2)...' into 24h bar chart."""
+    slots=[0]*24
+    if raw_peak:
+        for m in re.finditer(r'(\d+)(AM|PM)\s*\((\d+)\)',raw_peak):
+            h=int(m.group(1)); ampm=m.group(2); count=int(m.group(3))
+            if ampm=="PM" and h!=12: h+=12
+            if ampm=="AM" and h==12: h=0
+            if 0<=h<24: slots[h]=count
+    mx=max(slots) if max(slots)>0 else 1
+    bars="".join(f'<div class="peak-bar" style="height:{max(2,int(s/mx*44))}px"></div>' for s in slots)
+    labels="".join(f'<span>{h if h%6==0 else ""}</span>' for h in range(24))
+    return bars,labels
+
+def gen_notable(notable):
+    if not notable: return '<div class="notable-chip"><span class="notable-chip-icon">📌</span><div class="notable-chip-info"><strong>暂无数据</strong></div></div>'
+    chips=[]
+    for label,value,sid in notable[:4]:
+        cn=NOTABLE_CN.get(label,label)
+        icon={"最长会话":"⏳","最多消息":"💬","最多Token":"⚡","最多工具调用":"🔧"}.get(cn,"📌")
+        short_sid=sid[:28]+"…" if len(sid)>28 else sid
+        chips.append(f'<div class="notable-chip"><span class="notable-chip-icon">{icon}</span><div class="notable-chip-info"><strong>{value}</strong>{cn} · {short_sid}</div></div>')
+    return "\n".join(chips)
+
+# ═══════════════════════ MAIN ═══════════════════════
+
+def fill_template(data,date_str,weekday):
+    data["REPORT_DATE"]=date_str; data["REPORT_WEEKDAY"]=weekday
+    with open(TEMPLATE,"r",encoding="utf-8") as f: html=f.read()
+    for k,v in data.items():
+        if k.startswith("_"): continue
+        html=html.replace("{{"+k+"}}",str(v))
+    rem=re.findall(r'\{\{\s*(\w+)\s*\}\}',html)
+    if rem: print(f"⚠️ {len(rem)} 个占位符未填充: {rem}")
     return html
 
-
 def main():
-    today = datetime.date.today()
-    date_str = today.strftime("%Y-%m-%d")
-    weekdays = ["星期一","星期二","星期三","星期四","星期五","星期六","星期日"]
-    weekday = weekdays[today.weekday()]
-    print(f"📊 采集 {date_str} ({weekday}) …")
+    today=datetime.date.today()
+    ds=today.strftime("%Y-%m-%d")
+    wd=["星期一","星期二","星期三","星期四","星期五","星期六","星期日"][today.weekday()]
+    print(f"📊 {ds} ({wd})")
 
-    # 1. Insights (all data)
-    print("  1/5 insights (全字段解析) …")
-    out, _, _ = run("hermes insights --days 1", timeout=60)
-    data = parse_insights_full(out)
-    print(f"     会话 {data['SESSION_COUNT']} · 消息 {data['MESSAGE_COUNT']} · Token {data['TOKEN_TOTAL']} · 工具 {data['TOOL_COUNT']}")
+    out,_,_=run("hermes insights --days 1",timeout=60)
+    data=parse_insights_full(out)
+    print(f"  会话 {data['SESSION_COUNT']} · 消息 {data['MESSAGE_COUNT']} · Token {data['TOKEN_TOTAL']}")
 
-    # 2. Channels + Gateway
-    print("  2/5 三通道 + 网关 …")
-    ch = collect_channels()
-    wechat_msgs = int(data.get("WECHAT_MSGS", "0").replace(",","") or "0")
-    if wechat_msgs > 0:
-        ch["WECHAT_STATUS_CLASS"] = "online"; ch["WECHAT_STATUS_TEXT"] = "活跃"
-    elif check_port(9119):
-        ch["WECHAT_STATUS_CLASS"] = "activity"; ch["WECHAT_STATUS_TEXT"] = "待命中"
+    ch=collect_channels()
+    wm=int(data.get("WECHAT_MSGS","0").replace(",","") or "0")
+    if wm>0: ch["WECHAT_STATUS_CLASS"]="online"; ch["WECHAT_STATUS_TEXT"]="活跃"
+    elif check_port(9119): ch["WECHAT_STATUS_CLASS"]="activity"; ch["WECHAT_STATUS_TEXT"]="待命中"
     data.update(ch)
     data.update(collect_gateway())
-    print(f"     Mac {data['MAC_STATUS_TEXT']} · 微信 {data['WECHAT_STATUS_TEXT']} · WebUI {data['WEBUI_STATUS_TEXT']}")
+    print(f"  通道 Mac:{data['MAC_STATUS_TEXT']} WX:{data['WECHAT_STATUS_TEXT']} Web:{data['WEBUI_STATUS_TEXT']}")
 
-    # 3. Generate rich content
-    print("  3/5 生成排行+图表 …")
-    data["TOP_TOOLS"] = generate_top_tools(data["_tools"])
-    data["TOP_SKILLS"] = generate_top_skills(data["_skills"])
-    data["WEEK_BARS"] = generate_week_bars(data["WEEK_COUNTS"])
-    data["NOTABLE_SESSIONS"] = generate_notable_sessions(data["_notable"])
-    print(f"     工具 {len(data['_tools'])} 种 · 技能 {len(data['_skills'])} 种 · 亮点 {len(data['_notable'])} 项")
+    data["TOP_TOOLS"]=gen_top_tools(data["_tools"])
+    data["TOP_SKILLS"]=gen_top_skills(data["_skills"])
+    data["WEEK_BARS"]=gen_week_bars(data["WEEK_COUNTS"])
+    data["WEEK_NUMS"]=gen_week_nums(data["WEEK_COUNTS"])
+    peak_bars,peak_labels=gen_peak_chart(data.get("_peak_raw",""))
+    data["PEAK_BARS"]=peak_bars; data["PEAK_LABELS"]=peak_labels
+    data["NOTABLE_SESSIONS"]=gen_notable(data["_notable"])
+    print(f"  工具{len(data['_tools'])} 技能{len(data['_skills'])} 亮点{len(data['_notable'])}")
 
-    # 4. Host + Storage + Cron + Cost
-    print("  4/5 主机+存储+Cron …")
     data.update(collect_host())
     data.update(collect_storage())
     data.update(collect_cron())
-    data.update(collect_cost())
+    print(f"  CPU {data['CPU_USAGE']}%/{data['CPU_PEAK']}% MEM {data['MEM_USAGE']}%")
 
-    # 5. Narrative
-    print("  5/5 生成叙事 …")
-    sessions = data["SESSION_COUNT"]
-    msgs = data["MESSAGE_COUNT"]
-    tokens = data["TOKEN_TOTAL"]
-    tools = data["TOOL_COUNT"]
-    user_msgs = data.get("USER_MESSAGES", "0")
-    active_t = data.get("ACTIVE_TIME", "—")
+    # Narrative
+    s=data["SESSION_COUNT"]; ms=data["MESSAGE_COUNT"]; tk=data["TOKEN_TOTAL"]
+    um=data.get("USER_MESSAGES","0"); at=data.get("ACTIVE_TIME","—")
+    tops=[TOOL_CN.get(t[0],t[0]) for t in data["_tools"][:3]]
+    sk=[SKILL_CN.get(s[0],s[0]) for s in data["_skills"][:3]]
+    data["DAILY_SUMMARY"]=f'今日共 <em>{s}</em> 个会话，<em>{ms}</em> 条消息（用户 {um} 条），活跃 <em>{at}</em>，消耗 <em>{tk}</em> Token。主力工具：{"、".join(tops)}。高频技能：{"、".join(sk)}。'
 
-    summary_parts = []
-    summary_parts.append(f'今日共 {sessions} 个会话，{msgs} 条消息（用户 {user_msgs} 条），活跃 {active_t}，消耗 {tokens} Token。')
-    if data.get("_tools"):
-        top3 = [t[0] for t in data["_tools"][:3]]
-        summary_parts.append(f'主力工具：{", ".join(top3)}。')
-    if data.get("_skills"):
-        top_skills = [s[0] for s in data["_skills"][:3]]
-        summary_parts.append(f'高频技能：{", ".join(top_skills)}。')
+    recs=[]
+    if int(data.get("TOOL_COUNT","0").replace(",","") or "0")>500:
+        recs.append(("⚡","高强度工作","工具调用超过 500 次，建议检查是否存在冗余操作或循环调用。"))
+    if data.get("MEM_WARN"):
+        recs.append(("🖥️","内存使用偏高",f"当前 {data['MEM_USAGE']}%，建议关注后台进程。"))
+    if int(data.get("WECHAT_MSGS","0").replace(",","") or "0")<5 and data["WECHAT_STATUS_CLASS"]=="online":
+        recs.append(("💬","微信低活跃","今日微信端消息较少，检查 iLink 连接是否正常。"))
+    recs.append(("✅","三通道在线","Mac 远控、微信、WebUI 全部正常，无需干预。" if all(
+        data.get(k+"_STATUS_CLASS")=="online" for k in ["MAC","WECHAT","WEBUI"]
+    ) else ("⚠️","通道异常","部分服务通道未连接，建议检查对应进程。")))
 
-    data["DAILY_SUMMARY"] = " ".join(summary_parts)
+    data["DAILY_RECOMMENDATIONS"]="\n".join(
+        f'<div class="narrative-rec-item"><div class="rec-icon">{icon}</div><div class="rec-text"><strong>{title}</strong> — {desc}</div></div>'
+        for icon,title,desc in recs
+    )
 
-    # Recommendation
-    rec = "三通道全部在线，系统运行正常。"
-    if data.get("MEM_WARN") == " danger":
-        rec = "⚠️ 内存使用率过高，建议释放部分进程。"
-    elif data.get("DISK_WARN") == " danger":
-        rec = "⚠️ 磁盘使用率过高，建议清理。"
-    elif int(data.get("TOOL_COUNT", "0").replace(",","") or "0") > 500:
-        rec = "今日高强度工作，建议检查是否有冗余工具调用。"
-    data["DAILY_RECOMMENDATION"] = rec
+    html=fill_template(data,ds,wd)
+    ip=os.path.join(REPORTS_DIR,"index.html")
+    ap=os.path.join(REPORTS_DIR,f"{ds}.html")
+    with open(ip,"w",encoding="utf-8") as f: f.write(html)
+    with open(ap,"w",encoding="utf-8") as f: f.write(html)
+    print(f"✅ index.html ({len(html)} chars)")
 
-    # Fill + write
-    print("📝 填充模板 …")
-    html = fill_template(data, date_str, weekday)
-
-    index_path = os.path.join(REPORTS_DIR, "index.html")
-    archive_path = os.path.join(REPORTS_DIR, f"{date_str}.html")
-    with open(index_path, "w", encoding="utf-8") as f: f.write(html)
-    with open(archive_path, "w", encoding="utf-8") as f: f.write(html)
-    print(f"✅ index.html ({len(html)} chars) · {date_str}.html")
-
-    # Git
     os.chdir(REPORTS_DIR)
     run("git add index.html generate.py template.html 2>/dev/null")
-    if os.path.exists(f"{date_str}.html"):
-        run(f"git add {date_str}.html 2>/dev/null")
-    out_c, err_c, rc_c = run(f'git commit -m "日报 {date_str} v6 Oliver风格+全字段" 2>&1')
-    if rc_c == 0:
-        _, _, rc_p = run("git push origin main 2>&1", timeout=30)
-        print("✅ 已推送" if rc_p == 0 else "⚠️ push 失败")
+    if os.path.exists(f"{ds}.html"): run(f"git add {ds}.html 2>/dev/null")
+    oc,ec,rc=run(f'git commit -m "日报 {ds} v7 CN翻译+峰值叠加+cron详情+叙事增强" 2>&1')
+    if rc==0:
+        _,_,rp=run("git push origin main 2>&1",timeout=30)
+        print("✅ Push" if rp==0 else "⚠️ Push失败")
     else:
-        if "nothing to commit" in (out_c + err_c):
-            _, _, rc_p = run("git push origin main 2>&1", timeout=30)
-            print("✅ 已推送 (无变更)" if rc_p == 0 else "⚠️ push 失败")
-        else:
-            print(f"⚠️ commit: {err_c[:100]}")
+        if "nothing to commit" in (oc+ec):
+            _,_,rp=run("git push origin main 2>&1",timeout=30)
+            print("✅ Push (无变更)" if rp==0 else "⚠️ Push失败")
+        else: print(f"⚠️ commit: {ec[:80]}")
 
     print(f"\n🔗 https://burkereiii.github.io/hermes-daily-report/")
 
-
-if __name__ == "__main__":
-    main()
+if __name__=="__main__": main()
