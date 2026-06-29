@@ -302,12 +302,15 @@ def gen_top_skills(skills):
     return f'<div class="skill-featured">{"".join(feat)}</div>{rest_html}'
 
 def gen_week_bars(counts):
+    """Generate single bars, inactive days as subtle marks."""
     mx=max(counts) if counts and max(counts)>0 else 1
     bars=[]
     for c in counts:
-        h=max(3,int(c/mx*64))
-        cls='week-bar-s' if c>0 else 'week-bar-s inactive'
-        bars.append(f'<div class="week-col"><div class="{cls}" style="height:{h}px"></div></div>')
+        if c>0:
+            h=max(8,int(c/mx*60))
+            bars.append(f'<div class="week-col"><div class="week-bar-s" style="height:{h}px"></div></div>')
+        else:
+            bars.append(f'<div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div>')
     return "\n".join(bars)
 
 def gen_week_nums(counts):
