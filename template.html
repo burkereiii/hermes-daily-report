@@ -30,6 +30,7 @@
   body {
     background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.6; overflow-x: hidden;
   }
+  #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
   /* BG orbs */
   .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
@@ -287,6 +288,7 @@
 </head>
 <body>
 
+<canvas id="bg-canvas"></canvas>
 <div class="bg-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
 
 <!-- HERO -->
@@ -615,6 +617,33 @@
     }
   }
   window.addEventListener('scroll',rev);window.addEventListener('load',rev);rev();
+})();
+</script>
+<!-- PARTICLES -->
+<script>
+(function(){
+  var c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
+  var w,h,particles=[];
+  function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  for(var i=0;i<40;i++){
+    particles.push({x:Math.random()*w,y:Math.random()*h,r:1+Math.random()*1.5,
+      vx:(Math.random()-.5)*0.2,vy:-0.3-Math.random()*0.5,
+      o:0.15+Math.random()*0.25});
+  }
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(var i=0;i<particles.length;i++){
+      var p=particles[i];
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.y<-10){p.y=h+10;p.x=Math.random()*w;}
+      if(p.x<0)p.x=w;if(p.x>w)p.x=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(167,139,250,'+p.o+')';ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
 })();
 </script>
 </body>
