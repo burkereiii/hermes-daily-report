@@ -209,11 +209,11 @@
 
   /* === 24h CHART LINE === */
   .chart-line {
-    stroke-dasharray: 1000; stroke-dashoffset: 1000;
-    animation: draw-line 1.5s ease-out forwards;
+    animation: pulse-line 2s ease-in-out infinite;
   }
-  @keyframes draw-line {
-    to { stroke-dashoffset: 0; }
+  @keyframes pulse-line {
+    0%, 100% { stroke-opacity: 0.6; filter: drop-shadow(0 0 0px transparent); }
+    50% { stroke-opacity: 1; filter: drop-shadow(0 0 4px #a78bfa); }
   }
   .tl-chart {
     display: flex; gap: 2px; align-items: flex-end; height: 80px; padding: 0 2px;
