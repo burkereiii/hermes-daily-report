@@ -50,22 +50,25 @@
   .hero h1 { font-size: 2.6rem; font-weight: 750; color: var(--text-bright); letter-spacing: -1px; line-height: 1.1; }
   .hero .sub { font-size: 0.82rem; color: var(--text-dim); margin-top: 4px; }
 
-  /* MARQUEE — dual strip, crossed */
-  .marquee-zone { position: relative; z-index: 2; margin: -1px -24px 0; height: 70px; overflow: hidden; }
+  /* MARQUEE — dual crossed strips, overlaying hero */
+  .marquee-zone {
+    position: absolute; bottom: 10px; left: -5%; width: 110%; height: 68px;
+    z-index: 5; overflow: hidden; pointer-events: none;
+  }
   .marquee-strip {
     position: absolute; white-space: nowrap; overflow: hidden;
     font-family: var(--mono); font-weight: 700; color: var(--bg);
     display: flex; align-items: center;
   }
   .marquee-strip.top {
-    top: 4px; left: -8%; width: 116%; height: 28px;
-    background: #5b21b6; transform: rotate(-2.5deg);
+    top: 2px; left: -4%; width: 108%; height: 30px;
+    background: #5b21b6; transform: rotate(-2.8deg) translateX(-3%);
     font-size: 0.78rem; letter-spacing: 1px;
   }
   .marquee-strip.bot {
-    bottom: 4px; left: -6%; width: 112%; height: 22px;
-    background: #7c3aed; transform: rotate(1.8deg);
-    font-size: 0.68rem; letter-spacing: 0.5px; opacity: 0.85;
+    bottom: 2px; left: -6%; width: 112%; height: 24px;
+    background: #7c3aed; transform: rotate(2.2deg) translateX(2%);
+    font-size: 0.68rem; letter-spacing: 0.5px; opacity: 0.88;
   }
   .marquee-inner { display: inline-block; animation: marquee 28s linear infinite; padding: 0 40px; }
   .marquee-inner.rev { animation: marquee-rev 22s linear infinite; }
@@ -316,36 +319,35 @@
     <h1>Hermes 系统日报</h1>
     <div class="sub">{{REPORT_WEEKDAY}} · 沙河麻衣自动生成</div>
   </div>
-</div>
-
-<!-- MARQUEE — dual crossed strips -->
-<div class="marquee-zone">
-  <div class="marquee-strip top">
-    <div class="marquee-inner">
-      <span>{{MODEL_NAME}}</span><span class="sep">★</span>
-      <span>会话 {{SESSION_COUNT}}</span><span class="sep">★</span>
-      <span>{{TOKEN_TOTAL}}</span><span class="sep">★</span>
-      <span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
-      <span>PID {{GATEWAY_PID}}</span><span class="sep">★</span>
-      <span>{{MODEL_NAME}}</span><span class="sep">★</span>
-      <span>会话 {{SESSION_COUNT}}</span><span class="sep">★</span>
-      <span>{{TOKEN_TOTAL}}</span><span class="sep">★</span>
-      <span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
-      <span>PID {{GATEWAY_PID}}</span><span class="sep">★</span>
+  <!-- MARQUEE overlaid on hero -->
+  <div class="marquee-zone">
+    <div class="marquee-strip top">
+      <div class="marquee-inner">
+        <span>{{MODEL_NAME}}</span><span class="sep">★</span>
+        <span>会话 {{SESSION_COUNT}}</span><span class="sep">★</span>
+        <span>{{TOKEN_TOTAL}}</span><span class="sep">★</span>
+        <span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
+        <span>PID {{GATEWAY_PID}}</span><span class="sep">★</span>
+        <span>{{MODEL_NAME}}</span><span class="sep">★</span>
+        <span>会话 {{SESSION_COUNT}}</span><span class="sep">★</span>
+        <span>{{TOKEN_TOTAL}}</span><span class="sep">★</span>
+        <span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
+        <span>PID {{GATEWAY_PID}}</span><span class="sep">★</span>
+      </div>
     </div>
-  </div>
-  <div class="marquee-strip bot">
-    <div class="marquee-inner rev">
-      <span>图片 {{IMAGE_COUNT}}</span><span class="sep">★</span>
-      <span>Tailscale 在线</span><span class="sep">★</span>
-      <span>预览 :8899</span><span class="sep">★</span>
-      <span>WebUI :8787</span><span class="sep">★</span>
-      <span>微信 {{WECHAT_MSGS}}条</span><span class="sep">★</span>
-      <span>图片 {{IMAGE_COUNT}}</span><span class="sep">★</span>
-      <span>Tailscale 在线</span><span class="sep">★</span>
-      <span>预览 :8899</span><span class="sep">★</span>
-      <span>WebUI :8787</span><span class="sep">★</span>
-      <span>微信 {{WECHAT_MSGS}}条</span><span class="sep">★</span>
+    <div class="marquee-strip bot">
+      <div class="marquee-inner rev">
+        <span>图片 {{IMAGE_COUNT}}</span><span class="sep">★</span>
+        <span>Tailscale 在线</span><span class="sep">★</span>
+        <span>预览 :8899</span><span class="sep">★</span>
+        <span>WebUI :8787</span><span class="sep">★</span>
+        <span>微信 {{WECHAT_MSGS}}条</span><span class="sep">★</span>
+        <span>图片 {{IMAGE_COUNT}}</span><span class="sep">★</span>
+        <span>Tailscale 在线</span><span class="sep">★</span>
+        <span>预览 :8899</span><span class="sep">★</span>
+        <span>WebUI :8787</span><span class="sep">★</span>
+        <span>微信 {{WECHAT_MSGS}}条</span><span class="sep">★</span>
+      </div>
     </div>
   </div>
 </div>
