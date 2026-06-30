@@ -576,11 +576,13 @@ def gen_peak_chart(raw_peak):
 def gen_notable(notable):
     if not notable: return '<div class="notable-chip"><span class="notable-chip-icon">📌</span><div class="notable-chip-info"><strong>暂无数据</strong></div></div>'
     chips=[]
-    for label,value,sid in notable[:4]:
+    for item in notable[:4]:
+        label,value=item[0],item[1]
+        topic=item[2] if len(item)>2 else ""
         cn=NOTABLE_CN.get(label,label)
         icon={"最长会话":"⏳","最多消息":"💬","最多Token":"⚡","最多工具调用":"🔧"}.get(cn,"📌")
-        short_sid=sid[:28]+"…" if len(sid)>28 else sid
-        chips.append(f'<div class="notable-chip"><span class="notable-chip-icon">{icon}</span><div class="notable-chip-info"><strong>{value}</strong>{cn} · {short_sid}</div></div>')
+        topic_html=f'<span style="font-size:0.62rem;color:var(--text-dim);display:block;margin-top:2px;">{topic}</span>' if topic else ''
+        chips.append(f'<div class="notable-chip"><span class="notable-chip-icon">{icon}</span><div class="notable-chip-info"><strong>{value}</strong>{cn}{topic_html}</div></div>')
     return "\n".join(chips)
 
 # ═══════════════════════ COLLECT ALL (self-collect mode) ═══════════════════════
