@@ -408,20 +408,22 @@
     <div class="section-badge"><span class="dot"></span>系统负载</div>
     <h2>进程概况</h2>
   </div>
-  <div class="grid-2 reveal">
-    <div class="card">
-      <div class="proc-summary">
-        <span>总进程 <strong>{{PROCESS_TOTAL}}</strong></span>
-        <span>僵尸 <strong>{{ZOMBIE_COUNT}}</strong></span>
-      </div>
-      <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🔝 内存占用 Top 5</div>
-      {{PROCESS_TOP5}}
+  <div class="card reveal">
+    <div class="proc-summary">
+      <span>总进程 <strong>{{PROCESS_TOTAL}}</strong></span>
+      <span>僵尸 <strong>{{ZOMBIE_COUNT}}</strong></span>
     </div>
-    <div class="card">
-      <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🌐 网络概况</div>
-      <div style="font-size:0.76rem;color:var(--text-dim);line-height:1.7;">{{NETWORK_SUMMARY}}</div>
-      <div style="margin-top:10px;font-size:0.7rem;color:var(--text-dim);">
-        Tailscale: {{TAILSCALE_STATUS}} · {{TAILSCALE_IP}}{{TAILSCALE_EXIT}}
+    <div class="grid-2" style="gap:16px;">
+      <div>
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🔝 内存 Top 5</div>
+        {{PROCESS_TOP5}}
+      </div>
+      <div>
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🌐 网络概况</div>
+        <div style="font-size:0.72rem;color:var(--text-dim);line-height:1.7;">{{NETWORK_SUMMARY}}</div>
+        <div style="margin-top:8px;font-size:0.66rem;color:var(--text-dim);">
+          Tailscale: {{TAILSCALE_STATUS}} · {{TAILSCALE_IP}}{{TAILSCALE_EXIT}}
+        </div>
       </div>
     </div>
   </div>

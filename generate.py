@@ -244,12 +244,31 @@ def collect_tailscale():
         except: pass
 
     # Basic network info
-    out2,_,_=run('bash -c "ipconfig 2>/dev/null | grep -A1 \'以太网\|Wi-Fi\|Tailscale\' | head -20"',timeout=5)
+    out2,_,_=run('bash -c "ipconfig 2>/dev/null | grep -A1 \'以太网\|Wi-Fi\' | grep -v \'Unknown\|Tailscale\' | head -6"',timeout=5)
     if not out2:
         out2,_,_=run_ps("Get-NetAdapter | Where-Object Status -eq 'Up' | ForEach-Object { $_.Name + ': ' + $_.Status }")
-    if out2:
-        data["NETWORK_SUMMARY"]=data.get("NETWORK_SUMMARY","—")+"\n"+out2.replace("\n","<br>")
+    if out2 and out2.strip():
+        data["NETWORK_SUMMARY"]="以太网/Wi-Fi 已连接"
+    else:
+        data["NETWORK_SUMMARY"]=data.get("NETWORK_SUMMARY","Tailscale 在线")
     return data
+
+PROC_CN = {
+    "Memory Compression": "内存压缩",
+    "Hermes": "AI Agent",
+    "chrome": "Chrome",
+    "explorer": "资源管理器",
+    "steamwebhelper": "Steam",
+    "dwm": "桌面窗口",
+    "python": "Python",
+    "cmd": "命令行",
+    "Code": "VS Code",
+    "firefox": "Firefox",
+    "msedge": "Edge",
+    "Discord": "Discord",
+    "Everything": "文件搜索",
+    "SearchHost": "搜索",
+}
 
 def collect_processes():
     data={"PROCESS_TOTAL":"—","PROCESS_TOP5":"","ZOMBIE_COUNT":"—"}
@@ -267,9 +286,12 @@ foreach ($p in $top) { Write-Output "PROC|$($p.Name)|$($p.Id)|$($p.MemMB)" }
             elif line.startswith("PROC|"):
                 parts=line.split("|")
                 if len(parts)>=4:
-                    items.append(f'<div class="proc-row"><span class="proc-rank">{len(items)+1}</span><span class="proc-name">{parts[1]}</span><span class="proc-pid">{parts[2]}</span><span class="proc-mem">{parts[3]} MB</span></div>')
+                    name = parts[1]
+                    cn = PROC_CN.get(name, "")
+                    display = f"{name} <small style='color:var(--text-dim);font-size:0.6rem'>{cn}</small>" if cn else name
+                    items.append(f'<div class="proc-row"><span class="proc-rank">{len(items)+1}</span><span class="proc-name">{display}</span><span class="proc-pid">PID {parts[2]}</span><span class="proc-mem">{parts[3]} MB</span></div>')
         data["PROCESS_TOP5"]="\n".join(items) if items else '<div class="proc-row"><span class="proc-name" style="color:var(--text-dim)">暂无数据</span></div>'
-    data["ZOMBIE_COUNT"]="—"  # placeholder until reliable detection
+    data["ZOMBIE_COUNT"]="—"
     return data
 
 def collect_images():
