@@ -35,6 +35,13 @@ CRON_DESC = {
     "日报生成":"每日零点自动生成系统日报，推送至 GitHub Pages",
     "全盘健康检查":"凌晨3点采集系统指标并诊断，异常推送微信告警",
     "宿主进程自动清理":"每30分钟清理僵尸进程和临时文件",
+    "峰值采样":"每分钟采样CPU/内存/磁盘，用于日报真实峰值数据",
+}
+CRON_SCHED_CN = {
+    "0 0 * * *":"每天 00:00",
+    "0 3 * * *":"每天 03:00",
+    "*/30 * * * *":"每 30 分钟",
+    "* * * * *":"每分钟",
 }
 
 def run(cmd, timeout=30):
@@ -742,7 +749,7 @@ def collect_cron():
     items = []
     for j in jobs[:10]:
         name = j["name"] if j["name"] else j["id"][:12]
-        sched = j["schedule"]
+        sched = CRON_SCHED_CN.get(j["schedule"], j["schedule"])
         status = j["status"]
         desc = CRON_DESC.get(name, "")
         icon = "⚠️" if status == "error" else "✅"
