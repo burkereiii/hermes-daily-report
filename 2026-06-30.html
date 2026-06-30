@@ -79,8 +79,8 @@
   /* === 1. OVERVIEW CARDS with delta === */
   .kpi-card {
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 16px 14px 12px; position: relative; overflow: hidden; transition: all 0.3s;
-    display: flex; flex-direction: column; justify-content: center; min-height: 88px;
+    padding: 14px 14px 10px; position: relative; overflow: hidden; transition: all 0.3s;
+    display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 88px;
   }
   .kpi-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
   .kpi-card::after {
@@ -95,11 +95,11 @@
     opacity: 0; transition: opacity 0.3s;
   }
   .kpi-card:hover::before { opacity: 1; }
-  .kpi-icon { font-size: 1.15rem; margin-bottom: 3px; position: relative; z-index: 1; }
-  .kpi-value { font-size: 1.65rem; font-weight: 750; color: var(--text-bright); line-height: 1.05; position: relative; z-index: 1; }
-  .kpi-label { font-size: 0.73rem; color: var(--text-dim); position: relative; z-index: 1; margin-top: 1px; }
-  .kpi-sub { font-size: 0.67rem; color: var(--text-dim); opacity: 0.75; margin-top: 2px; position: relative; z-index: 1; }
-  .kpi-delta { font-size: 0.66rem; margin-top: 4px; position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 3px; }
+  .kpi-icon { font-size: 1.3rem; margin-bottom: 6px; position: relative; z-index: 1; }
+  .kpi-value { font-size: 1.8rem; font-weight: 750; color: var(--text-bright); line-height: 1; position: relative; z-index: 1; }
+  .kpi-label { font-size: 0.7rem; color: var(--text-dim); position: relative; z-index: 1; margin-top: 2px; }
+  .kpi-sub { font-size: 0.62rem; color: var(--text-dim); opacity: 0.7; margin-top: 2px; position: relative; z-index: 1; }
+  .kpi-delta { font-size: 0.65rem; margin-top: 5px; position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 3px; }
   .kpi-delta.up { color: var(--green); }
   .kpi-delta.down { color: var(--red); }
   .kpi-delta.flat { color: var(--text-dim); }
@@ -307,16 +307,16 @@
   <div class="marquee">
     <span>deepseek-v4-pro</span><span class="sep">★</span>
     <span>会话 9</span><span class="sep">★</span>
-    <span>141.6M</span><span class="sep">★</span>
+    <span>142.9M</span><span class="sep">★</span>
     <span>Cron 4/4</span><span class="sep">★</span>
     <span>图片 0</span><span class="sep">★</span>
-    <span>PID 31852</span><span class="sep">★</span>
+    <span>PID N/A</span><span class="sep">★</span>
     <span>deepseek-v4-pro</span><span class="sep">★</span>
     <span>会话 9</span><span class="sep">★</span>
-    <span>141.6M</span><span class="sep">★</span>
+    <span>142.9M</span><span class="sep">★</span>
     <span>Cron 4/4</span><span class="sep">★</span>
     <span>图片 0</span><span class="sep">★</span>
-    <span>PID 31852</span><span class="sep">★</span>
+    <span>PID N/A</span><span class="sep">★</span>
   </div>
 </div>
 
@@ -331,28 +331,28 @@
   <div class="grid-4">
     <div class="kpi-card reveal reveal-d1">
       <div class="kpi-icon">💰</div>
-      <div class="kpi-value">¥0.04</div>
+      <div class="kpi-value">¥0.05</div>
       <div class="kpi-label">DeepSeek 消耗</div>
-      <div class="kpi-sub">余额 ¥65.51</div>
+      <div class="kpi-sub">余额 ¥65.46</div>
       <div class="kpi-delta down">9 个会话</div>
     </div>
     <div class="kpi-card reveal reveal-d2">
       <div class="kpi-icon">📨</div>
-      <div class="kpi-value">2100</div>
+      <div class="kpi-value">2110</div>
       <div class="kpi-label">条消息</div>
-      <div class="kpi-sub">用户 128 条</div>
+      <div class="kpi-sub">用户 129 条</div>
       <div class="kpi-delta down">↓ 1746 (45%)</div>
     </div>
     <div class="kpi-card reveal reveal-d3">
       <div class="kpi-icon">⚡</div>
-      <div class="kpi-value">141.6M</div>
+      <div class="kpi-value">142.9M</div>
       <div class="kpi-label">Token</div>
-      <div class="kpi-sub">I/O 1.3M / 432.3K</div>
+      <div class="kpi-sub">I/O 1.3M / 434.0K</div>
       <div class="kpi-delta down">↓ 181690121 (56%)</div>
     </div>
     <div class="kpi-card reveal reveal-d4">
       <div class="kpi-icon">🔧</div>
-      <div class="kpi-value">1005</div>
+      <div class="kpi-value">1009</div>
       <div class="kpi-label">次工具调用</div>
       <div class="kpi-sub">均会话 3h</div>
       <div class="kpi-delta down">↓ 762 (43%)</div>
@@ -399,7 +399,7 @@
   </div>
 
   <div style="text-align:center;padding:8px 0;font-size:0.72rem;color:var(--text-dim);" class="reveal">
-    网关 运行中 · PID 31852 · deepseek-v4-pro / DeepSeek · 单模型 · 无 fallback
+    网关 已停止 · PID N/A · deepseek-v4-pro / DeepSeek · 单模型 · 无 fallback
   </div>
 
   <!-- ===== 03 进程概况 ===== -->
@@ -415,11 +415,11 @@
         <span>僵尸 <strong>—</strong></span>
       </div>
       <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🔝 内存占用 Top 5</div>
-      <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Hermes</span><span class="proc-pid">5260</span><span class="proc-mem">847 MB</span></div>
-<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Memory Compression</span><span class="proc-pid">4656</span><span class="proc-mem">843 MB</span></div>
-<div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">chrome</span><span class="proc-pid">4052</span><span class="proc-mem">633 MB</span></div>
+      <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Hermes</span><span class="proc-pid">5260</span><span class="proc-mem">880 MB</span></div>
+<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Memory Compression</span><span class="proc-pid">4656</span><span class="proc-mem">844 MB</span></div>
+<div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">chrome</span><span class="proc-pid">4052</span><span class="proc-mem">644 MB</span></div>
 <div class="proc-row"><span class="proc-rank">4</span><span class="proc-name">chrome</span><span class="proc-pid">32640</span><span class="proc-mem">379 MB</span></div>
-<div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">steamwebhelper</span><span class="proc-pid">25396</span><span class="proc-mem">341 MB</span></div>
+<div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">steamwebhelper</span><span class="proc-pid">25396</span><span class="proc-mem">353 MB</span></div>
     </div>
     <div class="card">
       <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🌐 网络概况</div>
@@ -440,8 +440,8 @@ Unknown adapter Tailscale:</div>
   <div class="grid-2 reveal">
     <div class="card">
       <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:12px;">🔧 工具排行</div>
-      <ul class="rank-list"><li class="rank-item"><span class="rank-pos">01</span><span class="rank-name">终端</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:100%"></div></div><span class="rank-count">444</span></li>
-<li class="rank-item"><span class="rank-pos">02</span><span class="rank-name">补丁</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:27%"></div></div><span class="rank-count">120</span></li>
+      <ul class="rank-list"><li class="rank-item"><span class="rank-pos">01</span><span class="rank-name">终端</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:100%"></div></div><span class="rank-count">446</span></li>
+<li class="rank-item"><span class="rank-pos">02</span><span class="rank-name">补丁</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:27%"></div></div><span class="rank-count">122</span></li>
 <li class="rank-item"><span class="rank-pos">03</span><span class="rank-name">读文件</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:21%"></div></div><span class="rank-count">96</span></li>
 <li class="rank-item"><span class="rank-pos">04</span><span class="rank-name">桌面操控</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:13%"></div></div><span class="rank-count">61</span></li>
 <li class="rank-item"><span class="rank-pos">05</span><span class="rank-name">浏览</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:9%"></div></div><span class="rank-count">44</span></li>
@@ -466,17 +466,17 @@ Unknown adapter Tailscale:</div>
   <div class="grid-2 reveal">
     <div class="card">
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 78% · 峰值 99%</span></div>
+        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 68% · 峰值 81%</span></div>
         <div class="dual-track">
-          <div class="dual-fill-curr" style="width:78%"></div>
-          <div class="dual-fill-peak" style="width:99%"></div>
+          <div class="dual-fill-curr" style="width:68%"></div>
+          <div class="dual-fill-peak" style="width:81%"></div>
         </div>
       </div>
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">内存</span><span class="v">当前 40% · 峰值 47% · 40 GB</span></div>
+        <div class="dual-head"><span class="l">内存</span><span class="v">当前 40% · 峰值 49% · 40 GB</span></div>
         <div class="dual-track">
           <div class="dual-fill-curr" style="width:40%"></div>
-          <div class="dual-fill-peak" style="width:47%"></div>
+          <div class="dual-fill-peak" style="width:49%"></div>
         </div>
       </div>
       <div class="dual-progress">
@@ -494,7 +494,7 @@ Unknown adapter Tailscale:</div>
         <div><div class="obs-stat-val">—</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
       </div>
       <div style="font-size:0.64rem;color:var(--text-dim);text-align:center;margin-top:4px;">
-        成本: $0.9547 估算 · deepseek
+        成本: $0.9568 估算 · deepseek
       </div>
     </div>
   </div>
@@ -565,7 +565,7 @@ Unknown adapter Tailscale:</div>
       <div class="peak-chart"><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:44px"></div><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:29px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div></div>
       <div class="peak-labels"><span>0</span><span></span><span></span><span></span><span></span><span></span><span>6</span><span></span><span></span><span></span><span></span><span></span><span>12</span><span></span><span></span><span></span><span></span><span></span><span>18</span><span></span><span></span><span></span><span></span><span></span></div>
       <div style="font-size:0.65rem;color:var(--text-dim);margin-top:6px;text-align:center;">
-        桌面 1594 条 · 微信 435 条
+        桌面 1604 条 · 微信 435 条
       </div>
       <div class="peak-note">⚠️ 峰值为瞬时快照+模拟，非持续监控数据。部署轻量守护进程后可获取真实峰值。</div>
     </div>
@@ -579,8 +579,8 @@ Unknown adapter Tailscale:</div>
   </div>
   <div class="notable-row reveal">
     <div class="notable-chip"><span class="notable-chip-icon">⏳</span><div class="notable-chip-info"><strong>13h 16m</strong>最长会话 · Jun 30, 20260630_021238_</div></div>
-<div class="notable-chip"><span class="notable-chip-icon">💬</span><div class="notable-chip-info"><strong>484 msgs</strong>最多消息 · Jun 30, 20260630_021238_</div></div>
-<div class="notable-chip"><span class="notable-chip-icon">⚡</span><div class="notable-chip-info"><strong>551,951 tokens</strong>最多Token · Jun 30, 20260630_171539_</div></div>
+<div class="notable-chip"><span class="notable-chip-icon">💬</span><div class="notable-chip-info"><strong>492 msgs</strong>最多消息 · Jun 30, 20260630_171539_</div></div>
+<div class="notable-chip"><span class="notable-chip-icon">⚡</span><div class="notable-chip-info"><strong>555,163 tokens</strong>最多Token · Jun 30, 20260630_171539_</div></div>
 <div class="notable-chip"><span class="notable-chip-icon">🔧</span><div class="notable-chip-info"><strong>227 calls</strong>最多工具调用 · Jun 30, 20260630_021238_</div></div>
   </div>
 

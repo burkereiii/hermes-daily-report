@@ -79,8 +79,8 @@
   /* === 1. OVERVIEW CARDS with delta === */
   .kpi-card {
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 16px 14px 12px; position: relative; overflow: hidden; transition: all 0.3s;
-    display: flex; flex-direction: column; justify-content: center; min-height: 88px;
+    padding: 14px 14px 10px; position: relative; overflow: hidden; transition: all 0.3s;
+    display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 88px;
   }
   .kpi-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
   .kpi-card::after {
@@ -95,11 +95,11 @@
     opacity: 0; transition: opacity 0.3s;
   }
   .kpi-card:hover::before { opacity: 1; }
-  .kpi-icon { font-size: 1.15rem; margin-bottom: 3px; position: relative; z-index: 1; }
-  .kpi-value { font-size: 1.65rem; font-weight: 750; color: var(--text-bright); line-height: 1.05; position: relative; z-index: 1; }
-  .kpi-label { font-size: 0.73rem; color: var(--text-dim); position: relative; z-index: 1; margin-top: 1px; }
-  .kpi-sub { font-size: 0.67rem; color: var(--text-dim); opacity: 0.75; margin-top: 2px; position: relative; z-index: 1; }
-  .kpi-delta { font-size: 0.66rem; margin-top: 4px; position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 3px; }
+  .kpi-icon { font-size: 1.3rem; margin-bottom: 6px; position: relative; z-index: 1; }
+  .kpi-value { font-size: 1.8rem; font-weight: 750; color: var(--text-bright); line-height: 1; position: relative; z-index: 1; }
+  .kpi-label { font-size: 0.7rem; color: var(--text-dim); position: relative; z-index: 1; margin-top: 2px; }
+  .kpi-sub { font-size: 0.62rem; color: var(--text-dim); opacity: 0.7; margin-top: 2px; position: relative; z-index: 1; }
+  .kpi-delta { font-size: 0.65rem; margin-top: 5px; position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 3px; }
   .kpi-delta.up { color: var(--green); }
   .kpi-delta.down { color: var(--red); }
   .kpi-delta.flat { color: var(--text-dim); }
