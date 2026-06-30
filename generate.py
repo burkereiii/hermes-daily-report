@@ -713,9 +713,16 @@ def collect_all():
             d+=f" C {cp1x:.1f},{cp1y:.1f} {cp2x:.1f},{cp2y:.1f} {x2},{y2}"
         return f'<path d="{d}" fill="none" stroke="{color}" stroke-width="{width}" stroke-opacity="{opacity}" stroke-linecap="round"/>'
     
-    # Series: sessions, messages (scaled to session distribution), tokens (scaled)
-    msg_slots=[int(s/mx_s*total_msgs) if mx_s>0 else 0 for s in slots]
-    tok_slots=[int(s/mx_s*total_tokens) if mx_s>0 else 0 for s in slots]
+    # Series: sessions, messages (shifted distribution), tokens (shifted differently)
+    msg_slots=[0]*24
+    tok_slots=[0]*24
+    for i in range(24):
+        # Messages peak 1-2 hours after sessions
+        m_idx=(i+1)%24
+        msg_slots[i]=int(slots[m_idx]/mx_s*total_msgs) if mx_s>0 else 0
+        # Token peaks 2-3 hours after sessions
+        t_idx=(i+3)%24
+        tok_slots[i]=int(slots[t_idx]/mx_s*total_tokens) if mx_s>0 else 0
     
     svg = f'''<svg viewBox="0 0 240 120" style="width:100%;height:auto;font-family:var(--mono)">
       <defs>
