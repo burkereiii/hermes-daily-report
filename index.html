@@ -176,23 +176,10 @@
   .rank-name { flex: 1; color: var(--text-bright); }
   .rank-bar-wrap { flex: 2; height: 4px; background: rgba(124,58,237,0.05); border-radius: 2px; overflow: hidden; }
   .rank-bar { height: 100%; border-radius: 2px; background: var(--accent); }
-  .rank-count { width: 44px; text-align: right; font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); }
+  .rank-count { min-width: 44px; text-align: right; font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); white-space: nowrap; }
 
-  /* === SKILLS === */
-  .skill-featured { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 12px; }
-  .skill-feat-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 14px 12px; text-align: center; transition: all 0.3s;
-    position: relative; overflow: hidden;
-  }
-  .skill-feat-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
-  .skill-feat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
-  .skill-feat-card.top1::before { background: linear-gradient(90deg, #f59e0b, var(--yellow)); }
-  .skill-feat-icon { font-size: 1.5rem; margin-bottom: 4px; }
-  .skill-feat-name { font-size: 0.88rem; font-weight: 600; color: var(--text-bright); }
-  .skill-feat-stat { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
-  .skill-rest { font-size: 0.76rem; color: var(--text-dim); padding: 4px 0; display: flex; flex-wrap: wrap; gap: 6px 14px; }
-  .skill-rest span { color: var(--text); } .skill-rest em { color: var(--accent-glow); font-style: normal; font-weight: 500; }
+  .skill-hl .rank-name { color: var(--accent-glow); font-weight: 600; }
+  .skill-hl .rank-pos { color: var(--accent-glow); }
 
   /* === WEEK CHART === */
   .week-dual { display: flex; gap: 4px; align-items: flex-end; height: 66px; padding: 0 4px; margin-bottom: 6px; }
@@ -331,9 +318,9 @@
   <div class="grid-4">
     <div class="kpi-card reveal reveal-d1">
       <div class="kpi-icon">💰</div>
-      <div class="kpi-value">¥0.33</div>
+      <div class="kpi-value">¥0.25</div>
       <div class="kpi-label">DeepSeek 消耗</div>
-      <div class="kpi-sub">余额 ¥63.62</div>
+      <div class="kpi-sub">余额 ¥63.37</div>
       <div class="kpi-delta down">10 个会话</div>
     </div>
     <div class="kpi-card reveal reveal-d2">
@@ -410,14 +397,14 @@
   </div>
   <div class="card reveal">
     <div class="proc-summary">
-      <span>总进程 <strong>371</strong></span>
+      <span>总进程 <strong>370</strong></span>
       <span>僵尸 <strong>—</strong></span>
     </div>
     <div class="grid-2" style="gap:16px;">
       <div>
         <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🔝 内存 Top 5</div>
-        <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression <small style='color:var(--text-dim);font-size:0.6rem'>内存压缩</small></span><span class="proc-pid">PID 4656</span><span class="proc-mem">846 MB</span></div>
-<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">778 MB</span></div>
+        <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression <small style='color:var(--text-dim);font-size:0.6rem'>内存压缩</small></span><span class="proc-pid">PID 4656</span><span class="proc-mem">1034 MB</span></div>
+<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">777 MB</span></div>
 <div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">explorer <small style='color:var(--text-dim);font-size:0.6rem'>资源管理器</small></span><span class="proc-pid">PID 15188</span><span class="proc-mem">422 MB</span></div>
 <div class="proc-row"><span class="proc-rank">4</span><span class="proc-name">steamwebhelper <small style='color:var(--text-dim);font-size:0.6rem'>Steam</small></span><span class="proc-pid">PID 25396</span><span class="proc-mem">336 MB</span></div>
 <div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">dwm <small style='color:var(--text-dim);font-size:0.6rem'>桌面窗口</small></span><span class="proc-pid">PID 2356</span><span class="proc-mem">336 MB</span></div>
@@ -454,7 +441,13 @@
     </div>
     <div class="card">
       <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:12px;">🧠 技能使用</div>
-      <div class="skill-featured"><div class="skill-feat-card top1"><div class="skill-feat-icon">🥇</div><div class="skill-feat-name">系统日报</div><div class="skill-feat-stat">加载 4 次 · 编辑 4 次</div></div><div class="skill-feat-card "><div class="skill-feat-icon">🥈</div><div class="skill-feat-name">笔记</div><div class="skill-feat-stat">加载 4 次 · 编辑 0 次</div></div><div class="skill-feat-card "><div class="skill-feat-icon">🥉</div><div class="skill-feat-name">配置管理</div><div class="skill-feat-stat">加载 2 次 · 编辑 0 次</div></div></div><div class="skill-rest"><span>obsidian-vault-discovery <em>1</em></span> · <span>计划制定 <em>1</em></span> · <span>系统调试 <em>1</em></span> · <span>知识策展 <em>0</em></span></div>
+      <ul class="rank-list"><li class="rank-item skill-hl"><span class="rank-pos">01</span><span class="rank-name">系统日报</span><span class="rank-count">加载 4 · 编辑 4</span></li>
+<li class="rank-item skill-hl"><span class="rank-pos">02</span><span class="rank-name">笔记</span><span class="rank-count">加载 4 · 编辑 0</span></li>
+<li class="rank-item skill-hl"><span class="rank-pos">03</span><span class="rank-name">配置管理</span><span class="rank-count">加载 2 · 编辑 0</span></li>
+<li class="rank-item "><span class="rank-pos">04</span><span class="rank-name">obsidian-vault-discovery</span><span class="rank-count">加载 1 · 编辑 0</span></li>
+<li class="rank-item "><span class="rank-pos">05</span><span class="rank-name">计划制定</span><span class="rank-count">加载 1 · 编辑 0</span></li>
+<li class="rank-item "><span class="rank-pos">06</span><span class="rank-name">系统调试</span><span class="rank-count">加载 1 · 编辑 0</span></li>
+<li class="rank-item "><span class="rank-pos">07</span><span class="rank-name">知识策展</span><span class="rank-count">加载 0 · 编辑 1</span></li></ul>
     </div>
   </div>
 
@@ -467,17 +460,17 @@
   <div class="grid-2 reveal">
     <div class="card">
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 8% · 峰值 14%</span></div>
+        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 5% · 峰值 13%</span></div>
         <div class="dual-track">
-          <div class="dual-fill-curr" style="width:8%"></div>
-          <div class="dual-fill-peak" style="width:14%"></div>
+          <div class="dual-fill-curr" style="width:5%"></div>
+          <div class="dual-fill-peak" style="width:13%"></div>
         </div>
       </div>
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">内存</span><span class="v">当前 40% · 峰值 45% · 40 GB</span></div>
+        <div class="dual-head"><span class="l">内存</span><span class="v">当前 38% · 峰值 52% · 40 GB</span></div>
         <div class="dual-track">
-          <div class="dual-fill-curr" style="width:40%"></div>
-          <div class="dual-fill-peak" style="width:45%"></div>
+          <div class="dual-fill-curr" style="width:38%"></div>
+          <div class="dual-fill-peak" style="width:52%"></div>
         </div>
       </div>
       <div class="dual-progress">

@@ -510,16 +510,12 @@ def gen_top_tools(tools):
 
 def gen_top_skills(skills):
     if not skills: return '<div style="color:var(--text-dim);font-size:0.78rem;">暂无数据</div>'
-    top3=skills[:3]
-    feat=[]
-    for i,(name,loads,edits) in enumerate(top3):
+    items=[]
+    for i,(name,loads,edits) in enumerate(skills[:10]):
         cn=SKILL_CN.get(name,name)
-        cls="top1" if i==0 else ""
-        icon=["🥇","🥈","🥉"][i] if i<3 else "📌"
-        feat.append(f'<div class="skill-feat-card {cls}"><div class="skill-feat-icon">{icon}</div><div class="skill-feat-name">{cn}</div><div class="skill-feat-stat">加载 {loads} 次 · 编辑 {edits} 次</div></div>')
-    rest=skills[3:7]
-    rest_html='<div class="skill-rest">'+" · ".join(f'<span>{SKILL_CN.get(n,n)} <em>{l}</em></span>' for n,l,_ in rest)+'</div>' if rest else ''
-    return f'<div class="skill-featured">{"".join(feat)}</div>{rest_html}'
+        hl='skill-hl' if i<3 else ''
+        items.append(f'<li class="rank-item {hl}"><span class="rank-pos">{i+1:02d}</span><span class="rank-name">{cn}</span><span class="rank-count">加载 {loads} · 编辑 {edits}</span></li>')
+    return '<ul class="rank-list">'+"\n".join(items)+'</ul>'
 
 def gen_week_bars(counts):
     mx=max(counts) if counts and max(counts)>0 else 1

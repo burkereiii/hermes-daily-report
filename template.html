@@ -176,23 +176,10 @@
   .rank-name { flex: 1; color: var(--text-bright); }
   .rank-bar-wrap { flex: 2; height: 4px; background: rgba(124,58,237,0.05); border-radius: 2px; overflow: hidden; }
   .rank-bar { height: 100%; border-radius: 2px; background: var(--accent); }
-  .rank-count { width: 44px; text-align: right; font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); }
+  .rank-count { min-width: 44px; text-align: right; font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); white-space: nowrap; }
 
-  /* === SKILLS === */
-  .skill-featured { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 12px; }
-  .skill-feat-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 14px 12px; text-align: center; transition: all 0.3s;
-    position: relative; overflow: hidden;
-  }
-  .skill-feat-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
-  .skill-feat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
-  .skill-feat-card.top1::before { background: linear-gradient(90deg, #f59e0b, var(--yellow)); }
-  .skill-feat-icon { font-size: 1.5rem; margin-bottom: 4px; }
-  .skill-feat-name { font-size: 0.88rem; font-weight: 600; color: var(--text-bright); }
-  .skill-feat-stat { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
-  .skill-rest { font-size: 0.76rem; color: var(--text-dim); padding: 4px 0; display: flex; flex-wrap: wrap; gap: 6px 14px; }
-  .skill-rest span { color: var(--text); } .skill-rest em { color: var(--accent-glow); font-style: normal; font-weight: 500; }
+  .skill-hl .rank-name { color: var(--accent-glow); font-weight: 600; }
+  .skill-hl .rank-pos { color: var(--accent-glow); }
 
   /* === WEEK CHART === */
   .week-dual { display: flex; gap: 4px; align-items: flex-end; height: 66px; padding: 0 4px; margin-bottom: 6px; }
