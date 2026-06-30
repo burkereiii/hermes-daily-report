@@ -66,9 +66,9 @@
   .section-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
 
   /* CARD base */
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; transition: border-color 0.3s, box-shadow 0.3s; position: relative; }
-  .card:hover { border-color: var(--border-hover); box-shadow: 0 4px 24px rgba(124,58,237,0.03); }
-  .card-accent { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; position: relative; transition: border-color 0.3s; }
+  .card { background: rgba(18,14,34,0.7); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; transition: border-color 0.3s, box-shadow 0.3s; position: relative; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .card:hover { border-color: var(--border-hover); box-shadow: 0 4px 24px rgba(124,58,237,0.05); }
+  .card-accent { background: rgba(18,14,34,0.7); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; position: relative; transition: border-color 0.3s; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   .card-accent::before { content: ''; position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px; background: var(--accent); border-radius: 0 2px 2px 0; }
   .card-accent:hover { border-color: var(--border-hover); }
 
@@ -79,9 +79,10 @@
 
   /* === 1. OVERVIEW CARDS with delta === */
   .kpi-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    background: rgba(18,14,34,0.7); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 14px 14px 10px; position: relative; overflow: hidden; transition: all 0.3s;
     display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 88px;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
   .kpi-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
   .kpi-card::after {
@@ -108,8 +109,9 @@
   /* === 2. CHANNEL STRIPS === */
   .channel-strip {
     display: flex; align-items: center; gap: 12px;
-    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: rgba(18,14,34,0.7); border: 1px solid var(--border); border-radius: var(--radius-sm);
     padding: 8px 16px; transition: border-color 0.3s;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
   .channel-strip:hover { border-color: var(--border-hover); }
   .ch-strip-icon { font-size: 1.3rem; width: 24px; text-align: center; }
@@ -214,9 +216,9 @@
   /* === NOTABLE SESSIONS === */
   .notable-row { display: flex; gap: 12px; flex-wrap: wrap; }
   .notable-chip {
-    flex: 1; min-width: 140px; background: var(--card); border: 1px solid var(--border);
+    flex: 1; min-width: 140px; background: rgba(18,14,34,0.7); border: 1px solid var(--border);
     border-radius: 20px; padding: 10px 16px; display: flex; align-items: center; gap: 10px;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
   .notable-chip:hover { border-color: var(--border-hover); }
   .notable-chip-icon { font-size: 1.1rem; }
@@ -225,9 +227,10 @@
 
   /* === CRON === */
   .cron-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    background: rgba(18,14,34,0.7); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 14px 18px; margin-bottom: 10px; transition: border-color 0.3s;
     display: flex; align-items: center; gap: 14px;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
   .cron-card:hover { border-color: var(--border-hover); }
   .cron-status-icon { font-size: 1.1rem; }
@@ -254,7 +257,7 @@
   @keyframes float-tag { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
   /* === DEEP INSIGHTS === */
-  .narrative-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 24px; }
+  .narrative-section { background: rgba(18,14,34,0.7); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 24px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   .narrative-intro { font-size: 0.88rem; color: var(--text); line-height: 1.75; margin-bottom: 16px; }
   .narrative-intro em { color: var(--accent-glow); font-style: normal; font-weight: 600; }
   .narrative-recs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
