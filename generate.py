@@ -296,18 +296,20 @@ def collect_files():
 
 def collect_host():
     data={"CPU_USAGE":"—","CPU_PEAK":"—","MEM_GB":"—","MEM_USAGE":"—","MEM_PEAK":"—",
-          "DISK_GB":"—","DISK_USAGE":"—","MEM_WARN":"","DISK_WARN":""}
+          "DISK_GB":"—","DISK_USAGE":"—","MEM_WARN":"","DISK_WARN":"",
+          "PEAK_SOURCE":""}
+    
+    # Current values
     out,_,_=run_ps("(Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average")
     if out and out.replace('.','').replace('-','').isdigit():
         cpu=int(float(out))
-        data["CPU_USAGE"]=str(cpu); data["CPU_PEAK"]=str(min(cpu+random.randint(5,25),100))
+        data["CPU_USAGE"]=str(cpu)
     out,_,_=run_ps("$os=Get-CimInstance Win32_OperatingSystem;$t=[math]::Round($os.TotalVisibleMemorySize/1MB);$f=[math]::Round($os.FreePhysicalMemory/1MB);Write-Output \"$t|$f\"")
     if "|" in out:
         p=out.strip().split("|")
         try:
             t,f=float(p[0]),float(p[1]); pct=round((1-f/t)*100)
             data["MEM_GB"]=str(int(t)); data["MEM_USAGE"]=str(pct)
-            data["MEM_PEAK"]=str(min(pct+random.randint(5,15),100))
             if pct>90: data["MEM_WARN"]=" danger"
             elif pct>80: data["MEM_WARN"]=" warn"
         except: pass
@@ -320,6 +322,30 @@ def collect_host():
             if pct>90: data["DISK_WARN"]=" danger"
             elif pct>80: data["DISK_WARN"]=" warn"
         except: pass
+    
+    # Try real peak data from monitor
+    peak_file = "D:\\Hermes\\cache\\peak_samples.json"
+    if os.path.exists(peak_file):
+        try:
+            with open(peak_file,"r",encoding="utf-8") as f:
+                samples = json.load(f)
+            if samples:
+                today = datetime.date.today().strftime("%Y-%m-%d")
+                today_samples = [s for s in samples if s.get("ts","").startswith(today)]
+                if today_samples:
+                    cpu_peak = max(s["cpu"] for s in today_samples)
+                    mem_peak = max(s["mem"] for s in today_samples)
+                    data["CPU_PEAK"] = str(int(cpu_peak))
+                    data["MEM_PEAK"] = str(int(mem_peak))
+                    data["PEAK_SOURCE"] = f"真实采样 · {len(today_samples)} 个样本"
+                    return data
+        except: pass
+    
+    # Fallback: simulated peaks
+    if data["CPU_USAGE"]!="—":
+        data["CPU_PEAK"]=str(min(int(data["CPU_USAGE"])+random.randint(5,25),100))
+    if data["MEM_USAGE"]!="—":
+        data["MEM_PEAK"]=str(min(int(data["MEM_USAGE"])+random.randint(5,15),100))
     return data
 
 def collect_storage():
@@ -518,7 +544,12 @@ def collect_all():
     data.setdefault("SESSION_TOPICS",'<span class="float-tag" style="animation:none">数据待分析</span>')
     data.setdefault("DAILY_SUMMARY",'今日数据已采集，深度分析待 agent 生成。')
     data.setdefault("DAILY_RECOMMENDATIONS","")
-    data.setdefault("PEAK_NOTE","峰值为瞬时快照+模拟，非持续监控数据。")
+    # Peak note from collect_host
+    peak_src = data.get("PEAK_SOURCE","")
+    if peak_src:
+        data["PEAK_NOTE"] = f"✅ {peak_src} · 峰值来自持续监控"
+    else:
+        data["PEAK_NOTE"] = "⚠️ 峰值为瞬时快照+模拟，非持续监控数据。部署轻量守护进程后可获取真实峰值。"
     
     # Date
     data["REPORT_DATE"]=ds
@@ -645,7 +676,12 @@ def main():
                      "VAULT_RECENT_FILES","TAG_HEALTH","TAG_HEALTH_CLASS"]:
             data.setdefault(key,"—")
         
-        data.setdefault("PEAK_NOTE","峰值为瞬时快照+模拟，非持续监控数据。")
+        # Peak note
+        peak_src = data.get("PEAK_SOURCE","")
+        if peak_src:
+            data["PEAK_NOTE"] = f"✅ {peak_src} · 峰值来自持续监控"
+        else:
+            data["PEAK_NOTE"] = "⚠️ 峰值为瞬时快照+模拟，非持续监控数据。部署轻量守护进程后可获取真实峰值。"
         data.setdefault("SESSION_TIMELINE",'<div class="tl-empty">数据待采集</div>')
     else:
         # Self-collect mode (backward compatible)
