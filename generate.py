@@ -576,6 +576,9 @@ def gen_notable(notable):
 def collect_all():
     """Self-collect mode. If past midnight but before 4AM, report on yesterday."""
     today=datetime.date.today()
+    # Preview mode: show yesterday if marker exists
+    if os.path.exists("D:\\Hermes\\cache\\preview_yesterday"):
+        today=today-datetime.timedelta(days=1)
     ds=today.strftime("%Y-%m-%d")
     wd=["星期一","星期二","星期三","星期四","星期五","星期六","星期日"][today.weekday()]
     
@@ -768,6 +771,9 @@ def main():
     args = parser.parse_args()
     
     today=datetime.date.today()
+    # Preview mode: show yesterday if marker exists
+    if os.path.exists("D:\\Hermes\\cache\\preview_yesterday"):
+        today=today-datetime.timedelta(days=1)
     ds=today.strftime("%Y-%m-%d")
     
     if args.json:
