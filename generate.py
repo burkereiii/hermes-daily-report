@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Hermes Daily Report Generator v7.0 — CN translations, peak overlay, cron detail, enhanced narrative."""
+"""Hermes Daily Report Generator v8.0 — Full-spectrum data, --json mode for agent-driven pipeline."""
 import subprocess, json, datetime, os, re, sys, tempfile, socket, random
 
 REPORTS_DIR = r"C:\Users\沙河马\hermes-reports"
 TEMPLATE = os.path.join(REPORTS_DIR, "template.html")
 
-# ── Translation maps ──
+# ── Translation maps (extended for v8) ──
 TOOL_CN = {
     "terminal":"终端","read_file":"读文件","search_files":"搜索","patch":"补丁",
     "process":"进程","browser_navigate":"浏览","execute_code":"执行代码",
@@ -14,13 +14,17 @@ TOOL_CN = {
     "todo":"清单","browser_snapshot":"快照","browser_vision":"视觉",
     "browser_click":"点击","browser_scroll":"滚动","browser_console":"控制台",
     "vision_analyze":"图像分析","text_to_speech":"语音","delegate_task":"委派",
-    "computer_use":"桌面操控","memory":"记忆",
+    "computer_use":"桌面操控","memory":"记忆","browser_type":"输入",
+    "browser_press":"按键",
 }
 SKILL_CN = {
     "hippo-selfie":"麻衣自拍","hermes-daily-report":"系统日报","hermes-agent":"配置管理",
     "obsidian":"笔记","plan":"计划制定","systematic-debugging":"系统调试",
     "comfyui":"AI绘画","hermes-remote-gateway":"远程网关",
-    "hermes-agent-skill-authoring":"技能编写",
+    "hermes-agent-skill-authoring":"技能编写","knowledge-curation":"知识策展",
+    "video-transcription":"视频转录","requesting-code-review":"代码审查",
+    "simplify-code":"代码精简","hermes-web-search":"网页搜索",
+    "test-driven-development":"TDD","video-content-extraction":"视频内容提取",
 }
 NOTABLE_CN = {
     "Longest session":"最长会话","Most messages":"最多消息",
@@ -68,7 +72,19 @@ def human_num(n):
     if n>=1000: return f"{n/1000:.1f}K"
     return str(n)
 
-# ═══════════════════════ DATA COLLECTION ═══════════════════════
+def delta_str(today, yesterday):
+    """Generate delta display string with direction."""
+    if today is None or yesterday is None or yesterday == 0:
+        return "", "flat"
+    diff = today - yesterday
+    pct = abs(diff) / yesterday * 100 if yesterday > 0 else 0
+    if diff > 0:
+        return f"↑ {abs(diff):+d} ({pct:.0f}%)", "up"
+    elif diff < 0:
+        return f"↓ {abs(diff):d} ({pct:.0f}%)", "down"
+    return "→ 持平", "flat"
+
+# ═══════════════════════ DATA COLLECTION (self-collect mode) ═══════════════════════
 
 def parse_insights_full(out):
     d = {"SESSION_COUNT":"0","MESSAGE_COUNT":"0","TOOL_COUNT":"0","TOKEN_TOTAL":"—",
@@ -76,7 +92,9 @@ def parse_insights_full(out):
          "ACTIVE_TIME":"—","AVG_SESSION":"—","MODEL_NAME":"—","MODEL_PROVIDER":"—",
          "MODEL_STABILITY":"","DESKTOP_MSGS":"0","WECHAT_MSGS":"0",
          "PEAK_HOURS":"—","WEEK_COUNTS":[0]*7,"_tools":[],"_skills":[],"_notable":[],
-         "_peak_raw":""}
+         "_peak_raw":"","_raw_sessions":"0","_raw_messages":"0","_raw_tool_calls":"0",
+         "_raw_user_msgs":"0","_raw_active_time":"—","_raw_avg_session":"—",
+         "_raw_input_tokens":0,"_raw_output_tokens":0,"_raw_total_tokens":0}
     section=None
     for line in out.split("\n"):
         s=line.strip()
@@ -90,27 +108,41 @@ def parse_insights_full(out):
         if "🏆 Notable Sessions" in s: section="notable"; continue
 
         if section=="overview":
-            m=re.search(r'Sessions:\s+([\d,]+)',s); 
-            if m: d["SESSION_COUNT"]=m.group(1).replace(",","")
+            m=re.search(r'Sessions:\s+([\d,]+)',s)
+            if m:
+                v=m.group(1).replace(",","")
+                d["SESSION_COUNT"]=v; d["_raw_sessions"]=v
             m=re.search(r'Messages:\s+([\d,]+)',s)
-            if m: d["MESSAGE_COUNT"]=m.group(1).replace(",","")
+            if m:
+                v=m.group(1).replace(",","")
+                d["MESSAGE_COUNT"]=v; d["_raw_messages"]=v
             m=re.search(r'Tool calls:\s+([\d,]+)',s)
-            if m: d["TOOL_COUNT"]=m.group(1).replace(",","")
+            if m:
+                v=m.group(1).replace(",","")
+                d["TOOL_COUNT"]=v; d["_raw_tool_calls"]=v
             m=re.search(r'User messages:\s+([\d,]+)',s)
-            if m: d["USER_MESSAGES"]=m.group(1).replace(",","")
+            if m:
+                v=m.group(1).replace(",","")
+                d["USER_MESSAGES"]=v; d["_raw_user_msgs"]=v
             m=re.search(r'Input tokens:\s+([\d,]+)',s)
-            if m: d["INPUT_TOKENS"]=human_num(int(m.group(1).replace(",","")))
+            if m:
+                v=int(m.group(1).replace(",",""))
+                d["INPUT_TOKENS"]=human_num(v); d["_raw_input_tokens"]=v
             m=re.search(r'Output tokens:\s+([\d,]+)',s)
-            if m: d["OUTPUT_TOKENS"]=human_num(int(m.group(1).replace(",","")))
+            if m:
+                v=int(m.group(1).replace(",",""))
+                d["OUTPUT_TOKENS"]=human_num(v); d["_raw_output_tokens"]=v
             m=re.search(r'Total tokens:\s+([\d,]+)',s)
-            if m: d["TOKEN_TOTAL"]=human_num(int(m.group(1).replace(",","")))
+            if m:
+                v=int(m.group(1).replace(",",""))
+                d["TOKEN_TOTAL"]=human_num(v); d["_raw_total_tokens"]=v
             m=re.search(r'Active time:\s+~?(\S+)',s)
-            if m: d["ACTIVE_TIME"]=m.group(1)
+            if m: d["ACTIVE_TIME"]=m.group(1); d["_raw_active_time"]=m.group(1)
             m=re.search(r'Avg session:\s+~?(\S+)',s)
-            if m: d["AVG_SESSION"]=m.group(1)
+            if m: d["AVG_SESSION"]=m.group(1); d["_raw_avg_session"]=m.group(1)
 
         elif section=="models":
-            m=re.search(r'^(deepseek-v\d[\w.-]*|gpt-[\d.]+|claude[\w.-]*)\s+(\d+)\s+[\d,]+',s)
+            m=re.search(r'^(deepseek-v[\w.\-]*|gpt-[\d.]+|claude[\w.\-]*)\s+(\d+)\s+[\d,]+',s)
             if m:
                 d["MODEL_NAME"]=m.group(1)
                 d["MODEL_PROVIDER"]={"deepseek":"DeepSeek","gpt":"OpenAI","claude":"Anthropic"}.get(
@@ -177,64 +209,89 @@ def collect_gateway():
         "GATEWAY_STATUS":"运行中" if ("running" in gw.lower() or "运行" in gw) else "已停止"
     }
 
-def collect_cron():
-    """Parse hermes cron list CLI output for job names, schedules, and status."""
-    data = {"CRON_TOTAL": "0", "CRON_ACTIVE": "0", "CRON_LIST": "", "CRON_FAILED_TEXT": ""}
-    out, _, _ = run("hermes cron list", timeout=10)
-    
-    # Parse CLI format: each job starts with hex ID [state], then indented fields
-    jobs = []
-    current = None
-    for line in out.split("\n"):
-        s = line.strip()
-        if not s: continue
-        # New job entry: hex ID [state]
-        m = re.match(r'^([a-f0-9]{10,})\s*\[(\w+)\]', s)
-        if m:
-            if current: jobs.append(current)
-            current = {"id": m.group(1), "state": m.group(2), "name": "", "schedule": "?", "status": "ok"}
-            continue
-        if current is None: continue
-        # Indented fields
-        m = re.match(r'^Name:\s+(.+)', s)
-        if m: current["name"] = m.group(1).strip(); continue
-        m = re.match(r'^Schedule:\s+(.+)', s)
-        if m: current["schedule"] = m.group(1).strip(); continue
-        m = re.match(r'^Last run:.*?\s+(ok|error)\b', s)
-        if m: current["status"] = m.group(1); continue
-    
-    if current: jobs.append(current)
-    
-    data["CRON_TOTAL"] = str(len(jobs))
-    active = [j for j in jobs if j["state"] == "active"]
-    data["CRON_ACTIVE"] = str(len(active))
-    
-    failed = [j for j in jobs if j["status"] == "error"]
-    if failed:
-        data["CRON_FAILED_TEXT"] = f" ⚠️ {len(failed)} 个异常"
-    
-    items = []
-    for j in jobs[:10]:
-        name = j["name"] if j["name"] else j["id"][:12]
-        sched = j["schedule"]
-        status = j["status"]
-        desc = CRON_DESC.get(name, "")
-        icon = "⚠️" if status == "error" else "✅"
-        tag_cls = "error" if status == "error" else "ok"
-        tag_txt = "异常" if status == "error" else "正常"
-        items.append(
-            f'<div class="cron-card">'
-            f'<span class="cron-status-icon">{icon}</span>'
-            f'<div class="cron-info">'
-            f'<div class="cron-name">{name}</div>'
-            f'<div class="cron-desc">{desc}</div>'
-            f'</div>'
-            f'<div class="cron-meta">'
-            f'<div class="cron-sched">{sched}</div>'
-            f'<span class="cron-status-tag {tag_cls}">{tag_txt}</span>'
-            f'</div></div>'
-        )
-    data["CRON_LIST"] = "\n".join(items) if items else '<div class="cron-card"><div class="cron-info"><div class="cron-name">暂无活跃任务</div></div></div>'
+def collect_tailscale():
+    data={"TAILSCALE_STATUS":"—","TAILSCALE_STATUS_CLASS":"offline",
+          "TAILSCALE_IP":"—","TAILSCALE_DNS":"—","TAILSCALE_EXIT":"",
+          "NETWORK_SUMMARY":"—"}
+    out,_,_=run("tailscale status --json 2>/dev/null",timeout=10)
+    if out:
+        try:
+            ts=json.loads(out)
+            if ts.get("Self"):
+                s=ts["Self"]
+                data["TAILSCALE_STATUS"]="在线" if s.get("Online") else "离线"
+                data["TAILSCALE_STATUS_CLASS"]="online" if s.get("Online") else "offline"
+                data["TAILSCALE_IP"]=", ".join(s.get("TailscaleIPs",["—"]))
+                data["TAILSCALE_DNS"]=s.get("DNSName","—").rstrip(".")
+                if s.get("ExitNodeID"):
+                    for peer in ts.get("Peer",{}).values():
+                        if peer.get("ID")==s["ExitNodeID"]:
+                            data["TAILSCALE_EXIT"]=f" · Exit: {peer.get('HostName','?')}"
+                            break
+            data["NETWORK_SUMMARY"]=f"Tailscale {data['TAILSCALE_STATUS']}"
+        except: pass
+
+    # Basic network info
+    out2,_,_=run('bash -c "ipconfig 2>/dev/null | grep -A1 \'以太网\|Wi-Fi\|Tailscale\' | head -20"',timeout=5)
+    if not out2:
+        out2,_,_=run_ps("Get-NetAdapter | Where-Object Status -eq 'Up' | ForEach-Object { $_.Name + ': ' + $_.Status }")
+    if out2:
+        data["NETWORK_SUMMARY"]=data.get("NETWORK_SUMMARY","—")+"\n"+out2.replace("\n","<br>")
+    return data
+
+def collect_processes():
+    data={"PROCESS_TOTAL":"—","PROCESS_TOP5":"","ZOMBIE_COUNT":"—"}
+    out,_,_=run_ps("""
+$procs = Get-Process | Sort-Object WorkingSet64 -Descending
+$top = $procs | Select-Object -First 5 Name,Id,@{N='MemMB';E={[math]::Round($_.WorkingSet64/1MB)}}
+Write-Output "TOTAL|$($procs.Count)"
+foreach ($p in $top) { Write-Output "PROC|$($p.Name)|$($p.Id)|$($p.MemMB)" }
+""")
+    if out:
+        items=[]
+        for line in out.strip().split("\n"):
+            if line.startswith("TOTAL|"):
+                data["PROCESS_TOTAL"]=line.split("|")[1]
+            elif line.startswith("PROC|"):
+                parts=line.split("|")
+                if len(parts)>=4:
+                    items.append(f'<div class="proc-row"><span class="proc-rank">{len(items)+1}</span><span class="proc-name">{parts[1]}</span><span class="proc-pid">{parts[2]}</span><span class="proc-mem">{parts[3]} MB</span></div>')
+        data["PROCESS_TOP5"]="\n".join(items) if items else '<div class="proc-row"><span class="proc-name" style="color:var(--text-dim)">暂无数据</span></div>'
+    data["ZOMBIE_COUNT"]="—"  # placeholder until reliable detection
+    return data
+
+def collect_images():
+    data={"IMAGE_COUNT":"0","IMAGE_LIST":""}
+    out,_,_=run('bash -c "find /d/Hermes/cache/images/ -name \'*.png\' -newermt \'today 00:00\' -printf \'%T+ %f\n\' 2>/dev/null | sort -r | head -20"',timeout=10)
+    if out:
+        lines=[l for l in out.strip().split("\n") if l]
+        data["IMAGE_COUNT"]=str(len(lines))
+        items=[]
+        for l in lines:
+            parts=l.split(" ",1)
+            ts=parts[0][:16] if len(parts)>0 else "?"
+            fn=parts[1] if len(parts)>1 else l
+            items.append(f'<li class="log-item"><span class="log-time">{ts}</span><span class="log-file">{fn}</span></li>')
+        data["IMAGE_LIST"]="\n".join(items) if items else '<li class="log-empty">今日无图片生成</li>'
+    else:
+        data["IMAGE_LIST"]='<li class="log-empty">今日无图片生成</li>'
+    return data
+
+def collect_files():
+    data={"FILE_CHANGES":"", "HERMES_HOME_SIZE":"—"}
+    out,_,_=run('bash -c "find /d/Hermes/ -not -path \'*/cache/*\' -not -path \'*/node_modules/*\' -not -path \'*/.git/*\' -newermt \'today 00:00\' -type f -printf \'%T+ %p\n\' 2>/dev/null | sort -r | head -20"',timeout=10)
+    items=[]
+    if out:
+        for l in out.strip().split("\n")[:12]:
+            parts=l.split(" ",1)
+            ts=parts[0][:16] if len(parts)>0 else "?"
+            fp=parts[1].replace("/d/Hermes/","Hermes/") if len(parts)>1 else l
+            items.append(f'<li class="log-item"><span class="log-time">{ts}</span><span class="log-file">{fp}</span></li>')
+    data["FILE_CHANGES"]="\n".join(items) if items else '<li class="log-empty">今日无文件变动</li>'
+
+    # Hermes home size
+    out2,_,_=run('bash -c "du -sh --exclude=node_modules /d/Hermes/ 2>/dev/null | cut -f1"',timeout=15)
+    if out2: data["HERMES_HOME_SIZE"]=out2.strip()
     return data
 
 def collect_host():
@@ -274,6 +331,36 @@ def collect_storage():
     except: pass
     return data
 
+def collect_obsidian():
+    data={"VAULT_TOTAL_FILES":"—","VAULT_TODAY_CHANGES":"—","VAULT_RECENT_FILES":"",
+          "TAG_HEALTH":"—","TAG_HEALTH_CLASS":""}
+    out,_,_=run('bash -c "find \'/c/Users/沙河马/Documents/hippo/\' -name \'*.md\' 2>/dev/null | wc -l"',timeout=10)
+    if out: data["VAULT_TOTAL_FILES"]=out.strip()
+    out2,_,_=run('bash -c "find \'/c/Users/沙河马/Documents/hippo/\' -name \'*.md\' -newermt \'today 00:00\' -printf \'%f\n\' 2>/dev/null | sort | head -15"',timeout=10)
+    if out2:
+        files=[f for f in out2.strip().split("\n") if f]
+        data["VAULT_TODAY_CHANGES"]=str(len(files))
+        data["VAULT_RECENT_FILES"]=" · ".join(files[:10]) if files else "今日无变更"
+    else:
+        data["VAULT_TODAY_CHANGES"]="0"
+        data["VAULT_RECENT_FILES"]="今日无变更"
+    return data
+
+def estimate_cost(model_name, raw_input, raw_output):
+    """Estimate token cost based on model pricing."""
+    if not model_name or model_name=="—":
+        return "—", "价格待确认"
+    rates={
+        "deepseek": (0.14, 0.28),  # $/1M tokens
+        "gpt": (2.50, 10.00),
+        "claude": (3.00, 15.00),
+    }
+    for prefix, (in_rate, out_rate) in rates.items():
+        if model_name.lower().startswith(prefix):
+            cost = (raw_input/1e6)*in_rate + (raw_output/1e6)*out_rate
+            return f"${cost:.4f}", f"估算 · {prefix}"
+    return "—", "价格待确认"
+
 # ═══════════════════════ CONTENT GENERATION ═══════════════════════
 
 def gen_top_tools(tools):
@@ -288,7 +375,6 @@ def gen_top_tools(tools):
 
 def gen_top_skills(skills):
     if not skills: return '<div style="color:var(--text-dim);font-size:0.78rem;">暂无数据</div>'
-    # Top 3 featured
     top3=skills[:3]
     feat=[]
     for i,(name,loads,edits) in enumerate(top3):
@@ -296,13 +382,11 @@ def gen_top_skills(skills):
         cls="top1" if i==0 else ""
         icon=["🥇","🥈","🥉"][i] if i<3 else "📌"
         feat.append(f'<div class="skill-feat-card {cls}"><div class="skill-feat-icon">{icon}</div><div class="skill-feat-name">{cn}</div><div class="skill-feat-stat">加载 {loads} 次 · 编辑 {edits} 次</div></div>')
-    # Rest inline
     rest=skills[3:7]
     rest_html='<div class="skill-rest">'+" · ".join(f'<span>{SKILL_CN.get(n,n)} <em>{l}</em></span>' for n,l,_ in rest)+'</div>' if rest else ''
     return f'<div class="skill-featured">{"".join(feat)}</div>{rest_html}'
 
 def gen_week_bars(counts):
-    """Generate single bars, inactive days as subtle marks."""
     mx=max(counts) if counts and max(counts)>0 else 1
     bars=[]
     for c in counts:
@@ -317,7 +401,6 @@ def gen_week_nums(counts):
     return "".join(f'<span>{c if c>0 else ""}</span>' for c in counts)
 
 def gen_peak_chart(raw_peak):
-    """Parse '4AM (4), 2AM (3), 3AM (2)...' into 24h bar chart."""
     slots=[0]*24
     if raw_peak:
         for m in re.finditer(r'(\d+)(AM|PM)\s*\((\d+)\)',raw_peak):
@@ -340,10 +423,166 @@ def gen_notable(notable):
         chips.append(f'<div class="notable-chip"><span class="notable-chip-icon">{icon}</span><div class="notable-chip-info"><strong>{value}</strong>{cn} · {short_sid}</div></div>')
     return "\n".join(chips)
 
-# ═══════════════════════ MAIN ═══════════════════════
+# ═══════════════════════ COLLECT ALL (self-collect mode) ═══════════════════════
 
-def fill_template(data,date_str,weekday):
-    data["REPORT_DATE"]=date_str; data["REPORT_WEEKDAY"]=weekday
+def collect_all():
+    """Self-collect mode: run all data sources from Python."""
+    today=datetime.date.today()
+    ds=today.strftime("%Y-%m-%d")
+    wd=["星期一","星期二","星期三","星期四","星期五","星期六","星期日"][today.weekday()]
+    
+    # A1: Today insights
+    out,_,_=run("hermes insights --days 1",timeout=60)
+    data=parse_insights_full(out)
+    
+    # A2: Yesterday insights (compare)
+    out2,_,_=run("hermes insights --days 2",timeout=60)
+    ydata=parse_insights_full(out2)
+    
+    # Channels
+    ch=collect_channels()
+    wm=int(data.get("WECHAT_MSGS","0").replace(",","") or "0")
+    if wm>0: ch["WECHAT_STATUS_CLASS"]="online"; ch["WECHAT_STATUS_TEXT"]="活跃"
+    elif check_port(9119): ch["WECHAT_STATUS_CLASS"]="activity"; ch["WECHAT_STATUS_TEXT"]="待命中"
+    data.update(ch)
+    
+    # Gateway
+    data.update(collect_gateway())
+    
+    # Tailscale
+    data.update(collect_tailscale())
+    
+    # Processes
+    data.update(collect_processes())
+    
+    # Images
+    data.update(collect_images())
+    
+    # Files + Hermes size
+    data.update(collect_files())
+    
+    # Host metrics
+    data.update(collect_host())
+    
+    # Storage
+    data.update(collect_storage())
+    
+    # Obsidian
+    data.update(collect_obsidian())
+    
+    # Cost
+    raw_in=data.get("_raw_input_tokens",0)
+    raw_out=data.get("_raw_output_tokens",0)
+    model=data.get("MODEL_NAME","—")
+    cost,cost_note=estimate_cost(model,raw_in,raw_out)
+    data["ESTIMATED_COST"]=cost
+    data["COST_NOTE"]=cost_note
+    
+    # Yesterday deltas
+    for raw_key, display_key, delta_key, cls_key in [
+        ("_raw_sessions","SESSION_COUNT","SESSION_DELTA","SESSION_DELTA_CLASS"),
+        ("_raw_messages","MESSAGE_COUNT","MESSAGE_DELTA","MESSAGE_DELTA_CLASS"),
+        ("_raw_tool_calls","TOOL_COUNT","TOOL_DELTA","TOOL_DELTA_CLASS"),
+    ]:
+        try:
+            tv=int(data.get(raw_key,"0"))
+            yv=int(ydata.get(raw_key,"0"))
+            txt,cls=delta_str(tv,yv)
+            data[delta_key]=txt; data[cls_key]=cls
+        except:
+            data[delta_key]="—"; data[cls_key]="flat"
+    
+    # Token delta (different raw key)
+    try:
+        tv=data.get("_raw_total_tokens",0)
+        yv=ydata.get("_raw_total_tokens",0)
+        txt,cls=delta_str(tv,yv) if tv and yv else ("—","flat")
+        data["TOKEN_DELTA"]=txt; data["TOKEN_DELTA_CLASS"]=cls
+    except:
+        data["TOKEN_DELTA"]="—"; data["TOKEN_DELTA_CLASS"]="flat"
+    
+    # Generated content
+    data["TOP_TOOLS"]=gen_top_tools(data["_tools"])
+    data["TOP_SKILLS"]=gen_top_skills(data["_skills"])
+    data["WEEK_BARS"]=gen_week_bars(data["WEEK_COUNTS"])
+    data["WEEK_NUMS"]=gen_week_nums(data["WEEK_COUNTS"])
+    peak_bars,peak_labels=gen_peak_chart(data.get("_peak_raw",""))
+    data["PEAK_BARS"]=peak_bars; data["PEAK_LABELS"]=peak_labels
+    data["NOTABLE_SESSIONS"]=gen_notable(data["_notable"])
+    
+    # Cron
+    data.update(collect_cron())
+    
+    # Defaults for LLM-filled fields (agent will override)
+    data.setdefault("SESSION_TIMELINE",'<div class="tl-empty">数据待采集</div>')
+    data.setdefault("SESSION_TOPICS",'<span class="float-tag" style="animation:none">数据待分析</span>')
+    data.setdefault("DAILY_SUMMARY",'今日数据已采集，深度分析待 agent 生成。')
+    data.setdefault("DAILY_RECOMMENDATIONS","")
+    data.setdefault("PEAK_NOTE","峰值为瞬时快照+模拟，非持续监控数据。")
+    
+    # Date
+    data["REPORT_DATE"]=ds
+    data["REPORT_WEEKDAY"]=wd
+    
+    return data
+
+def collect_cron():
+    data = {"CRON_TOTAL": "0", "CRON_ACTIVE": "0", "CRON_LIST": "", "CRON_FAILED_TEXT": ""}
+    out, _, _ = run("hermes cron list", timeout=10)
+    jobs = []
+    current = None
+    for line in out.split("\n"):
+        s = line.strip()
+        if not s: continue
+        m = re.match(r'^([a-f0-9]{10,})\s*\[(\w+)\]', s)
+        if m:
+            if current: jobs.append(current)
+            current = {"id": m.group(1), "state": m.group(2), "name": "", "schedule": "?", "status": "ok"}
+            continue
+        if current is None: continue
+        m = re.match(r'^Name:\s+(.+)', s)
+        if m: current["name"] = m.group(1).strip(); continue
+        m = re.match(r'^Schedule:\s+(.+)', s)
+        if m: current["schedule"] = m.group(1).strip(); continue
+        m = re.match(r'^Last run:.*?\s+(ok|error)\b', s)
+        if m: current["status"] = m.group(1); continue
+    if current: jobs.append(current)
+    
+    data["CRON_TOTAL"] = str(len(jobs))
+    active = [j for j in jobs if j["state"] == "active"]
+    data["CRON_ACTIVE"] = str(len(active))
+    
+    failed = [j for j in jobs if j["status"] == "error"]
+    if failed:
+        data["CRON_FAILED_TEXT"] = f" ⚠️ {len(failed)} 个异常"
+    
+    items = []
+    for j in jobs[:10]:
+        name = j["name"] if j["name"] else j["id"][:12]
+        sched = j["schedule"]
+        status = j["status"]
+        desc = CRON_DESC.get(name, "")
+        icon = "⚠️" if status == "error" else "✅"
+        tag_cls = "error" if status == "error" else "ok"
+        tag_txt = "异常" if status == "error" else "正常"
+        items.append(
+            f'<div class="cron-card">'
+            f'<span class="cron-status-icon">{icon}</span>'
+            f'<div class="cron-info">'
+            f'<div class="cron-name">{name}</div>'
+            f'<div class="cron-desc">{desc}</div>'
+            f'</div>'
+            f'<div class="cron-meta">'
+            f'<div class="cron-sched">{sched}</div>'
+            f'<span class="cron-status-tag {tag_cls}">{tag_txt}</span>'
+            f'</div></div>'
+        )
+    data["CRON_LIST"] = "\n".join(items) if items else '<div class="cron-card"><div class="cron-info"><div class="cron-name">暂无活跃任务</div></div></div>'
+    return data
+
+# ═══════════════════════ TEMPLATE FILL ═══════════════════════
+
+def fill_template(data):
     with open(TEMPLATE,"r",encoding="utf-8") as f: html=f.read()
     for k,v in data.items():
         if k.startswith("_"): continue
@@ -352,72 +591,82 @@ def fill_template(data,date_str,weekday):
     if rem: print(f"⚠️ {len(rem)} 个占位符未填充: {rem}")
     return html
 
+# ═══════════════════════ MAIN ═══════════════════════
+
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Hermes Daily Report Generator v8.0")
+    parser.add_argument("--json", help="JSON data (string or file path) from agent collection")
+    args = parser.parse_args()
+    
     today=datetime.date.today()
     ds=today.strftime("%Y-%m-%d")
-    wd=["星期一","星期二","星期三","星期四","星期五","星期六","星期日"][today.weekday()]
-    print(f"📊 {ds} ({wd})")
-
-    out,_,_=run("hermes insights --days 1",timeout=60)
-    data=parse_insights_full(out)
-    print(f"  会话 {data['SESSION_COUNT']} · 消息 {data['MESSAGE_COUNT']} · Token {data['TOKEN_TOTAL']}")
-
-    ch=collect_channels()
-    wm=int(data.get("WECHAT_MSGS","0").replace(",","") or "0")
-    if wm>0: ch["WECHAT_STATUS_CLASS"]="online"; ch["WECHAT_STATUS_TEXT"]="活跃"
-    elif check_port(9119): ch["WECHAT_STATUS_CLASS"]="activity"; ch["WECHAT_STATUS_TEXT"]="待命中"
-    data.update(ch)
-    data.update(collect_gateway())
-    print(f"  通道 Mac:{data['MAC_STATUS_TEXT']} WX:{data['WECHAT_STATUS_TEXT']} Web:{data['WEBUI_STATUS_TEXT']}")
-
-    data["TOP_TOOLS"]=gen_top_tools(data["_tools"])
-    data["TOP_SKILLS"]=gen_top_skills(data["_skills"])
-    data["WEEK_BARS"]=gen_week_bars(data["WEEK_COUNTS"])
-    data["WEEK_NUMS"]=gen_week_nums(data["WEEK_COUNTS"])
-    peak_bars,peak_labels=gen_peak_chart(data.get("_peak_raw",""))
-    data["PEAK_BARS"]=peak_bars; data["PEAK_LABELS"]=peak_labels
-    data["NOTABLE_SESSIONS"]=gen_notable(data["_notable"])
-    print(f"  工具{len(data['_tools'])} 技能{len(data['_skills'])} 亮点{len(data['_notable'])}")
-
-    data.update(collect_host())
-    data.update(collect_storage())
-    data.update(collect_cron())
-    print(f"  CPU {data['CPU_USAGE']}%/{data['CPU_PEAK']}% MEM {data['MEM_USAGE']}%")
-
-    # Narrative
-    s=data["SESSION_COUNT"]; ms=data["MESSAGE_COUNT"]; tk=data["TOKEN_TOTAL"]
-    um=data.get("USER_MESSAGES","0"); at=data.get("ACTIVE_TIME","—")
-    tops=[TOOL_CN.get(t[0],t[0]) for t in data["_tools"][:3]]
-    sk=[SKILL_CN.get(s[0],s[0]) for s in data["_skills"][:3]]
-    data["DAILY_SUMMARY"]=f'今日共 <em>{s}</em> 个会话，<em>{ms}</em> 条消息（用户 {um} 条），活跃 <em>{at}</em>，消耗 <em>{tk}</em> Token。主力工具：{"、".join(tops)}。高频技能：{"、".join(sk)}。'
-
-    recs=[]
-    if int(data.get("TOOL_COUNT","0").replace(",","") or "0")>500:
-        recs.append(("⚡","高强度工作","工具调用超过 500 次，建议检查是否存在冗余操作或循环调用。"))
-    if data.get("MEM_WARN"):
-        recs.append(("🖥️","内存使用偏高",f"当前 {data['MEM_USAGE']}%，建议关注后台进程。"))
-    if int(data.get("WECHAT_MSGS","0").replace(",","") or "0")<5 and data["WECHAT_STATUS_CLASS"]=="online":
-        recs.append(("💬","微信低活跃","今日微信端消息较少，检查 iLink 连接是否正常。"))
-    recs.append(("✅","三通道在线","Mac 远控、微信、WebUI 全部正常，无需干预。" if all(
-        data.get(k+"_STATUS_CLASS")=="online" for k in ["MAC","WECHAT","WEBUI"]
-    ) else ("⚠️","通道异常","部分服务通道未连接，建议检查对应进程。")))
-
-    data["DAILY_RECOMMENDATIONS"]="\n".join(
-        f'<div class="narrative-rec-item"><div class="rec-icon">{icon}</div><div class="rec-text"><strong>{title}</strong> — {desc}</div></div>'
-        for icon,title,desc in recs
-    )
-
-    html=fill_template(data,ds,wd)
-    ip=os.path.join(REPORTS_DIR,"index.html")
-    ap=os.path.join(REPORTS_DIR,f"{ds}.html")
+    
+    if args.json:
+        # Agent-driven mode: receive pre-collected JSON
+        json_str = args.json
+        if os.path.exists(json_str):
+            with open(json_str,"r",encoding="utf-8") as f:
+                json_str = f.read()
+        data = json.loads(json_str)
+        print(f"📊 使用 agent 采集数据: {len(data)} 字段")
+        
+        # Generate content from raw data
+        if "_tools" in data:
+            data["TOP_TOOLS"] = gen_top_tools(data["_tools"])
+        if "_skills" in data:
+            data["TOP_SKILLS"] = gen_top_skills(data["_skills"])
+        if "WEEK_COUNTS" in data:
+            data["WEEK_BARS"] = gen_week_bars(data.get("WEEK_COUNTS",[0]*7))
+            data["WEEK_NUMS"] = gen_week_nums(data.get("WEEK_COUNTS",[0]*7))
+        if "_peak_raw" in data:
+            peak_bars,peak_labels = gen_peak_chart(data.get("_peak_raw",""))
+            data["PEAK_BARS"] = peak_bars
+            data["PEAK_LABELS"] = peak_labels
+        if "_notable" in data:
+            data["NOTABLE_SESSIONS"] = gen_notable(data["_notable"])
+        if "_cron_data" in data:
+            # Agent already formatted cron HTML
+            data["CRON_LIST"] = data["_cron_data"].get("CRON_LIST","")
+            data["CRON_TOTAL"] = data["_cron_data"].get("CRON_TOTAL","0")
+            data["CRON_ACTIVE"] = data["_cron_data"].get("CRON_ACTIVE","0")
+            data["CRON_FAILED_TEXT"] = data["_cron_data"].get("CRON_FAILED_TEXT","")
+        
+        # Fallback cron if not provided
+        if "CRON_TOTAL" not in data or data.get("CRON_TOTAL")=="0":
+            data.update(collect_cron())
+        
+        # Defaults for missing fields
+        for key in ["SESSION_TIMELINE","SESSION_TOPICS","DAILY_SUMMARY","DAILY_RECOMMENDATIONS",
+                     "PEAK_NOTE","ESTIMATED_COST","COST_NOTE","PROCESS_TOTAL","PROCESS_TOP5",
+                     "ZOMBIE_COUNT","TAILSCALE_STATUS","TAILSCALE_STATUS_CLASS","TAILSCALE_IP",
+                     "TAILSCALE_DNS","TAILSCALE_EXIT","NETWORK_SUMMARY","IMAGE_COUNT","IMAGE_LIST",
+                     "FILE_CHANGES","HERMES_HOME_SIZE","VAULT_TOTAL_FILES","VAULT_TODAY_CHANGES",
+                     "VAULT_RECENT_FILES","TAG_HEALTH","TAG_HEALTH_CLASS"]:
+            data.setdefault(key,"—")
+        
+        data.setdefault("PEAK_NOTE","峰值为瞬时快照+模拟，非持续监控数据。")
+        data.setdefault("SESSION_TIMELINE",'<div class="tl-empty">数据待采集</div>')
+    else:
+        # Self-collect mode (backward compatible)
+        print(f"📊 {ds}")
+        data = collect_all()
+    
+    # Fill template
+    html = fill_template(data)
+    
+    # Write output
+    ip = os.path.join(REPORTS_DIR,"index.html")
+    ap = os.path.join(REPORTS_DIR,f"{ds}.html")
     with open(ip,"w",encoding="utf-8") as f: f.write(html)
     with open(ap,"w",encoding="utf-8") as f: f.write(html)
     print(f"✅ index.html ({len(html)} chars)")
-
+    
+    # Git push
     os.chdir(REPORTS_DIR)
     run("git add index.html generate.py template.html 2>/dev/null")
     if os.path.exists(f"{ds}.html"): run(f"git add {ds}.html 2>/dev/null")
-    oc,ec,rc=run(f'git commit -m "日报 {ds} v7 CN翻译+峰值叠加+cron详情+叙事增强" 2>&1')
+    oc,ec,rc=run(f'git commit -m "日报 {ds} v8 全谱数据+深度洞察" 2>&1')
     if rc==0:
         _,_,rp=run("git push origin main 2>&1",timeout=30)
         print("✅ Push" if rp==0 else "⚠️ Push失败")
@@ -426,7 +675,7 @@ def main():
             _,_,rp=run("git push origin main 2>&1",timeout=30)
             print("✅ Push (无变更)" if rp==0 else "⚠️ Push失败")
         else: print(f"⚠️ commit: {ec[:80]}")
-
+    
     print(f"\n🔗 https://burkereiii.github.io/hermes-daily-report/")
 
 if __name__=="__main__": main()

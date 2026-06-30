@@ -31,7 +31,7 @@
     background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.6; overflow-x: hidden;
   }
 
-  /* BG */
+  /* BG orbs */
   .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
   .orb { position: absolute; border-radius: 50%; filter: blur(160px); opacity: 0.22; animation: orb-float 30s infinite alternate; }
   .orb-1 { width: 700px; height: 700px; background: var(--accent); top: -18%; right: -12%; }
@@ -75,7 +75,7 @@
   .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
   .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
 
-  /* === 1. OVERVIEW CARDS — compact with gradient decoration === */
+  /* === 1. OVERVIEW CARDS with delta === */
   .kpi-card {
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 14px 12px; position: relative; overflow: hidden; transition: all 0.3s;
@@ -97,10 +97,12 @@
   .kpi-value { font-size: 1.5rem; font-weight: 750; color: var(--text-bright); line-height: 1.1; position: relative; z-index: 1; }
   .kpi-label { font-size: 0.7rem; color: var(--text-dim); position: relative; z-index: 1; }
   .kpi-sub { font-size: 0.64rem; color: var(--text-dim); opacity: 0.7; margin-top: 1px; position: relative; z-index: 1; }
-  .kpi-change { font-size: 0.62rem; margin-top: 2px; position: relative; z-index: 1; }
-  .kpi-change.up { color: var(--green); } .kpi-change.down { color: var(--red); }
+  .kpi-delta { font-size: 0.62rem; margin-top: 3px; position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 3px; }
+  .kpi-delta.up { color: var(--green); }
+  .kpi-delta.down { color: var(--red); }
+  .kpi-delta.flat { color: var(--text-dim); }
 
-  /* === 2. CHANNEL STRIPS — compact horizontal bars === */
+  /* === 2. CHANNEL STRIPS === */
   .channel-strip {
     display: flex; align-items: center; gap: 12px;
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -119,7 +121,41 @@
   .ch-txt.online { color: var(--green); } .ch-txt.offline { color: var(--red); } .ch-txt.activity { color: var(--yellow); }
   @keyframes pulse-dot { 0%,100% { box-shadow: 0 0 4px var(--green); } 50% { box-shadow: 0 0 12px var(--green); } }
 
-  /* === 5. DUAL-LAYER PROGRESS === */
+  /* === 3. PROCESS LIST === */
+  .proc-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(124,58,237,0.05); font-size: 0.76rem; }
+  .proc-row:last-child { border-bottom: none; }
+  .proc-rank { width: 18px; font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-align: right; }
+  .proc-name { flex: 1; color: var(--text-bright); }
+  .proc-pid { width: 50px; font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-align: right; }
+  .proc-mem { width: 60px; font-family: var(--mono); font-size: 0.7rem; color: var(--accent-glow); text-align: right; }
+  .proc-summary { display: flex; gap: 20px; font-size: 0.72rem; color: var(--text-dim); margin-bottom: 10px; }
+  .proc-summary strong { color: var(--text-bright); }
+
+  /* === 4. IMAGE & FILE LOG === */
+  .log-list { list-style: none; font-size: 0.72rem; }
+  .log-item { padding: 5px 0; display: flex; align-items: flex-start; gap: 8px; border-bottom: 1px solid rgba(124,58,237,0.04); }
+  .log-item:last-child { border-bottom: none; }
+  .log-time { font-family: var(--mono); font-size: 0.62rem; color: var(--text-dim); white-space: nowrap; min-width: 55px; }
+  .log-file { color: var(--text); word-break: break-all; }
+  .log-empty { color: var(--text-dim); font-style: italic; padding: 8px 0; }
+
+  /* === 5. OBSIDIAN CARD === */
+  .obs-stat { display: flex; justify-content: space-around; text-align: center; padding: 10px 0; }
+  .obs-stat-val { font-size: 1.3rem; font-weight: 700; color: var(--text-bright); }
+  .obs-stat-lbl { font-size: 0.68rem; color: var(--text-dim); }
+  .obs-tag-ok { color: var(--green); font-size: 0.7rem; }
+  .obs-tag-warn { color: var(--yellow); font-size: 0.7rem; }
+  .obs-recent { font-size: 0.7rem; color: var(--text-dim); margin-top: 8px; line-height: 1.6; }
+
+  /* === 6. SESSION TIMELINE === */
+  .tl-item { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(124,58,237,0.04); font-size: 0.74rem; align-items: baseline; }
+  .tl-item:last-child { border-bottom: none; }
+  .tl-time { font-family: var(--mono); font-size: 0.62rem; color: var(--text-dim); min-width: 48px; white-space: nowrap; }
+  .tl-platform { font-size: 0.6rem; padding: 1px 6px; border-radius: 8px; background: rgba(124,58,237,0.1); color: var(--accent-glow); white-space: nowrap; }
+  .tl-topic { flex: 1; color: var(--text); }
+  .tl-empty { color: var(--text-dim); font-style: italic; padding: 8px 0; }
+
+  /* === DUAL-LAYER PROGRESS === */
   .dual-progress { margin-bottom: 14px; }
   .dual-progress:last-child { margin-bottom: 0; }
   .dual-head { display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 4px; }
@@ -130,7 +166,7 @@
   .dual-fill-curr.warn { background: linear-gradient(90deg, #f59e0b, var(--yellow)); }
   .dual-fill-curr.danger { background: linear-gradient(90deg, #ef4444, var(--red)); }
 
-  /* === 3. TOOL RANK === */
+  /* === TOOL RANK === */
   .rank-list { list-style: none; }
   .rank-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(124,58,237,0.05); font-size: 0.8rem; }
   .rank-item:last-child { border-bottom: none; }
@@ -140,7 +176,7 @@
   .rank-bar { height: 100%; border-radius: 2px; background: var(--accent); }
   .rank-count { width: 44px; text-align: right; font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); }
 
-  /* === 4. SKILLS — top 3 featured === */
+  /* === SKILLS === */
   .skill-featured { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 12px; }
   .skill-feat-card {
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm);
@@ -156,12 +192,11 @@
   .skill-rest { font-size: 0.76rem; color: var(--text-dim); padding: 4px 0; display: flex; flex-wrap: wrap; gap: 6px 14px; }
   .skill-rest span { color: var(--text); } .skill-rest em { color: var(--accent-glow); font-style: normal; font-weight: 500; }
 
-  /* === 6. WEEK CHART === */
+  /* === WEEK CHART === */
   .week-dual { display: flex; gap: 4px; align-items: flex-end; height: 66px; padding: 0 4px; margin-bottom: 6px; }
   .week-col { flex: 1; display: flex; flex-direction: column; gap: 2px; justify-content: flex-end; }
   .week-bar-s { background: var(--accent); border-radius: 2px; min-height: 2px; transition: height 0.8s ease; }
-  .week-bar-t { background: rgba(167,139,250,0.45); border-radius: 2px; min-height: 2px; transition: height 0.8s ease; }
-  .week-bar-s.inactive, .week-bar-t.inactive { background: rgba(124,58,237,0.06); min-height: 2px; }
+  .week-bar-s.inactive { background: rgba(124,58,237,0.06); min-height: 2px; }
   .week-labels { display: flex; gap: 3px; font-size: 0.62rem; color: var(--text-dim); }
   .week-labels span { flex: 1; text-align: center; }
   .week-nums { display: flex; gap: 3px; font-size: 0.62rem; color: var(--text-dim); font-family: var(--mono); margin-top: 2px; }
@@ -172,8 +207,9 @@
   .peak-bar { flex: 1; background: var(--accent); border-radius: 2px 2px 0 0; min-height: 2px; transition: height 0.6s ease; }
   .peak-labels { display: flex; gap: 2px; font-size: 0.55rem; color: var(--text-dim); margin-top: 3px; }
   .peak-labels span { flex: 1; text-align: center; }
+  .peak-note { font-size: 0.62rem; color: var(--yellow); opacity: 0.7; margin-top: 4px; text-align: center; }
 
-  /* === 7. NOTABLE SESSIONS — compact inline === */
+  /* === NOTABLE SESSIONS === */
   .notable-row { display: flex; gap: 12px; flex-wrap: wrap; }
   .notable-chip {
     flex: 1; min-width: 140px; background: var(--card); border: 1px solid var(--border);
@@ -185,7 +221,7 @@
   .notable-chip-info { font-size: 0.76rem; }
   .notable-chip-info strong { color: var(--text-bright); display: block; font-size: 0.84rem; }
 
-  /* === 8. CRON === */
+  /* === CRON === */
   .cron-card {
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 14px 18px; margin-bottom: 10px; transition: border-color 0.3s;
@@ -202,7 +238,7 @@
   .cron-status-tag.ok { background: rgba(52,211,153,0.1); color: var(--green); }
   .cron-status-tag.error { background: rgba(248,113,113,0.1); color: var(--red); }
 
-  /* === 9. FLOAT TAGS — animated === */
+  /* === FLOAT TAGS === */
   .float-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 18px 0; margin: 16px 0; }
   .float-tag {
     padding: 6px 16px; border-radius: 20px; font-size: 0.73rem; font-weight: 500;
@@ -215,7 +251,7 @@
   .float-tag:nth-child(even) { animation-delay: 2s; }
   @keyframes float-tag { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
-  /* === 10. NARRATIVE === */
+  /* === DEEP INSIGHTS === */
   .narrative-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 24px; }
   .narrative-intro { font-size: 0.88rem; color: var(--text); line-height: 1.75; margin-bottom: 16px; }
   .narrative-intro em { color: var(--accent-glow); font-style: normal; font-weight: 600; }
@@ -227,22 +263,23 @@
   .narrative-rec-item .rec-icon { font-size: 1rem; margin-bottom: 4px; }
   .narrative-rec-item .rec-text { font-size: 0.78rem; color: var(--text); line-height: 1.5; }
 
-  /* SCROLL REVEAL */
+  /* === SCROLL REVEAL === */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22,0.61,0.36,1); }
   .reveal.visible { opacity: 1; transform: translateY(0); }
   .reveal-d1 { transition-delay: 0.05s; } .reveal-d2 { transition-delay: 0.1s; } .reveal-d3 { transition-delay: 0.15s; } .reveal-d4 { transition-delay: 0.2s; }
 
-  /* FOOTER */
+  /* === FOOTER === */
   .footer { text-align: center; padding: 36px 0 16px; margin-top: 36px; border-top: 1px solid rgba(124,58,237,0.05); color: var(--text-dim); font-size: 0.72rem; }
   .footer span { color: var(--accent-glow); } .footer a { color: var(--accent-glow); text-decoration: none; }
 
-  /* RESPONSIVE */
+  /* === RESPONSIVE === */
   @media (max-width: 768px) {
     .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
     .skill-featured { grid-template-columns: 1fr; }
     .narrative-recs { grid-template-columns: 1fr; }
     .hero { height: 200px; } .hero h1 { font-size: 1.8rem; }
     .notable-row { flex-direction: column; }
+    .obs-stat { flex-wrap: wrap; gap: 16px; }
   }
 </style>
 </head>
@@ -261,13 +298,21 @@
   </div>
 </div>
 
-<!-- MARQUEE TOP -->
+<!-- MARQUEE -->
 <div class="marquee-wrap">
   <div class="marquee">
-    <span>DeepSeek</span><span class="sep">★</span><span>终端</span><span class="sep">★</span><span>微信</span><span class="sep">★</span><span>WebUI</span><span class="sep">★</span>
-    <span>{{MODEL_NAME}}</span><span class="sep">★</span><span>PID {{GATEWAY_PID}}</span><span class="sep">★</span><span>{{TOKEN_TOTAL}}</span><span class="sep">★</span><span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
-    <span>DeepSeek</span><span class="sep">★</span><span>终端</span><span class="sep">★</span><span>微信</span><span class="sep">★</span><span>WebUI</span><span class="sep">★</span>
-    <span>{{MODEL_NAME}}</span><span class="sep">★</span><span>PID {{GATEWAY_PID}}</span><span class="sep">★</span><span>{{TOKEN_TOTAL}}</span><span class="sep">★</span><span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
+    <span>{{MODEL_NAME}}</span><span class="sep">★</span>
+    <span>会话 {{SESSION_COUNT}}</span><span class="sep">★</span>
+    <span>{{TOKEN_TOTAL}}</span><span class="sep">★</span>
+    <span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
+    <span>图片 {{IMAGE_COUNT}}</span><span class="sep">★</span>
+    <span>PID {{GATEWAY_PID}}</span><span class="sep">★</span>
+    <span>{{MODEL_NAME}}</span><span class="sep">★</span>
+    <span>会话 {{SESSION_COUNT}}</span><span class="sep">★</span>
+    <span>{{TOKEN_TOTAL}}</span><span class="sep">★</span>
+    <span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
+    <span>图片 {{IMAGE_COUNT}}</span><span class="sep">★</span>
+    <span>PID {{GATEWAY_PID}}</span><span class="sep">★</span>
   </div>
 </div>
 
@@ -276,7 +321,7 @@
   <!-- ===== 01 核心指标 ===== -->
   <div class="section-head reveal">
     <div class="ghost">OVERVIEW</div>
-    <div class="section-badge"><span class="dot"></span>今日概况</div>
+    <div class="section-badge"><span class="dot"></span>今日概况 · 较昨日</div>
     <h2>核心指标一览</h2>
   </div>
   <div class="grid-4">
@@ -285,32 +330,36 @@
       <div class="kpi-value">{{SESSION_COUNT}}</div>
       <div class="kpi-label">个会话</div>
       <div class="kpi-sub">活跃 {{ACTIVE_TIME}}</div>
+      <div class="kpi-delta {{SESSION_DELTA_CLASS}}">{{SESSION_DELTA}}</div>
     </div>
     <div class="kpi-card reveal reveal-d2">
       <div class="kpi-icon">📨</div>
       <div class="kpi-value">{{MESSAGE_COUNT}}</div>
       <div class="kpi-label">条消息</div>
       <div class="kpi-sub">用户 {{USER_MESSAGES}} 条</div>
+      <div class="kpi-delta {{MESSAGE_DELTA_CLASS}}">{{MESSAGE_DELTA}}</div>
     </div>
     <div class="kpi-card reveal reveal-d3">
       <div class="kpi-icon">⚡</div>
       <div class="kpi-value">{{TOKEN_TOTAL}}</div>
       <div class="kpi-label">Token</div>
       <div class="kpi-sub">I/O {{INPUT_TOKENS}} / {{OUTPUT_TOKENS}}</div>
+      <div class="kpi-delta {{TOKEN_DELTA_CLASS}}">{{TOKEN_DELTA}}</div>
     </div>
     <div class="kpi-card reveal reveal-d4">
       <div class="kpi-icon">🔧</div>
       <div class="kpi-value">{{TOOL_COUNT}}</div>
       <div class="kpi-label">次工具调用</div>
       <div class="kpi-sub">均会话 {{AVG_SESSION}}</div>
+      <div class="kpi-delta {{TOOL_DELTA_CLASS}}">{{TOOL_DELTA}}</div>
     </div>
   </div>
 
-  <!-- ===== 02 服务通道 ===== -->
+  <!-- ===== 02 服务与网络 ===== -->
   <div class="section-head reveal">
     <div class="ghost">CHANNELS</div>
     <div class="section-badge"><span class="dot"></span>连接状态</div>
-    <h2>服务通道</h2>
+    <h2>服务与网络</h2>
   </div>
   <div style="display:flex;flex-direction:column;gap:8px;" class="reveal">
     <div class="channel-strip">
@@ -337,13 +386,43 @@
       <span class="ch-strip-detail">文件预览 :8899</span>
       <span class="ch-strip-status"><span class="ch-dot {{PREVIEW_STATUS_CLASS}}"></span><span class="ch-txt {{PREVIEW_STATUS_CLASS}}">{{PREVIEW_STATUS_TEXT}}</span></span>
     </div>
+    <div class="channel-strip">
+      <span class="ch-strip-icon">🔗</span>
+      <span class="ch-strip-name">Tailscale</span>
+      <span class="ch-strip-detail">{{TAILSCALE_IP}} · {{TAILSCALE_DNS}}</span>
+      <span class="ch-strip-status"><span class="ch-dot {{TAILSCALE_STATUS_CLASS}}"></span><span class="ch-txt {{TAILSCALE_STATUS_CLASS}}">{{TAILSCALE_STATUS}}</span></span>
+    </div>
   </div>
 
   <div style="text-align:center;padding:8px 0;font-size:0.72rem;color:var(--text-dim);" class="reveal">
     网关 {{GATEWAY_STATUS}} · PID {{GATEWAY_PID}} · {{MODEL_NAME}} / {{MODEL_PROVIDER}}{{MODEL_STABILITY}}
   </div>
 
-  <!-- ===== 03 工具 + 技能 ===== -->
+  <!-- ===== 03 进程概况 ===== -->
+  <div class="section-head reveal">
+    <div class="ghost">PROCESSES</div>
+    <div class="section-badge"><span class="dot"></span>系统负载</div>
+    <h2>进程概况</h2>
+  </div>
+  <div class="grid-2 reveal">
+    <div class="card">
+      <div class="proc-summary">
+        <span>总进程 <strong>{{PROCESS_TOTAL}}</strong></span>
+        <span>僵尸 <strong>{{ZOMBIE_COUNT}}</strong></span>
+      </div>
+      <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🔝 内存占用 Top 5</div>
+      {{PROCESS_TOP5}}
+    </div>
+    <div class="card">
+      <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🌐 网络概况</div>
+      <div style="font-size:0.76rem;color:var(--text-dim);line-height:1.7;">{{NETWORK_SUMMARY}}</div>
+      <div style="margin-top:10px;font-size:0.7rem;color:var(--text-dim);">
+        Tailscale: {{TAILSCALE_STATUS}} · {{TAILSCALE_IP}}{{TAILSCALE_EXIT}}
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 04 今日在做什么 ===== -->
   <div class="section-head reveal">
     <div class="ghost">ACTIVITY</div>
     <div class="section-badge"><span class="dot"></span>工具与技能</div>
@@ -360,7 +439,7 @@
     </div>
   </div>
 
-  <!-- ===== 04 宿主机 + 存储 ===== -->
+  <!-- ===== 05 宿主机 + 存储 ===== -->
   <div class="section-head reveal">
     <div class="ghost">MACHINE</div>
     <div class="section-badge"><span class="dot"></span>系统资源</div>
@@ -390,15 +469,61 @@
       </div>
     </div>
     <div class="card">
-      <div style="display:flex;justify-content:space-around;text-align:center;padding:12px 0;">
-        <div><div style="font-size:1.4rem;font-weight:700;color:var(--text-bright);">{{CACHE_SIZE}}</div><div style="font-size:0.7rem;color:var(--text-dim);">缓存</div></div>
-        <div><div style="font-size:1.4rem;font-weight:700;color:var(--text-bright);">{{DB_SIZE}}</div><div style="font-size:0.7rem;color:var(--text-dim);">数据库</div></div>
-        <div><div style="font-size:1.4rem;font-weight:700;color:var(--text-bright);">{{MEMORY_COUNT}}</div><div style="font-size:0.7rem;color:var(--text-dim);">记忆条目</div></div>
+      <div class="obs-stat" style="padding:8px 0;">
+        <div><div class="obs-stat-val">{{CACHE_SIZE}}</div><div class="obs-stat-lbl">缓存</div></div>
+        <div><div class="obs-stat-val">{{DB_SIZE}}</div><div class="obs-stat-lbl">数据库</div></div>
+        <div><div class="obs-stat-val">{{MEMORY_COUNT}}</div><div class="obs-stat-lbl">记忆条目</div></div>
+        <div><div class="obs-stat-val">{{HERMES_HOME_SIZE}}</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
+      </div>
+      <div style="font-size:0.64rem;color:var(--text-dim);text-align:center;margin-top:4px;">
+        成本: {{ESTIMATED_COST}} {{COST_NOTE}}
       </div>
     </div>
   </div>
 
-  <!-- ===== 05 一周节奏 ===== -->
+  <!-- ===== 06 图片与文件 ===== -->
+  <div class="section-head reveal">
+    <div class="ghost">OUTPUT</div>
+    <div class="section-badge"><span class="dot"></span>产出</div>
+    <h2>图片与文件</h2>
+  </div>
+  <div class="grid-2 reveal">
+    <div class="card">
+      <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🖼️ 图片生成 · {{IMAGE_COUNT}} 张</div>
+      <ul class="log-list">{{IMAGE_LIST}}</ul>
+    </div>
+    <div class="card">
+      <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">📝 文件变动</div>
+      <div class="log-list">{{FILE_CHANGES}}</div>
+    </div>
+  </div>
+
+  <!-- ===== 07 Obsidian 健康 ===== -->
+  <div class="section-head reveal">
+    <div class="ghost">VAULT</div>
+    <div class="section-badge"><span class="dot"></span>知识库</div>
+    <h2>Obsidian 健康</h2>
+  </div>
+  <div class="card reveal">
+    <div class="obs-stat">
+      <div><div class="obs-stat-val">{{VAULT_TOTAL_FILES}}</div><div class="obs-stat-lbl">总文件数</div></div>
+      <div><div class="obs-stat-val">{{VAULT_TODAY_CHANGES}}</div><div class="obs-stat-lbl">今日变更</div></div>
+      <div><div class="obs-stat-val {{TAG_HEALTH_CLASS}}">{{TAG_HEALTH}}</div><div class="obs-stat-lbl">标签健康</div></div>
+    </div>
+    <div class="obs-recent">{{VAULT_RECENT_FILES}}</div>
+  </div>
+
+  <!-- ===== 08 会话时间线 ===== -->
+  <div class="section-head reveal">
+    <div class="ghost">TIMELINE</div>
+    <div class="section-badge"><span class="dot"></span>全部会话</div>
+    <h2>今日会话时间线</h2>
+  </div>
+  <div class="card reveal">
+    {{SESSION_TIMELINE}}
+  </div>
+
+  <!-- ===== 09 一周节奏 ===== -->
   <div class="section-head reveal">
     <div class="ghost">RHYTHM</div>
     <div class="section-badge"><span class="dot"></span>活动规律</div>
@@ -418,10 +543,11 @@
       <div style="font-size:0.65rem;color:var(--text-dim);margin-top:6px;text-align:center;">
         桌面 {{DESKTOP_MSGS}} 条 · 微信 {{WECHAT_MSGS}} 条
       </div>
+      <div class="peak-note">{{PEAK_NOTE}}</div>
     </div>
   </div>
 
-  <!-- ===== 06 亮点会话 ===== -->
+  <!-- ===== 10 亮点会话 ===== -->
   <div class="section-head reveal">
     <div class="ghost">HIGHLIGHTS</div>
     <div class="section-badge"><span class="dot"></span>值得关注</div>
@@ -431,7 +557,7 @@
     {{NOTABLE_SESSIONS}}
   </div>
 
-  <!-- ===== 07 CRON ===== -->
+  <!-- ===== 11 CRON ===== -->
   <div class="section-head reveal">
     <div class="ghost">AUTOMATION</div>
     <div class="section-badge"><span class="dot"></span>自动化</div>
@@ -441,29 +567,38 @@
     {{CRON_LIST}}
   </div>
 
-  <!-- ===== 08 FLOAT TAGS ===== -->
-  <div class="float-tags reveal">
-    <span class="float-tag">Terminal</span><span class="float-tag">Python</span><span class="float-tag">DeepSeek</span>
-    <span class="float-tag">Obsidian</span><span class="float-tag">GitHub</span><span class="float-tag">Tailscale</span>
-    <span class="float-tag">WebUI</span><span class="float-tag">Dashboard</span><span class="float-tag">Windows</span>
-    <span class="float-tag">{{MODEL_NAME}}</span>
-  </div>
-
-  <!-- ===== 09 今日总结 ===== -->
+  <!-- ===== 12 深度洞察 ===== -->
   <div class="section-head reveal">
-    <div class="ghost">SUMMARY</div>
-    <div class="section-badge"><span class="dot"></span>今日总结</div>
-    <h2>今天发生了什么</h2>
+    <div class="ghost">INSIGHTS</div>
+    <div class="section-badge"><span class="dot"></span>深度分析</div>
+    <h2>麻衣的洞察与建议</h2>
+  </div>
+  <div class="card reveal" style="margin-bottom:12px;">
+    <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🔍 今日主题</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">{{SESSION_TOPICS}}</div>
   </div>
   <div class="narrative-section reveal">
     <div class="narrative-intro">{{DAILY_SUMMARY}}</div>
     <div class="narrative-recs">{{DAILY_RECOMMENDATIONS}}</div>
   </div>
 
+  <!-- ===== 13 浮动标签 ===== -->
+  <div class="float-tags reveal">
+    <span class="float-tag">{{MODEL_NAME}}</span>
+    <span class="float-tag">Terminal</span>
+    <span class="float-tag">Python</span>
+    <span class="float-tag">Obsidian</span>
+    <span class="float-tag">GitHub</span>
+    <span class="float-tag">Tailscale</span>
+    <span class="float-tag">Windows</span>
+    <span class="float-tag">DeepSeek</span>
+    <span class="float-tag">Hermes</span>
+  </div>
+
   <!-- FOOTER -->
   <div class="footer reveal">
-    <p>由 <span>沙河麻衣</span> 自动生成 · {{REPORT_DATE}} · Hermes Agent on DeepSeek</p>
-    <p style="margin-top:2px;"><a href="https://burkereiii.github.io/hermes-daily-report/">🌐 在线查看</a></p>
+    <p>由 <span>沙河麻衣</span> 自动生成 · {{REPORT_DATE}} · Hermes Agent on {{MODEL_PROVIDER}}</p>
+    <p style="margin-top:2px;"><a href="https://burkereiii.github.io/hermes-daily-report/">🌐 在线查看</a> · v8.0 全谱数据</p>
   </div>
 
 </div>
