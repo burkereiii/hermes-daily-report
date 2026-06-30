@@ -373,11 +373,11 @@ def collect_obsidian():
     return data
 
 def estimate_cost(model_name, raw_input, raw_output):
-    """Estimate token cost based on model pricing."""
+    """Estimate token cost based on model pricing (fallback only)."""
     if not model_name or model_name=="—":
         return "—", "价格待确认"
     rates={
-        "deepseek": (0.14, 0.28),  # $/1M tokens
+        "deepseek": (0.435, 0.87),
         "gpt": (2.50, 10.00),
         "claude": (3.00, 15.00),
     }
@@ -386,6 +386,81 @@ def estimate_cost(model_name, raw_input, raw_output):
             cost = (raw_input/1e6)*in_rate + (raw_output/1e6)*out_rate
             return f"${cost:.4f}", f"估算 · {prefix}"
     return "—", "价格待确认"
+
+def collect_deepseek_cost():
+    """Query DeepSeek API for real account balance. Track daily consumption.
+    Detects ¥100 top-ups: if balance jumps up by ~100, treat as recharge not negative spend."""
+    data = {"DS_BALANCE": "—", "DS_CONSUMPTION": "—", "DS_CONSUMPTION_CLASS": "flat",
+            "DS_RECHARGE_NOTE": "", "DS_CURRENCY": "CNY"}
+    
+    # Query API
+    key = ""
+    env_paths = ["/d/Hermes/.env", "D:\\Hermes\\.env"]
+    for p in env_paths:
+        if os.path.exists(p):
+            with open(p,"r") as f:
+                for line in f:
+                    if line.startswith("DEEPSEEK_API_KEY="):
+                        key = line.split("=",1)[1].strip().strip('"').strip("'")
+                        break
+        if key: break
+    
+    if not key:
+        return data
+    
+    try:
+        import urllib.request, ssl
+        ctx = ssl.create_default_context()
+        req = urllib.request.Request("https://api.deepseek.com/user/balance")
+        req.add_header("Authorization", f"Bearer {key}")
+        resp = urllib.request.urlopen(req, context=ctx, timeout=10)
+        body = json.loads(resp.read())
+        
+        if body.get("is_available") and body.get("balance_infos"):
+            info = body["balance_infos"][0]
+            current = float(info["total_balance"])
+            currency = info.get("currency", "CNY")
+            data["DS_BALANCE"] = f"{current:.2f}"
+            data["DS_CURRENCY"] = currency
+            
+            # Load yesterday's balance
+            cache_file = "D:\\Hermes\\cache\\ds_balance.json"
+            yesterday = None
+            if os.path.exists(cache_file):
+                try:
+                    with open(cache_file,"r") as f:
+                        hist = json.load(f)
+                    yesterday = hist.get("balance")
+                except: pass
+            
+            # Calculate consumption
+            if yesterday is not None:
+                diff = yesterday - current
+                # Detect ¥100 recharge: balance went UP by ~100
+                if current > yesterday and abs(current - yesterday - 100) < 5:
+                    data["DS_RECHARGE_NOTE"] = " · 检测到充值 +100"
+                    # Consumption is what it would have been without recharge
+                    adjusted = yesterday + 100 - current
+                    data["DS_CONSUMPTION"] = f"-¥{adjusted:.2f}" if adjusted > 0 else "—"
+                    data["DS_CONSUMPTION_CLASS"] = "down" if adjusted > 0 else "flat"
+                elif diff > 0:
+                    data["DS_CONSUMPTION"] = f"-¥{diff:.2f}"
+                    data["DS_CONSUMPTION_CLASS"] = "down"
+                elif diff < 0:
+                    data["DS_CONSUMPTION"] = f"+¥{abs(diff):.2f}"
+                    data["DS_CONSUMPTION_CLASS"] = "up"
+                else:
+                    data["DS_CONSUMPTION"] = "¥0"
+                    data["DS_CONSUMPTION_CLASS"] = "flat"
+            
+            # Store current for tomorrow
+            with open(cache_file,"w") as f:
+                json.dump({"date": datetime.date.today().strftime("%Y-%m-%d"), "balance": current}, f)
+    except Exception as e:
+        data["DS_BALANCE"] = "—"
+        data["DS_CONSUMPTION"] = "API 查询失败"
+    
+    return data
 
 # ═══════════════════════ CONTENT GENERATION ═══════════════════════
 
@@ -504,6 +579,9 @@ def collect_all():
     data["ESTIMATED_COST"]=cost
     data["COST_NOTE"]=cost_note
     
+    # DeepSeek cost (real balance query)
+    data.update(collect_deepseek_cost())
+    
     # Yesterday deltas
     for raw_key, display_key, delta_key, cls_key in [
         ("_raw_sessions","SESSION_COUNT","SESSION_DELTA","SESSION_DELTA_CLASS"),
@@ -541,6 +619,8 @@ def collect_all():
     
     # Defaults for LLM-filled fields (agent will override)
     data.setdefault("SESSION_TIMELINE",'<div class="tl-empty">数据待采集</div>')
+    data.setdefault("DS_BALANCE","—"); data.setdefault("DS_CONSUMPTION","—")
+    data.setdefault("DS_CONSUMPTION_CLASS","flat"); data.setdefault("DS_RECHARGE_NOTE","")
     data.setdefault("SESSION_TOPICS",'<span class="float-tag" style="animation:none">数据待分析</span>')
     data.setdefault("DAILY_SUMMARY",'今日数据已采集，深度分析待 agent 生成。')
     data.setdefault("DAILY_RECOMMENDATIONS","")
@@ -683,6 +763,8 @@ def main():
         else:
             data["PEAK_NOTE"] = "⚠️ 峰值为瞬时快照+模拟，非持续监控数据。部署轻量守护进程后可获取真实峰值。"
         data.setdefault("SESSION_TIMELINE",'<div class="tl-empty">数据待采集</div>')
+        data.setdefault("DS_BALANCE","—"); data.setdefault("DS_CONSUMPTION","—")
+        data.setdefault("DS_CONSUMPTION_CLASS","flat"); data.setdefault("DS_RECHARGE_NOTE","")
     else:
         # Self-collect mode (backward compatible)
         print(f"📊 {ds}")
