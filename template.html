@@ -207,6 +207,24 @@
   .peak-labels span { flex: 1; text-align: center; }
   .peak-note { font-size: 0.62rem; color: var(--yellow); opacity: 0.7; margin-top: 4px; text-align: center; }
 
+  /* === 24h ACTIVITY CHART === */
+  .tl-chart {
+    display: flex; gap: 2px; align-items: flex-end; height: 80px; padding: 0 2px;
+  }
+  .tl-bar {
+    flex: 1; background: var(--accent); border-radius: 2px 2px 0 0;
+    min-height: 2px; transition: height 0.6s ease;
+  }
+  .tl-bar.empty { background: rgba(124,58,237,0.05); min-height: 1px; }
+  .tl-bar.peak { background: var(--accent-glow); }
+  .tl-axis {
+    display: flex; gap: 2px; font-size: 0.55rem; color: var(--text-dim);
+    margin-top: 3px; padding: 0 2px;
+  }
+  .tl-axis span { flex: 1; text-align: center; }
+  .tl-axis span:first-child { text-align: left; }
+  .tl-axis span:last-child { text-align: right; }
+
   /* === NOTABLE SESSIONS === */
   .notable-row { display: flex; gap: 12px; flex-wrap: wrap; }
   .notable-chip {
@@ -518,14 +536,20 @@
     <div class="obs-recent">{{VAULT_RECENT_FILES}}</div>
   </div>
 
-  <!-- ===== 08 会话时间线 ===== -->
+  <!-- ===== 08 24h 活动分布 ===== -->
   <div class="section-head reveal">
     <div class="ghost">TIMELINE</div>
-    <div class="section-badge"><span class="dot"></span>全部会话</div>
-    <h2>今日会话时间线</h2>
+    <div class="section-badge"><span class="dot"></span>24小时</div>
+    <h2>今日活动分布</h2>
   </div>
   <div class="card reveal">
-    {{SESSION_TIMELINE}}
+    <div class="tl-chart">{{SESSION_TIMELINE}}</div>
+    <div class="tl-axis">
+      <span>0</span><span>3</span><span>6</span><span>9</span><span>12</span><span>15</span><span>18</span><span>21</span>
+    </div>
+    <div style="font-size:0.65rem;color:var(--text-dim);margin-top:6px;text-align:center;">
+      桌面 {{DESKTOP_MSGS}} 条 · 微信 {{WECHAT_MSGS}} 条 · 共 {{SESSION_COUNT}} 个会话
+    </div>
   </div>
 
   <!-- ===== 09 一周节奏 ===== -->

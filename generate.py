@@ -677,20 +677,25 @@ def collect_all():
     # Cron
     data.update(collect_cron())
     
-    # Session timeline (basic: from insights, detailed requires agent)
-    s_count = data.get("SESSION_COUNT","0")
-    active = data.get("ACTIVE_TIME","—")
-    tui_msgs = data.get("DESKTOP_MSGS","0")
-    wx_msgs = data.get("WECHAT_MSGS","0")
-    tl_parts = []
-    if int(tui_msgs)>0:
-        tl_parts.append(f'<div class="tl-item"><span class="tl-time">{active}</span><span class="tl-platform">TUI</span><span class="tl-topic">桌面端 {tui_msgs} 条消息 · 深度主题分析需 agent 模式</span></div>')
-    if int(wx_msgs)>0:
-        tl_parts.append(f'<div class="tl-item"><span class="tl-time">{active}</span><span class="tl-platform">微信</span><span class="tl-topic">移动端 {wx_msgs} 条消息 · 深度主题分析需 agent 模式</span></div>')
-    if tl_parts:
-        data["SESSION_TIMELINE"] = "\n".join(tl_parts) + f'\n<div class="tl-item"><span class="tl-time">—</span><span class="tl-platform">📊</span><span class="tl-topic" style="color:var(--text-dim)">共 {s_count} 个会话 · 活跃 {active} · 详细主题请用 agent 驱动模式生成</span></div>'
-    else:
-        data["SESSION_TIMELINE"] = '<div class="tl-empty">今日无会话</div>'
+    # 24h activity chart from peak data
+    peak_raw = data.get("_peak_raw","")
+    slots=[0]*24
+    if peak_raw:
+        for m in re.finditer(r'(\d+)(AM|PM)\s*\((\d+)\)',peak_raw):
+            h=int(m.group(1)); ampm=m.group(2); count=int(m.group(3))
+            if ampm=="PM" and h!=12: h+=12
+            if ampm=="AM" and h==12: h=0
+            if 0<=h<24: slots[h]=count
+    mx=max(slots) if max(slots)>0 else 1
+    bars=[]
+    for s in slots:
+        if s>0:
+            h_px=max(4,int(s/mx*72))
+            cls="peak" if s==mx else ""
+            bars.append(f'<div class="tl-bar {cls}" style="height:{h_px}px" title="{s} 个会话"></div>')
+        else:
+            bars.append('<div class="tl-bar empty"></div>')
+    data["SESSION_TIMELINE"]="\n".join(bars)
     data.setdefault("DS_BALANCE","—"); data.setdefault("DS_CONSUMPTION","—")
     data.setdefault("DS_CONSUMPTION_CLASS","flat"); data.setdefault("DS_RECHARGE_NOTE","")
     data.setdefault("SESSION_TOPICS",'<span class="float-tag" style="animation:none">数据待分析</span>')
