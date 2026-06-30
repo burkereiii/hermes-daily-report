@@ -19,9 +19,10 @@ TOOL_CN = {
 }
 SKILL_CN = {
     "hippo-selfie":"麻衣自拍","hermes-daily-report":"系统日报","hermes-agent":"配置管理",
-    "obsidian":"笔记","plan":"计划制定","systematic-debugging":"系统调试",
+    "obsidian":"笔记管理","plan":"计划制定","systematic-debugging":"系统调试",
     "comfyui":"AI绘画","hermes-remote-gateway":"远程网关",
     "hermes-agent-skill-authoring":"技能编写","knowledge-curation":"知识策展",
+    "obsidian-vault-discovery":"Obsidian管理",
     "video-transcription":"视频转录","requesting-code-review":"代码审查",
     "simplify-code":"代码精简","hermes-web-search":"网页搜索",
     "test-driven-development":"TDD","video-content-extraction":"视频内容提取",
