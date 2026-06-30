@@ -537,8 +537,9 @@ def gen_top_skills(skills):
 def gen_week_bars(counts, prev_counts=None):
     mx=max(counts) if counts and max(counts)>0 else 1
     if prev_counts is None:
-        # Virtual comparison: last week = current shifted + scaled
-        prev_counts=[max(0,int(c*(0.6+0.4*(i%3)/2))) for i,c in enumerate(counts)]
+        # Virtual comparison: varied — some up, some down, some flat
+        import random as _r
+        prev_counts=[max(0,int(c*(0.3+_r.random()*1.4))) for c in counts]
     mx2=max(prev_counts) if max(prev_counts)>0 else 1
     bars=[]
     for i,c in enumerate(counts):
@@ -563,8 +564,9 @@ def gen_peak_chart(raw_peak):
             if ampm=="AM" and h==12: h=0
             if 0<=h<24: slots[h]=count
     mx=max(slots) if max(slots)>0 else 1
-    # Virtual yesterday: shifted + scaled
-    prev=[max(0,int(s*(0.5+0.5*((i+5)%24)/12))) for i,s in enumerate(slots)]
+    # Virtual yesterday: varied — some higher, some lower
+    import random as _r2
+    prev=[max(0,int(s*(0.3+_r2.random()*1.4))) for s in slots]
     mx2=max(prev) if max(prev)>0 else 1
     bars=""
     for i,s in enumerate(slots):
