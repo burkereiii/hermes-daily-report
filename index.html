@@ -164,7 +164,16 @@
   .dual-head .l { color: var(--text-dim); } .dual-head .v { color: var(--text-bright); font-weight: 600; }
   .dual-track { position: relative; height: 8px; background: rgba(124,58,237,0.08); border-radius: 4px; overflow: hidden; }
   .dual-fill-curr { position: absolute; left: 0; top: 0; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent-glow)); z-index: 2; transition: width 1s ease; }
-  .dual-fill-peak { position: absolute; left: 0; top: 0; height: 100%; border-radius: 4px; background: rgba(167,139,250,0.35); z-index: 1; transition: width 1.2s ease; border-right: 2px solid rgba(167,139,250,0.6); }
+  .dual-fill-peak { position: absolute; left: 0; top: 0; height: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, rgba(167,139,250,0.08), rgba(167,139,250,0.55));
+    z-index: 1; transition: width 1.2s ease; border-right: 2px solid rgba(167,139,250,0.6); }
+  .dual-fill-curr {
+    animation: bar-shimmer 3s ease-in-out infinite;
+  }
+  @keyframes bar-shimmer {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.25); }
+  }
   .dual-fill-curr.warn { background: linear-gradient(90deg, #f59e0b, var(--yellow)); }
   .dual-fill-curr.danger { background: linear-gradient(90deg, #ef4444, var(--red)); }
 
@@ -318,10 +327,10 @@
   <div class="grid-4">
     <div class="kpi-card reveal reveal-d1">
       <div class="kpi-icon">💰</div>
-      <div class="kpi-value">¥0</div>
+      <div class="kpi-value">¥0.56</div>
       <div class="kpi-label">DeepSeek 消耗</div>
-      <div class="kpi-sub">余额 ¥63.37</div>
-      <div class="kpi-delta flat">10 个会话</div>
+      <div class="kpi-sub">余额 ¥62.81</div>
+      <div class="kpi-delta down">10 个会话</div>
     </div>
     <div class="kpi-card reveal reveal-d2">
       <div class="kpi-icon">📨</div>
@@ -389,37 +398,7 @@
     网关 运行中 · PID 31852 · deepseek-v4-pro / DeepSeek · 单模型 · 无 fallback
   </div>
 
-  <!-- ===== 03 进程概况 ===== -->
-  <div class="section-head reveal">
-    <div class="ghost">PROCESSES</div>
-    <div class="section-badge"><span class="dot"></span>系统负载</div>
-    <h2>进程概况</h2>
-  </div>
-  <div class="card reveal">
-    <div class="proc-summary">
-      <span>总进程 <strong>371</strong></span>
-      <span>僵尸 <strong>—</strong></span>
-    </div>
-    <div class="grid-2" style="gap:16px;">
-      <div>
-        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🔝 内存 Top 5</div>
-        <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression <small style='color:var(--text-dim);font-size:0.6rem'>内存压缩</small></span><span class="proc-pid">PID 4656</span><span class="proc-mem">1032 MB</span></div>
-<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">776 MB</span></div>
-<div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">explorer <small style='color:var(--text-dim);font-size:0.6rem'>资源管理器</small></span><span class="proc-pid">PID 15188</span><span class="proc-mem">422 MB</span></div>
-<div class="proc-row"><span class="proc-rank">4</span><span class="proc-name">steamwebhelper <small style='color:var(--text-dim);font-size:0.6rem'>Steam</small></span><span class="proc-pid">PID 25396</span><span class="proc-mem">336 MB</span></div>
-<div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">dwm <small style='color:var(--text-dim);font-size:0.6rem'>桌面窗口</small></span><span class="proc-pid">PID 2356</span><span class="proc-mem">336 MB</span></div>
-      </div>
-      <div>
-        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🌐 网络概况</div>
-        <div style="font-size:0.72rem;color:var(--text-dim);line-height:1.7;">以太网/Wi-Fi 已连接</div>
-        <div style="margin-top:8px;font-size:0.66rem;color:var(--text-dim);">
-          Tailscale: 在线 · 100.64.111.119, fd7a:115c:a1e0::9335:6f78
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== 04 今日在做什么 ===== -->
+  <!-- ===== 03 今日在做什么 ===== -->
   <div class="section-head reveal">
     <div class="ghost">ACTIVITY</div>
     <div class="section-badge"><span class="dot"></span>工具与技能</div>
@@ -451,7 +430,7 @@
     </div>
   </div>
 
-  <!-- ===== 05 宿主机 + 存储 ===== -->
+  <!-- ===== 04 宿主机 + 存储 ===== -->
   <div class="section-head reveal">
     <div class="ghost">MACHINE</div>
     <div class="section-badge"><span class="dot"></span>系统资源</div>
@@ -460,17 +439,17 @@
   <div class="grid-2 reveal">
     <div class="card">
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 5% · 峰值 15%</span></div>
+        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 4% · 峰值 11%</span></div>
         <div class="dual-track">
-          <div class="dual-fill-curr" style="width:5%"></div>
-          <div class="dual-fill-peak" style="width:15%"></div>
+          <div class="dual-fill-curr" style="width:4%"></div>
+          <div class="dual-fill-peak" style="width:11%"></div>
         </div>
       </div>
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">内存</span><span class="v">当前 38% · 峰值 43% · 40 GB</span></div>
+        <div class="dual-head"><span class="l">内存</span><span class="v">当前 38% · 峰值 51% · 40 GB</span></div>
         <div class="dual-track">
           <div class="dual-fill-curr" style="width:38%"></div>
-          <div class="dual-fill-peak" style="width:43%"></div>
+          <div class="dual-fill-peak" style="width:51%"></div>
         </div>
       </div>
       <div class="dual-progress">
@@ -483,12 +462,42 @@
     <div class="card">
       <div class="obs-stat" style="padding:8px 0;">
         <div><div class="obs-stat-val">9.9M</div><div class="obs-stat-lbl">缓存</div></div>
-        <div><div class="obs-stat-val">38.2M</div><div class="obs-stat-lbl">数据库</div></div>
+        <div><div class="obs-stat-val">38.9M</div><div class="obs-stat-lbl">数据库</div></div>
         <div><div class="obs-stat-val">—</div><div class="obs-stat-lbl">记忆条目</div></div>
         <div><div class="obs-stat-val">1.9G</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
       </div>
       <div style="font-size:0.64rem;color:var(--text-dim);text-align:center;margin-top:4px;">
         成本: $1.0081 估算 · deepseek
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 05 进程概况 ===== -->
+  <div class="section-head reveal">
+    <div class="ghost">PROCESSES</div>
+    <div class="section-badge"><span class="dot"></span>系统负载</div>
+    <h2>进程概况</h2>
+  </div>
+  <div class="card reveal">
+    <div class="proc-summary">
+      <span>总进程 <strong>371</strong></span>
+      <span>僵尸 <strong>—</strong></span>
+    </div>
+    <div class="grid-2" style="gap:16px;">
+      <div>
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🔝 内存 Top 5</div>
+        <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression <small style='color:var(--text-dim);font-size:0.6rem'>内存压缩</small></span><span class="proc-pid">PID 4656</span><span class="proc-mem">1019 MB</span></div>
+<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">782 MB</span></div>
+<div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">explorer <small style='color:var(--text-dim);font-size:0.6rem'>资源管理器</small></span><span class="proc-pid">PID 15188</span><span class="proc-mem">422 MB</span></div>
+<div class="proc-row"><span class="proc-rank">4</span><span class="proc-name">steamwebhelper <small style='color:var(--text-dim);font-size:0.6rem'>Steam</small></span><span class="proc-pid">PID 25396</span><span class="proc-mem">336 MB</span></div>
+<div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">dwm <small style='color:var(--text-dim);font-size:0.6rem'>桌面窗口</small></span><span class="proc-pid">PID 2356</span><span class="proc-mem">336 MB</span></div>
+      </div>
+      <div>
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🌐 网络概况</div>
+        <div style="font-size:0.72rem;color:var(--text-dim);line-height:1.7;">以太网/Wi-Fi 已连接</div>
+        <div style="margin-top:8px;font-size:0.66rem;color:var(--text-dim);">
+          Tailscale: 在线 · 100.64.111.119, fd7a:115c:a1e0::9335:6f78
+        </div>
       </div>
     </div>
   </div>
