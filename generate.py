@@ -686,7 +686,7 @@ def collect_all():
     data["WEEK_NUMS"]=gen_week_nums(data["WEEK_COUNTS"])
     peak_bars,peak_labels=gen_peak_chart(data.get("_peak_raw",""))
     data["PEAK_BARS"]=peak_bars; data["PEAK_LABELS"]=peak_labels
-    data["NOTABLE_SESSIONS"]=gen_notable(data["_notable"])
+    data["NOTABLE_SESSIONS"]=gen_notable([(l,v) for l,v,_ in data["_notable"]])
     
     # Cron
     data.update(collect_cron())
