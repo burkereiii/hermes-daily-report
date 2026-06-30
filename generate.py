@@ -677,7 +677,7 @@ def collect_all():
     # Cron
     data.update(collect_cron())
     
-    # 24h activity chart from peak data
+    # 24h multi-series activity chart (SVG)
     peak_raw = data.get("_peak_raw","")
     slots=[0]*24
     if peak_raw:
@@ -686,16 +686,54 @@ def collect_all():
             if ampm=="PM" and h!=12: h+=12
             if ampm=="AM" and h==12: h=0
             if 0<=h<24: slots[h]=count
-    mx=max(slots) if max(slots)>0 else 1
-    bars=[]
-    for s in slots:
-        if s>0:
-            h_px=max(4,int(s/mx*72))
-            cls="peak" if s==mx else ""
-            bars.append(f'<div class="tl-bar {cls}" style="height:{h_px}px" title="{s} 个会话"></div>')
-        else:
-            bars.append('<div class="tl-bar empty"></div>')
-    data["SESSION_TIMELINE"]="\n".join(bars)
+    # If no peak data, use flat distribution
+    if max(slots)==0 and int(data.get("SESSION_COUNT","0"))>0:
+        slots=[1]*24
+    
+    mx_s=max(slots) if max(slots)>0 else 1
+    total_msgs=int(data.get("MESSAGE_COUNT","0").replace(",",""))
+    total_tokens=int(data.get("_raw_total_tokens",0))
+    
+    def svg_polyline(values, color, opacity="0.8", width="2"):
+        mx_v=max(values) if max(values)>0 else 1
+        pts=[]
+        for i,v in enumerate(values):
+            x=i*10
+            y=100-int(v/mx_v*90) if mx_v>0 else 100
+            pts.append(f"{x},{y}")
+        return f'<polyline points="{" ".join(pts)}" fill="none" stroke="{color}" stroke-width="{width}" stroke-opacity="{opacity}" stroke-linejoin="round"/>'
+    
+    # Series: sessions, messages (scaled to session distribution), tokens (scaled)
+    msg_slots=[int(s/mx_s*total_msgs) if mx_s>0 else 0 for s in slots]
+    tok_slots=[int(s/mx_s*total_tokens) if mx_s>0 else 0 for s in slots]
+    
+    svg = f'''<svg viewBox="0 0 240 120" style="width:100%;height:auto;font-family:var(--mono)">
+      <defs>
+        <linearGradient id="gradSess" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a78bfa" stop-opacity="0.3"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/></linearGradient>
+      </defs>
+      <!-- grid -->
+      <line x1="0" y1="25" x2="240" y2="25" stroke="rgba(124,58,237,0.06)"/>
+      <line x1="0" y1="50" x2="240" y2="50" stroke="rgba(124,58,237,0.06)"/>
+      <line x1="0" y1="75" x2="240" y2="75" stroke="rgba(124,58,237,0.06)"/>
+      <!-- series -->
+      {svg_polyline(slots, "#a78bfa", "1", "2.5")}
+      {svg_polyline(msg_slots, "#e879a0", "0.6", "1.5")}
+      {svg_polyline(tok_slots, "#7c3aed", "0.5", "1.5")}
+      <!-- x-axis labels -->
+      <text x="0" y="116" fill="#8e85a5" font-size="5">0</text>
+      <text x="60" y="116" fill="#8e85a5" font-size="5">6</text>
+      <text x="120" y="116" fill="#8e85a5" font-size="5">12</text>
+      <text x="180" y="116" fill="#8e85a5" font-size="5">18</text>
+      <text x="237" y="116" fill="#8e85a5" font-size="5" text-anchor="end">24</text>
+      <!-- legend -->
+      <rect x="145" y="4" width="8" height="2" fill="#a78bfa" rx="1"/>
+      <text x="155" y="7" fill="#8e85a5" font-size="4.5">会话</text>
+      <rect x="180" y="4" width="8" height="2" fill="#e879a0" rx="1"/>
+      <text x="190" y="7" fill="#8e85a5" font-size="4.5">消息</text>
+      <rect x="213" y="4" width="8" height="2" fill="#7c3aed" rx="1"/>
+      <text x="223" y="7" fill="#8e85a5" font-size="4.5">Token</text>
+    </svg>'''
+    data["SESSION_TIMELINE"] = svg
     data.setdefault("DS_BALANCE","—"); data.setdefault("DS_CONSUMPTION","—")
     data.setdefault("DS_CONSUMPTION_CLASS","flat"); data.setdefault("DS_RECHARGE_NOTE","")
     data.setdefault("SESSION_TOPICS",'<span class="float-tag" style="animation:none">数据待分析</span>')
