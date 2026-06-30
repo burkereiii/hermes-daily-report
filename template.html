@@ -42,7 +42,7 @@
 
   /* HERO */
   .hero { position: relative; margin: 0 -24px 0; height: 300px; border-radius: 0 0 36px 36px;
-    display: flex; align-items: flex-end; box-shadow: 0 20px 80px rgba(124,58,237,0.1); }
+    overflow: hidden; display: flex; align-items: flex-end; box-shadow: 0 20px 80px rgba(124,58,237,0.1); }
  .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 15%; filter: brightness(0.5) saturate(1.1); border-radius: 0 0 36px 36px; }
  .hero-fade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,3,8,0.96) 0%, rgba(5,3,8,0.25) 55%, transparent 100%); border-radius: 0 0 36px 36px; z-index: 1; }
   .hero-content { position: relative; z-index: 2; padding: 36px 32px 28px; width: 100%; }
@@ -51,10 +51,10 @@
   .hero h1 { font-size: 2.6rem; font-weight: 750; color: var(--text-bright); letter-spacing: -1px; line-height: 1.1; }
   .hero .sub { font-size: 0.82rem; color: var(--text-dim); margin-top: 4px; }
 
-  /* MARQUEE — dual crossed strips, lower hero, full bleed */
+  /* MARQUEE — dual crossed strips, outside hero, negative margin overlap */
   .marquee-zone {
-    position: absolute; bottom: -12px; left: 0; width: 100%; height: 60px;
-    z-index: 5; overflow: visible; pointer-events: none;
+    position: relative; z-index: 5; margin-top: -50px; margin-left: -24px;
+    width: calc(100% + 48px); height: 55px; overflow: visible; pointer-events: none;
   }
   .marquee-strip {
     position: absolute; white-space: nowrap; overflow: hidden;
@@ -63,12 +63,12 @@
   }
   .marquee-strip.top {
     top: 0; height: 28px; background: #5b21b6;
-    transform: rotate(-2.2deg) translateX(2%);
+    transform: rotate(-2.2deg) translateX(3%);
     font-size: 0.78rem; letter-spacing: 1px;
   }
   .marquee-strip.bot {
     bottom: 0; height: 22px; background: #7c3aed;
-    transform: rotate(1.6deg) translateX(-1%);
+    transform: rotate(1.6deg) translateX(-2%);
     font-size: 0.68rem; letter-spacing: 0.5px; opacity: 0.88;
   }
   .marquee-inner { display: inline-block; animation: marquee 28s linear infinite; padding: 0 40px; }
@@ -320,35 +320,37 @@
     <h1>Hermes 系统日报</h1>
     <div class="sub">{{REPORT_WEEKDAY}} · 沙河麻衣自动生成</div>
   </div>
-  <!-- MARQUEE overlaid on hero -->
-  <div class="marquee-zone">
-    <div class="marquee-strip top">
-      <div class="marquee-inner">
-        <span>{{MODEL_NAME}}</span><span class="sep">★</span>
-        <span>会话 {{SESSION_COUNT}}</span><span class="sep">★</span>
-        <span>{{TOKEN_TOTAL}}</span><span class="sep">★</span>
-        <span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
-        <span>PID {{GATEWAY_PID}}</span><span class="sep">★</span>
-        <span>{{MODEL_NAME}}</span><span class="sep">★</span>
-        <span>会话 {{SESSION_COUNT}}</span><span class="sep">★</span>
-        <span>{{TOKEN_TOTAL}}</span><span class="sep">★</span>
-        <span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
-        <span>PID {{GATEWAY_PID}}</span><span class="sep">★</span>
-      </div>
+  </div>
+</div>
+
+<!-- MARQUEE — dual crossed strips, overlaps hero bottom -->
+<div class="marquee-zone">
+  <div class="marquee-strip top">
+    <div class="marquee-inner">
+      <span>{{MODEL_NAME}}</span><span class="sep">★</span>
+      <span>会话 {{SESSION_COUNT}}</span><span class="sep">★</span>
+      <span>{{TOKEN_TOTAL}}</span><span class="sep">★</span>
+      <span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
+      <span>PID {{GATEWAY_PID}}</span><span class="sep">★</span>
+      <span>{{MODEL_NAME}}</span><span class="sep">★</span>
+      <span>会话 {{SESSION_COUNT}}</span><span class="sep">★</span>
+      <span>{{TOKEN_TOTAL}}</span><span class="sep">★</span>
+      <span>Cron {{CRON_ACTIVE}}/{{CRON_TOTAL}}</span><span class="sep">★</span>
+      <span>PID {{GATEWAY_PID}}</span><span class="sep">★</span>
     </div>
-    <div class="marquee-strip bot">
-      <div class="marquee-inner rev">
-        <span>图片 {{IMAGE_COUNT}}</span><span class="sep">★</span>
-        <span>Tailscale 在线</span><span class="sep">★</span>
-        <span>预览 :8899</span><span class="sep">★</span>
-        <span>WebUI :8787</span><span class="sep">★</span>
-        <span>微信 {{WECHAT_MSGS}}条</span><span class="sep">★</span>
-        <span>图片 {{IMAGE_COUNT}}</span><span class="sep">★</span>
-        <span>Tailscale 在线</span><span class="sep">★</span>
-        <span>预览 :8899</span><span class="sep">★</span>
-        <span>WebUI :8787</span><span class="sep">★</span>
-        <span>微信 {{WECHAT_MSGS}}条</span><span class="sep">★</span>
-      </div>
+  </div>
+  <div class="marquee-strip bot">
+    <div class="marquee-inner rev">
+      <span>图片 {{IMAGE_COUNT}}</span><span class="sep">★</span>
+      <span>Tailscale 在线</span><span class="sep">★</span>
+      <span>预览 :8899</span><span class="sep">★</span>
+      <span>WebUI :8787</span><span class="sep">★</span>
+      <span>微信 {{WECHAT_MSGS}}条</span><span class="sep">★</span>
+      <span>图片 {{IMAGE_COUNT}}</span><span class="sep">★</span>
+      <span>Tailscale 在线</span><span class="sep">★</span>
+      <span>预览 :8899</span><span class="sep">★</span>
+      <span>WebUI :8787</span><span class="sep">★</span>
+      <span>微信 {{WECHAT_MSGS}}条</span><span class="sep">★</span>
     </div>
   </div>
 </div>
