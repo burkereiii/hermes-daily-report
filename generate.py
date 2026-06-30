@@ -202,12 +202,24 @@ def collect_channels():
     return data
 
 def collect_gateway():
-    gw,_,_=run("hermes gateway status",timeout=15)
+    gw,_,_=run("hermes gateway status",timeout=10)
     m=re.search(r'PID:\s*(\d+)',gw)
-    return {
-        "GATEWAY_PID":m.group(1) if m else "N/A",
-        "GATEWAY_STATUS":"运行中" if ("running" in gw.lower() or "运行" in gw) else "已停止"
-    }
+    pid = m.group(1) if m else None
+    if pid:
+        return {
+            "GATEWAY_PID": pid,
+            "GATEWAY_STATUS": "运行中" if ("running" in gw.lower() or "运行" in gw) else "已停止"
+        }
+    # Fallback: check if gateway PID from cache is still alive
+    try:
+        cache = "D:\\Hermes\\cache\\gateway_pid.txt"
+        if os.path.exists(cache):
+            with open(cache) as f: last_pid = f.read().strip()
+            out,_,_=run(f"tasklist /FI \"PID eq {last_pid}\" 2>nul",timeout=5)
+            if last_pid in out:
+                return {"GATEWAY_PID": last_pid, "GATEWAY_STATUS": "运行中 (无响应)"}
+    except: pass
+    return {"GATEWAY_PID": "N/A", "GATEWAY_STATUS": "已停止"}
 
 def collect_tailscale():
     data={"TAILSCALE_STATUS":"—","TAILSCALE_STATUS_CLASS":"offline",
