@@ -694,14 +694,24 @@ def collect_all():
     total_msgs=int(data.get("MESSAGE_COUNT","0").replace(",",""))
     total_tokens=int(data.get("_raw_total_tokens",0))
     
-    def svg_polyline(values, color, opacity="0.8", width="2"):
+    def svg_curve(values, color, opacity="0.8", width="1.2"):
+        """Generate smooth SVG path from 24 data points using cubic bezier."""
         mx_v=max(values) if max(values)>0 else 1
-        pts=[]
-        for i,v in enumerate(values):
-            x=i*10
-            y=100-int(v/mx_v*90) if mx_v>0 else 100
-            pts.append(f"{x},{y}")
-        return f'<polyline points="{" ".join(pts)}" fill="none" stroke="{color}" stroke-width="{width}" stroke-opacity="{opacity}" stroke-linejoin="round"/>'
+        n=len(values)
+        pts=[(i*10, 100-int(v/mx_v*90) if mx_v>0 else 100) for i,v in enumerate(values)]
+        if n<3:
+            return f'<polyline points="{" ".join(f"{x},{y}" for x,y in pts)}" fill="none" stroke="{color}" stroke-width="{width}" stroke-opacity="{opacity}" stroke-linecap="round"/>'
+        # Catmull-Rom to cubic bezier
+        d=f"M {pts[0][0]},{pts[0][1]}"
+        for i in range(n-1):
+            x0,y0=pts[max(0,i-1)]
+            x1,y1=pts[i]
+            x2,y2=pts[i+1]
+            x3,y3=pts[min(n-1,i+2)]
+            cp1x=x1+(x2-x0)/6; cp1y=y1+(y2-y0)/6
+            cp2x=x2-(x3-x1)/6; cp2y=y2-(y3-y1)/6
+            d+=f" C {cp1x:.1f},{cp1y:.1f} {cp2x:.1f},{cp2y:.1f} {x2},{y2}"
+        return f'<path d="{d}" fill="none" stroke="{color}" stroke-width="{width}" stroke-opacity="{opacity}" stroke-linecap="round"/>'
     
     # Series: sessions, messages (scaled to session distribution), tokens (scaled)
     msg_slots=[int(s/mx_s*total_msgs) if mx_s>0 else 0 for s in slots]
@@ -716,9 +726,9 @@ def collect_all():
       <line x1="0" y1="50" x2="240" y2="50" stroke="rgba(124,58,237,0.06)"/>
       <line x1="0" y1="75" x2="240" y2="75" stroke="rgba(124,58,237,0.06)"/>
       <!-- series -->
-      {svg_polyline(slots, "#a78bfa", "1", "2.5")}
-      {svg_polyline(msg_slots, "#e879a0", "0.6", "1.5")}
-      {svg_polyline(tok_slots, "#7c3aed", "0.5", "1.5")}
+      {svg_curve(slots, "#a78bfa", "1", "1.5")}
+      {svg_curve(msg_slots, "#e879a0", "0.6", "1")}
+      {svg_curve(tok_slots, "#7c3aed", "0.5", "1")}
       <!-- x-axis labels -->
       <text x="0" y="116" fill="#8e85a5" font-size="5">0</text>
       <text x="60" y="116" fill="#8e85a5" font-size="5">6</text>
