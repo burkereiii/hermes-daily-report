@@ -83,9 +83,10 @@
   }
   .kpi-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
   .kpi-card::after {
-    content: ''; position: absolute; top: -10px; right: -10px; width: 70px; height: 70px;
-    background: radial-gradient(circle at center, rgba(124,58,237,0.1), transparent 70%);
-    border-radius: 50%;
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 160px; height: 160px;
+    background: radial-gradient(circle at center, rgba(124,58,237,0.08), transparent 70%);
+    border-radius: 50%; pointer-events: none;
   }
   .kpi-card::before {
     content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
