@@ -51,26 +51,25 @@
   .hero h1 { font-size: 2.6rem; font-weight: 750; color: var(--text-bright); letter-spacing: -1px; line-height: 1.1; }
   .hero .sub { font-size: 0.82rem; color: var(--text-dim); margin-top: 4px; }
 
-  /* MARQUEE — dual crossed strips, pivot from center-right */
+  /* MARQUEE — dual crossed strips, below hero, proper crossing */
   .marquee-zone {
-    position: relative; z-index: 5; margin-top: -80px; margin-left: -24px;
-    width: calc(100% + 48px); height: 50px; overflow: visible; pointer-events: none;
+    position: relative; z-index: 5; margin: 0 -24px;
+    height: 44px; overflow: visible; pointer-events: none;
   }
   .marquee-strip {
     position: absolute; white-space: nowrap; overflow: hidden;
     font-family: var(--mono); font-weight: 700; color: var(--bg);
-    display: flex; align-items: center; width: 120%; left: -10%;
-    transform-origin: 65% center;
+    display: flex; align-items: center; width: 115%; left: -7.5%;
   }
   .marquee-strip.top {
-    top: 0; height: 26px; background: #5b21b6;
-    transform: rotate(-2.8deg);
-    font-size: 0.76rem; letter-spacing: 1px;
+    top: 0; height: 24px; background: #5b21b6;
+    transform: rotate(-4deg);
+    font-size: 0.74rem; letter-spacing: 1px;
   }
   .marquee-strip.bot {
-    bottom: 0; height: 20px; background: #7c3aed;
-    transform: rotate(2.4deg);
-    font-size: 0.66rem; letter-spacing: 0.5px; opacity: 0.88;
+    bottom: 0; height: 18px; background: #7c3aed;
+    transform: rotate(3.5deg);
+    font-size: 0.64rem; letter-spacing: 0.5px; opacity: 0.88;
   }
   .marquee-inner { display: inline-block; animation: marquee 28s linear infinite; padding: 0 40px; }
   .marquee-inner.rev { animation: marquee-rev 22s linear infinite; }
