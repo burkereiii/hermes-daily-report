@@ -83,9 +83,10 @@
   }
   .kpi-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
   .kpi-card::after {
-    content: ''; position: absolute; top: -10px; right: -10px; width: 70px; height: 70px;
-    background: radial-gradient(circle at center, rgba(124,58,237,0.1), transparent 70%);
-    border-radius: 50%;
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 160px; height: 160px;
+    background: radial-gradient(circle at center, rgba(124,58,237,0.08), transparent 70%);
+    border-radius: 50%; pointer-events: none;
   }
   .kpi-card::before {
     content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
@@ -274,7 +275,8 @@
 
   /* === RESPONSIVE === */
   @media (max-width: 768px) {
-    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
     .skill-featured { grid-template-columns: 1fr; }
     .narrative-recs { grid-template-columns: 1fr; }
     .hero { height: 200px; } .hero h1 { font-size: 1.8rem; }
@@ -303,13 +305,13 @@
   <div class="marquee">
     <span>deepseek-v4-pro</span><span class="sep">★</span>
     <span>会话 8</span><span class="sep">★</span>
-    <span>98.6M</span><span class="sep">★</span>
+    <span>100.2M</span><span class="sep">★</span>
     <span>Cron 4/4</span><span class="sep">★</span>
     <span>图片 0</span><span class="sep">★</span>
     <span>PID 31852</span><span class="sep">★</span>
     <span>deepseek-v4-pro</span><span class="sep">★</span>
     <span>会话 8</span><span class="sep">★</span>
-    <span>98.6M</span><span class="sep">★</span>
+    <span>100.2M</span><span class="sep">★</span>
     <span>Cron 4/4</span><span class="sep">★</span>
     <span>图片 0</span><span class="sep">★</span>
     <span>PID 31852</span><span class="sep">★</span>
@@ -334,21 +336,21 @@
     </div>
     <div class="kpi-card reveal reveal-d2">
       <div class="kpi-icon">📨</div>
-      <div class="kpi-value">1627</div>
+      <div class="kpi-value">1647</div>
       <div class="kpi-label">条消息</div>
-      <div class="kpi-sub">用户 87 条</div>
-      <div class="kpi-delta down">↓ 1746 (52%)</div>
+      <div class="kpi-sub">用户 90 条</div>
+      <div class="kpi-delta down">↓ 1746 (51%)</div>
     </div>
     <div class="kpi-card reveal reveal-d3">
       <div class="kpi-icon">⚡</div>
-      <div class="kpi-value">98.6M</div>
+      <div class="kpi-value">100.2M</div>
       <div class="kpi-label">Token</div>
-      <div class="kpi-sub">I/O 939.4K / 353.2K</div>
-      <div class="kpi-delta down">↓ 181690121 (65%)</div>
+      <div class="kpi-sub">I/O 942.7K / 356.6K</div>
+      <div class="kpi-delta down">↓ 181690121 (64%)</div>
     </div>
     <div class="kpi-card reveal reveal-d4">
       <div class="kpi-icon">🔧</div>
-      <div class="kpi-value">801</div>
+      <div class="kpi-value">808</div>
       <div class="kpi-label">次工具调用</div>
       <div class="kpi-sub">均会话 3h</div>
       <div class="kpi-delta down">↓ 762 (49%)</div>
@@ -407,15 +409,15 @@
   <div class="grid-2 reveal">
     <div class="card">
       <div class="proc-summary">
-        <span>总进程 <strong>384</strong></span>
+        <span>总进程 <strong>382</strong></span>
         <span>僵尸 <strong>—</strong></span>
       </div>
       <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🔝 内存占用 Top 5</div>
       <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression</span><span class="proc-pid">4656</span><span class="proc-mem">933 MB</span></div>
 <div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">chrome</span><span class="proc-pid">4052</span><span class="proc-mem">492 MB</span></div>
 <div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">chrome</span><span class="proc-pid">32640</span><span class="proc-mem">386 MB</span></div>
-<div class="proc-row"><span class="proc-rank">4</span><span class="proc-name">Hermes</span><span class="proc-pid">2136</span><span class="proc-mem">366 MB</span></div>
-<div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">steamwebhelper</span><span class="proc-pid">25396</span><span class="proc-mem">319 MB</span></div>
+<div class="proc-row"><span class="proc-rank">4</span><span class="proc-name">Hermes</span><span class="proc-pid">2136</span><span class="proc-mem">371 MB</span></div>
+<div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">steamwebhelper</span><span class="proc-pid">25396</span><span class="proc-mem">317 MB</span></div>
     </div>
     <div class="card">
       <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🌐 网络概况</div>
@@ -436,11 +438,11 @@ Unknown adapter Tailscale:</div>
   <div class="grid-2 reveal">
     <div class="card">
       <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:12px;">🔧 工具排行</div>
-      <ul class="rank-list"><li class="rank-item"><span class="rank-pos">01</span><span class="rank-name">终端</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:100%"></div></div><span class="rank-count">338</span></li>
+      <ul class="rank-list"><li class="rank-item"><span class="rank-pos">01</span><span class="rank-name">终端</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:100%"></div></div><span class="rank-count">343</span></li>
 <li class="rank-item"><span class="rank-pos">02</span><span class="rank-name">读文件</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:21%"></div></div><span class="rank-count">74</span></li>
-<li class="rank-item"><span class="rank-pos">03</span><span class="rank-name">补丁</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:21%"></div></div><span class="rank-count">71</span></li>
-<li class="rank-item"><span class="rank-pos">04</span><span class="rank-name">桌面操控</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:18%"></div></div><span class="rank-count">61</span></li>
-<li class="rank-item"><span class="rank-pos">05</span><span class="rank-name">浏览</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:13%"></div></div><span class="rank-count">44</span></li>
+<li class="rank-item"><span class="rank-pos">03</span><span class="rank-name">补丁</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:21%"></div></div><span class="rank-count">73</span></li>
+<li class="rank-item"><span class="rank-pos">04</span><span class="rank-name">桌面操控</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:17%"></div></div><span class="rank-count">61</span></li>
+<li class="rank-item"><span class="rank-pos">05</span><span class="rank-name">浏览</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:12%"></div></div><span class="rank-count">44</span></li>
 <li class="rank-item"><span class="rank-pos">06</span><span class="rank-name">进程</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:9%"></div></div><span class="rank-count">33</span></li>
 <li class="rank-item"><span class="rank-pos">07</span><span class="rank-name">写文件</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:9%"></div></div><span class="rank-count">32</span></li>
 <li class="rank-item"><span class="rank-pos">08</span><span class="rank-name">搜索</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:8%"></div></div><span class="rank-count">28</span></li>
@@ -462,17 +464,17 @@ Unknown adapter Tailscale:</div>
   <div class="grid-2 reveal">
     <div class="card">
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 18% · 峰值 36%</span></div>
+        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 4% · 峰值 13%</span></div>
         <div class="dual-track">
-          <div class="dual-fill-curr" style="width:18%"></div>
-          <div class="dual-fill-peak" style="width:36%"></div>
+          <div class="dual-fill-curr" style="width:4%"></div>
+          <div class="dual-fill-peak" style="width:13%"></div>
         </div>
       </div>
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">内存</span><span class="v">当前 40% · 峰值 49% · 40 GB</span></div>
+        <div class="dual-head"><span class="l">内存</span><span class="v">当前 40% · 峰值 52% · 40 GB</span></div>
         <div class="dual-track">
           <div class="dual-fill-curr" style="width:40%"></div>
-          <div class="dual-fill-peak" style="width:49%"></div>
+          <div class="dual-fill-peak" style="width:52%"></div>
         </div>
       </div>
       <div class="dual-progress">
@@ -485,12 +487,12 @@ Unknown adapter Tailscale:</div>
     <div class="card">
       <div class="obs-stat" style="padding:8px 0;">
         <div><div class="obs-stat-val">9.9M</div><div class="obs-stat-lbl">缓存</div></div>
-        <div><div class="obs-stat-val">32.5M</div><div class="obs-stat-lbl">数据库</div></div>
+        <div><div class="obs-stat-val">32.8M</div><div class="obs-stat-lbl">数据库</div></div>
         <div><div class="obs-stat-val">—</div><div class="obs-stat-lbl">记忆条目</div></div>
         <div><div class="obs-stat-val">1.9G</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
       </div>
       <div style="font-size:0.64rem;color:var(--text-dim);text-align:center;margin-top:4px;">
-        成本: $0.2304 估算 · deepseek
+        成本: $0.2318 估算 · deepseek
       </div>
     </div>
   </div>
@@ -561,7 +563,7 @@ Unknown adapter Tailscale:</div>
       <div class="peak-chart"><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:44px"></div><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:29px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div></div>
       <div class="peak-labels"><span>0</span><span></span><span></span><span></span><span></span><span></span><span>6</span><span></span><span></span><span></span><span></span><span></span><span>12</span><span></span><span></span><span></span><span></span><span></span><span>18</span><span></span><span></span><span></span><span></span><span></span></div>
       <div style="font-size:0.65rem;color:var(--text-dim);margin-top:6px;text-align:center;">
-        桌面 1121 条 · 微信 435 条
+        桌面 1141 条 · 微信 435 条
       </div>
       <div class="peak-note">⚠️ 峰值为瞬时快照+模拟，非持续监控数据。部署轻量守护进程后可获取真实峰值。</div>
     </div>
