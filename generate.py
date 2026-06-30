@@ -677,49 +677,7 @@ def collect_all():
     # Cron
     data.update(collect_cron())
     
-    # 24h multi-series activity chart (SVG)
-    peak_raw = data.get("_peak_raw","")
-    slots=[0]*24
-    if peak_raw:
-        for m in re.finditer(r'(\d+)(AM|PM)\s*\((\d+)\)',peak_raw):
-            h=int(m.group(1)); ampm=m.group(2); count=int(m.group(3))
-            if ampm=="PM" and h!=12: h+=12
-            if ampm=="AM" and h==12: h=0
-            if 0<=h<24: slots[h]=count
-    # If no peak data, use flat distribution
-    if max(slots)==0 and int(data.get("SESSION_COUNT","0"))>0:
-        slots=[1]*24
-    
-    mx_s=max(slots) if max(slots)>0 else 1
-    total_msgs=int(data.get("MESSAGE_COUNT","0").replace(",",""))
-    total_tokens=int(data.get("_raw_total_tokens",0))
-    
-    # Session activity line chart
-    def svg_line(values):
-        mx_v=max(values) if max(values)>0 else 1
-        pts=[f"{i*10},{100-int(v/mx_v*90) if mx_v>0 else 100}" for i,v in enumerate(values)]
-        return f'<polyline points="{" ".join(pts)}" fill="none" stroke="url(#lineGrad)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="chart-line"/>'
-
-    svg = f'''<svg viewBox="0 0 240 120" style="width:100%;height:auto;font-family:var(--mono)">
-      <defs>
-        <linearGradient id="lineGrad" x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.4"/>
-          <stop offset="50%" stop-color="#c4b5fd" stop-opacity="0.8"/>
-          <stop offset="100%" stop-color="#ede9fe" stop-opacity="1"/>
-        </linearGradient>
-      </defs>
-      <line x1="0" y1="25" x2="240" y2="25" stroke="rgba(124,58,237,0.06)"/>
-      <line x1="0" y1="50" x2="240" y2="50" stroke="rgba(124,58,237,0.06)"/>
-      <line x1="0" y1="75" x2="240" y2="75" stroke="rgba(124,58,237,0.06)"/>
-      {svg_line(slots)}
-      <text x="0" y="116" fill="#8e85a5" font-size="5">0</text>
-      <text x="60" y="116" fill="#8e85a5" font-size="5">6</text>
-      <text x="120" y="116" fill="#8e85a5" font-size="5">12</text>
-      <text x="180" y="116" fill="#8e85a5" font-size="5">18</text>
-      <text x="237" y="116" fill="#8e85a5" font-size="5" text-anchor="end">24</text>
-    </svg>'''
-    data["SESSION_TIMELINE"] = svg
-    data.setdefault("DS_BALANCE","—"); data.setdefault("DS_CONSUMPTION","—")
+    # Defaults
     data.setdefault("DS_CONSUMPTION_CLASS","flat"); data.setdefault("DS_RECHARGE_NOTE","")
     data.setdefault("SESSION_TOPICS",'<span class="float-tag" style="animation:none">数据待分析</span>')
     data.setdefault("DAILY_SUMMARY",'今日数据已采集，深度分析待 agent 生成。')
