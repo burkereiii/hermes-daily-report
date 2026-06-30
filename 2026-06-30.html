@@ -209,11 +209,11 @@
 
   /* === 24h CHART LINE === */
   .chart-line {
-    stroke-dasharray: 300; stroke-dashoffset: 300;
-    animation: draw-line 1.5s ease-out forwards;
+    animation: pulse-line 2s ease-in-out infinite;
   }
-  @keyframes draw-line {
-    to { stroke-dashoffset: 0; }
+  @keyframes pulse-line {
+    0%, 100% { stroke-opacity: 0.6; filter: drop-shadow(0 0 0px transparent); }
+    50% { stroke-opacity: 1; filter: drop-shadow(0 0 4px #a78bfa); }
   }
   .tl-chart {
     display: flex; gap: 2px; align-items: flex-end; height: 80px; padding: 0 2px;
@@ -352,9 +352,9 @@
   <div class="grid-4">
     <div class="kpi-card reveal reveal-d1">
       <div class="kpi-icon">💰</div>
-      <div class="kpi-value">¥0.07</div>
+      <div class="kpi-value">¥0.43</div>
       <div class="kpi-label">DeepSeek 消耗</div>
-      <div class="kpi-sub">余额 ¥60.83</div>
+      <div class="kpi-sub">余额 ¥60.40</div>
       <div class="kpi-delta down">9 个会话</div>
     </div>
     <div class="kpi-card reveal reveal-d2">
@@ -464,17 +464,17 @@
   <div class="grid-2 reveal">
     <div class="card">
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 9% · 峰值 27%</span></div>
+        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 0% · 峰值 10%</span></div>
         <div class="dual-track">
-          <div class="dual-fill-curr" style="width:9%"></div>
-          <div class="dual-fill-peak" style="width:27%"></div>
+          <div class="dual-fill-curr" style="width:0%"></div>
+          <div class="dual-fill-peak" style="width:10%"></div>
         </div>
       </div>
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">内存</span><span class="v">当前 38% · 峰值 48% · 40 GB</span></div>
+        <div class="dual-head"><span class="l">内存</span><span class="v">当前 40% · 峰值 53% · 40 GB</span></div>
         <div class="dual-track">
-          <div class="dual-fill-curr" style="width:38%"></div>
-          <div class="dual-fill-peak" style="width:48%"></div>
+          <div class="dual-fill-curr" style="width:40%"></div>
+          <div class="dual-fill-peak" style="width:53%"></div>
         </div>
       </div>
       <div class="dual-progress">
@@ -487,7 +487,7 @@
     <div class="card">
       <div class="obs-stat" style="padding:8px 0;">
         <div><div class="obs-stat-val">9.9M</div><div class="obs-stat-lbl">缓存</div></div>
-        <div><div class="obs-stat-val">39.5M</div><div class="obs-stat-lbl">数据库</div></div>
+        <div><div class="obs-stat-val">39.6M</div><div class="obs-stat-lbl">数据库</div></div>
         <div><div class="obs-stat-val">—</div><div class="obs-stat-lbl">记忆条目</div></div>
         <div><div class="obs-stat-val">2.0G</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
       </div>
@@ -511,9 +511,9 @@
     <div class="grid-2" style="gap:16px;">
       <div>
         <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🔝 内存 Top 5</div>
-        <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression <small style='color:var(--text-dim);font-size:0.6rem'>内存压缩</small></span><span class="proc-pid">PID 4656</span><span class="proc-mem">920 MB</span></div>
-<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">779 MB</span></div>
-<div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">explorer <small style='color:var(--text-dim);font-size:0.6rem'>资源管理器</small></span><span class="proc-pid">PID 15188</span><span class="proc-mem">422 MB</span></div>
+        <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression <small style='color:var(--text-dim);font-size:0.6rem'>内存压缩</small></span><span class="proc-pid">PID 4656</span><span class="proc-mem">919 MB</span></div>
+<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">782 MB</span></div>
+<div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">explorer <small style='color:var(--text-dim);font-size:0.6rem'>资源管理器</small></span><span class="proc-pid">PID 15188</span><span class="proc-mem">509 MB</span></div>
 <div class="proc-row"><span class="proc-rank">4</span><span class="proc-name">steamwebhelper <small style='color:var(--text-dim);font-size:0.6rem'>Steam</small></span><span class="proc-pid">PID 25396</span><span class="proc-mem">337 MB</span></div>
 <div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">dwm <small style='color:var(--text-dim);font-size:0.6rem'>桌面窗口</small></span><span class="proc-pid">PID 2356</span><span class="proc-mem">336 MB</span></div>
       </div>
@@ -542,20 +542,20 @@
       </div>
     </div>
     <div class="card">
-      <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">📝 文件变动 · 84 个</div>
+      <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">📝 文件变动 · 90 个</div>
       <ul class="log-list"><li class="log-item"><span class="log-file">Hermes/state.db-wal</span></li>
 <li class="log-item"><span class="log-file">Hermes/state.db</span></li>
-<li class="log-item"><span class="log-file">Hermes/weixin/accounts/be8db2768347@im.bot.sync.json</span></li>
 <li class="log-item"><span class="log-file">Hermes/skills/.bundled_manifest</span></li>
 <li class="log-item"><span class="log-file">Hermes/logs/agent.log</span></li>
-<li class="log-item"><span class="log-file">Hermes/verification_evidence.db</span></li>
+<li class="log-item"><span class="log-file">Hermes/weixin/accounts/be8db2768347@im.bot.sync.json</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/ticker_last_success</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/ticker_heartbeat</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/.tick.lock</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/jobs.json</span></li>
-<li class="log-item"><span class="log-file">Hermes/cron/output/02e94d8c0d8e/2026-07-01_02-53-37.md</span></li>
-<li class="log-item"><span class="log-file">Hermes/skills/.usage.json</span></li>
-<li class="log-item"><span class="log-file" style="color:var(--text-dim)">... 还有 72 个文件</span></li></ul>
+<li class="log-item"><span class="log-file">Hermes/cron/output/02e94d8c0d8e/2026-07-01_03-04-37.md</span></li>
+<li class="log-item"><span class="log-file">Hermes/cron/output/6c8e702e279b/2026-07-01_03-03-52.md</span></li>
+<li class="log-item"><span class="log-file">Hermes/logs/errors.log</span></li>
+<li class="log-item"><span class="log-file" style="color:var(--text-dim)">... 还有 78 个文件</span></li></ul>
     </div>
   </div>
 
