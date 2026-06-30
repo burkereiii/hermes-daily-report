@@ -207,7 +207,14 @@
   .peak-labels span { flex: 1; text-align: center; }
   .peak-note { font-size: 0.62rem; color: var(--yellow); opacity: 0.7; margin-top: 4px; text-align: center; }
 
-  /* === 24h ACTIVITY CHART === */
+  /* === 24h CHART LINE === */
+  .chart-line {
+    stroke-dasharray: 300; stroke-dashoffset: 300;
+    animation: draw-line 1.5s ease-out forwards;
+  }
+  @keyframes draw-line {
+    to { stroke-dashoffset: 0; }
+  }
   .tl-chart {
     display: flex; gap: 2px; align-items: flex-end; height: 80px; padding: 0 2px;
   }

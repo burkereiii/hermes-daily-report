@@ -694,61 +694,29 @@ def collect_all():
     total_msgs=int(data.get("MESSAGE_COUNT","0").replace(",",""))
     total_tokens=int(data.get("_raw_total_tokens",0))
     
-    def svg_curve(values, color, opacity="0.8", width="1.2"):
-        """Generate smooth SVG path from 24 data points using cubic bezier."""
+    # Session activity line chart
+    def svg_line(values):
         mx_v=max(values) if max(values)>0 else 1
-        n=len(values)
-        pts=[(i*10, 100-int(v/mx_v*90) if mx_v>0 else 100) for i,v in enumerate(values)]
-        if n<3:
-            return f'<polyline points="{" ".join(f"{x},{y}" for x,y in pts)}" fill="none" stroke="{color}" stroke-width="{width}" stroke-opacity="{opacity}" stroke-linecap="round"/>'
-        # Catmull-Rom to cubic bezier
-        d=f"M {pts[0][0]},{pts[0][1]}"
-        for i in range(n-1):
-            x0,y0=pts[max(0,i-1)]
-            x1,y1=pts[i]
-            x2,y2=pts[i+1]
-            x3,y3=pts[min(n-1,i+2)]
-            cp1x=x1+(x2-x0)/6; cp1y=y1+(y2-y0)/6
-            cp2x=x2-(x3-x1)/6; cp2y=y2-(y3-y1)/6
-            d+=f" C {cp1x:.1f},{cp1y:.1f} {cp2x:.1f},{cp2y:.1f} {x2},{y2}"
-        return f'<path d="{d}" fill="none" stroke="{color}" stroke-width="{width}" stroke-opacity="{opacity}" stroke-linecap="round"/>'
-    
-    # Series: sessions, messages (shifted distribution), tokens (shifted differently)
-    msg_slots=[0]*24
-    tok_slots=[0]*24
-    for i in range(24):
-        # Messages peak 1-2 hours after sessions
-        m_idx=(i+1)%24
-        msg_slots[i]=int(slots[m_idx]/mx_s*total_msgs) if mx_s>0 else 0
-        # Token peaks 2-3 hours after sessions
-        t_idx=(i+3)%24
-        tok_slots[i]=int(slots[t_idx]/mx_s*total_tokens) if mx_s>0 else 0
-    
+        pts=[f"{i*10},{100-int(v/mx_v*90) if mx_v>0 else 100}" for i,v in enumerate(values)]
+        return f'<polyline points="{" ".join(pts)}" fill="none" stroke="url(#lineGrad)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="chart-line"/>'
+
     svg = f'''<svg viewBox="0 0 240 120" style="width:100%;height:auto;font-family:var(--mono)">
       <defs>
-        <linearGradient id="gradSess" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a78bfa" stop-opacity="0.3"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/></linearGradient>
+        <linearGradient id="lineGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.4"/>
+          <stop offset="50%" stop-color="#c4b5fd" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#ede9fe" stop-opacity="1"/>
+        </linearGradient>
       </defs>
-      <!-- grid -->
       <line x1="0" y1="25" x2="240" y2="25" stroke="rgba(124,58,237,0.06)"/>
       <line x1="0" y1="50" x2="240" y2="50" stroke="rgba(124,58,237,0.06)"/>
       <line x1="0" y1="75" x2="240" y2="75" stroke="rgba(124,58,237,0.06)"/>
-      <!-- series -->
-      {svg_curve(slots, "#a78bfa", "1", "1.5")}
-      {svg_curve(msg_slots, "#e879a0", "0.6", "1")}
-      {svg_curve(tok_slots, "#7c3aed", "0.5", "1")}
-      <!-- x-axis labels -->
+      {svg_line(slots)}
       <text x="0" y="116" fill="#8e85a5" font-size="5">0</text>
       <text x="60" y="116" fill="#8e85a5" font-size="5">6</text>
       <text x="120" y="116" fill="#8e85a5" font-size="5">12</text>
       <text x="180" y="116" fill="#8e85a5" font-size="5">18</text>
       <text x="237" y="116" fill="#8e85a5" font-size="5" text-anchor="end">24</text>
-      <!-- legend -->
-      <rect x="145" y="4" width="8" height="2" fill="#a78bfa" rx="1"/>
-      <text x="155" y="7" fill="#8e85a5" font-size="4.5">会话</text>
-      <rect x="180" y="4" width="8" height="2" fill="#e879a0" rx="1"/>
-      <text x="190" y="7" fill="#8e85a5" font-size="4.5">消息</text>
-      <rect x="213" y="4" width="8" height="2" fill="#7c3aed" rx="1"/>
-      <text x="223" y="7" fill="#8e85a5" font-size="4.5">Token</text>
     </svg>'''
     data["SESSION_TIMELINE"] = svg
     data.setdefault("DS_BALANCE","—"); data.setdefault("DS_CONSUMPTION","—")
