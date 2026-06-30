@@ -537,9 +537,9 @@ def gen_top_skills(skills):
 def gen_week_bars(counts, prev_counts=None):
     mx=max(counts) if counts and max(counts)>0 else 1
     if prev_counts is None:
-        # Virtual comparison: varied — some up, some down, some flat
+        # Virtual: some days busier, some quieter, zeros get ghosts too
         import random as _r
-        prev_counts=[max(0,int(c*(0.3+_r.random()*1.4))) for c in counts]
+        prev_counts=[max(0,int(c*(0.2+_r.random()*1.6))) if c>0 else int(2+_r.random()*4) for c in counts]
     mx2=max(prev_counts) if max(prev_counts)>0 else 1
     bars=[]
     for i,c in enumerate(counts):
