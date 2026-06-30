@@ -41,7 +41,7 @@
   .container { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 0 24px 80px; }
 
   /* HERO */
-  .hero { position: relative; margin: 0 -24px 0; height: 300px; border-radius: 0 0 36px 36px;
+  .hero { position: relative; margin: 0 -24px 0; height: 360px; border-radius: 0 0 36px 36px;
     overflow: hidden; display: flex; align-items: flex-end; box-shadow: 0 20px 80px rgba(124,58,237,0.1); }
  .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 15%; filter: brightness(0.5) saturate(1.1); border-radius: 0 0 36px 36px; }
  .hero-fade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,3,8,0.96) 0%, rgba(5,3,8,0.25) 55%, transparent 100%); border-radius: 0 0 36px 36px; z-index: 1; }
@@ -52,8 +52,8 @@
   .hero .sub { font-size: 0.82rem; color: var(--text-dim); margin-top: 4px; }
 
   /* MARQUEE */
-  .marquee-wrap { margin: -1px -24px 0; padding: 11px 0; background: #5b21b6; overflow: hidden; white-space: nowrap; position: relative; z-index: 2; }
-  .marquee { display: inline-block; animation: marquee 25s linear infinite; font-size: 0.8rem; font-weight: 700; color: var(--bg); font-family: var(--mono); letter-spacing: 0.5px; }
+  .marquee-wrap { margin: -1px -24px 0; padding: 7px 0; background: #7c3aed; overflow: hidden; white-space: nowrap; position: relative; z-index: 2; }
+  .marquee { display: inline-block; animation: marquee 25s linear infinite; font-size: 0.72rem; font-weight: 700; color: var(--bg); font-family: var(--mono); letter-spacing: 0.5px; }
   .marquee span { margin: 0 18px; } .marquee .sep { opacity: 0.4; }
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
@@ -280,7 +280,7 @@
     .grid-4 { grid-template-columns: 1fr 1fr; }
     .skill-featured { grid-template-columns: 1fr; }
     .narrative-recs { grid-template-columns: 1fr; }
-    .hero { height: 200px; } .hero h1 { font-size: 1.8rem; }
+    .hero { height: 240px; } .hero h1 { font-size: 1.8rem; }
     .notable-row { flex-direction: column; }
     .obs-stat { flex-wrap: wrap; gap: 16px; }
   }
