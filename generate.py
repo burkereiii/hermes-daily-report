@@ -677,8 +677,20 @@ def collect_all():
     # Cron
     data.update(collect_cron())
     
-    # Defaults for LLM-filled fields (agent will override)
-    data.setdefault("SESSION_TIMELINE",'<div class="tl-empty">数据待采集</div>')
+    # Session timeline (basic: from insights, detailed requires agent)
+    s_count = data.get("SESSION_COUNT","0")
+    active = data.get("ACTIVE_TIME","—")
+    tui_msgs = data.get("DESKTOP_MSGS","0")
+    wx_msgs = data.get("WECHAT_MSGS","0")
+    tl_parts = []
+    if int(tui_msgs)>0:
+        tl_parts.append(f'<div class="tl-item"><span class="tl-time">{active}</span><span class="tl-platform">TUI</span><span class="tl-topic">桌面端 {tui_msgs} 条消息 · 深度主题分析需 agent 模式</span></div>')
+    if int(wx_msgs)>0:
+        tl_parts.append(f'<div class="tl-item"><span class="tl-time">{active}</span><span class="tl-platform">微信</span><span class="tl-topic">移动端 {wx_msgs} 条消息 · 深度主题分析需 agent 模式</span></div>')
+    if tl_parts:
+        data["SESSION_TIMELINE"] = "\n".join(tl_parts) + f'\n<div class="tl-item"><span class="tl-time">—</span><span class="tl-platform">📊</span><span class="tl-topic" style="color:var(--text-dim)">共 {s_count} 个会话 · 活跃 {active} · 详细主题请用 agent 驱动模式生成</span></div>'
+    else:
+        data["SESSION_TIMELINE"] = '<div class="tl-empty">今日无会话</div>'
     data.setdefault("DS_BALANCE","—"); data.setdefault("DS_CONSUMPTION","—")
     data.setdefault("DS_CONSUMPTION_CLASS","flat"); data.setdefault("DS_RECHARGE_NOTE","")
     data.setdefault("SESSION_TOPICS",'<span class="float-tag" style="animation:none">数据待分析</span>')
@@ -825,7 +837,7 @@ def main():
             data["PEAK_NOTE"] = f"✅ {peak_src} · 峰值来自持续监控"
         else:
             data["PEAK_NOTE"] = "⚠️ 峰值为瞬时快照+模拟，非持续监控数据。部署轻量守护进程后可获取真实峰值。"
-        data.setdefault("SESSION_TIMELINE",'<div class="tl-empty">数据待采集</div>')
+        data.setdefault("SESSION_TIMELINE",'<div class="tl-empty">今日无会话</div>')
         data.setdefault("DS_BALANCE","—"); data.setdefault("DS_CONSUMPTION","—")
         data.setdefault("DS_CONSUMPTION_CLASS","flat"); data.setdefault("DS_RECHARGE_NOTE","")
     else:
