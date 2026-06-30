@@ -537,9 +537,7 @@ def gen_top_skills(skills):
 def gen_week_bars(counts, prev_counts=None):
     mx=max(counts) if counts and max(counts)>0 else 1
     if prev_counts is None:
-        # Virtual: some days busier, some quieter, zeros get ghosts too
-        import random as _r
-        prev_counts=[max(0,int(c*(0.2+_r.random()*1.6))) if c>0 else int(2+_r.random()*4) for c in counts]
+        prev_counts=[0]*7
     mx2=max(prev_counts) if max(prev_counts)>0 else 1
     bars=[]
     for i,c in enumerate(counts):
@@ -564,9 +562,8 @@ def gen_peak_chart(raw_peak):
             if ampm=="AM" and h==12: h=0
             if 0<=h<24: slots[h]=count
     mx=max(slots) if max(slots)>0 else 1
-    # Virtual yesterday: varied — some higher, some lower
-    import random as _r2
-    prev=[max(0,int(s*(0.3+_r2.random()*1.4))) for s in slots]
+    # Placeholder: previous day data (empty until real data available)
+    prev=[0]*24
     mx2=max(prev) if max(prev)>0 else 1
     bars=""
     for i,s in enumerate(slots):
