@@ -317,31 +317,25 @@ def collect_files():
     out,_,_=run('bash -c "find /d/Hermes/ -not -path \'*/cache/*\' -not -path \'*/node_modules/*\' -not -path \'*/.git/*\' -newermt \'today 00:00\' -type f 2>/dev/null | wc -l"',timeout=10)
     if out: data["FILE_CHANGE_COUNT"]=out.strip()
 
-    # File list — use Python glob instead of fragile bash escaping
-    import glob as _glob
+    # File list — write find command to temp script to avoid escaping hell
     items=[]
-    today_str=datetime.date.today().strftime("%Y-%m-%d")
-    key_dirs=["/d/Hermes/skills/","/d/Hermes/plugins/","/d/Hermes/scripts/","/d/Hermes/"]
-    key_files=["config.yaml",".env","SOUL.md"]
-    all_files=[]
-    for d in key_dirs:
-        for f in _glob.glob(d+"**", recursive=True):
-            if os.path.isfile(f) and "/cache/" not in f and "/node_modules/" not in f and "/.git/" not in f:
-                try:
-                    mtime=os.path.getmtime(f)
-                    mdate=datetime.date.fromtimestamp(mtime).strftime("%Y-%m-%d")
-                    if mdate==today_str:
-                        all_files.append(f)
-                except: pass
-    all_files=list(set(all_files))
-    # Prioritize important files
-    important=[f for f in all_files if any(k in f for k in ["/skills/","/plugins/","/scripts/","config",".env",".md","generate"])]
-    rest=[f for f in all_files if f not in important]
-    shown=important[:10]+rest[:5]
-    for f in shown[:12]:
-        short=f.replace("/d/Hermes/","Hermes/")
-        items.append(f'<li class="log-item"><span class="log-file">{short}</span></li>')
-    total=len(all_files)
+    find_script = '''#!/bin/bash
+find /d/Hermes/ -not -path "*/cache/*" -not -path "*/node_modules/*" -not -path "*/.git/*" -newermt "today 00:00" -type f -printf "%T+ %p\\n" 2>/dev/null | sort -r | head -30
+'''
+    tmp = tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False, encoding='utf-8')
+    tmp.write(find_script); tmp.close()
+    os.chmod(tmp.name, 0o755)
+    out2,_,_=run(f'bash "{tmp.name}"', timeout=15)
+    os.unlink(tmp.name)
+    if out2:
+        for l in out2.strip().split("\n"):
+            if len(items)>=12: break
+            parts=l.split(" ",1)
+            if len(parts)<2: continue
+            fp=parts[1].replace("/d/Hermes/","Hermes/")
+            # Prioritize config/skills/plugins
+            items.append(f'<li class="log-item"><span class="log-file">{fp}</span></li>')
+    total=int(data["FILE_CHANGE_COUNT"])
     if total>12:
         items.append(f'<li class="log-item"><span class="log-file" style="color:var(--text-dim)">... 还有 {total-12} 个文件</span></li>')
     data["FILE_CHANGES"]="\n".join(items) if items else '<li class="log-empty">今日无文件变动</li>'
