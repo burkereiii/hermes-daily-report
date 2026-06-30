@@ -441,14 +441,14 @@ def collect_deepseek_cost():
                     data["DS_RECHARGE_NOTE"] = " · 检测到充值 +100"
                     # Consumption is what it would have been without recharge
                     adjusted = yesterday + 100 - current
-                    data["DS_CONSUMPTION"] = f"-¥{adjusted:.2f}" if adjusted > 0 else "—"
+                    data["DS_CONSUMPTION"] = f"¥{adjusted:.2f}" if adjusted > 0 else "¥0"
                     data["DS_CONSUMPTION_CLASS"] = "down" if adjusted > 0 else "flat"
                 elif diff > 0:
-                    data["DS_CONSUMPTION"] = f"-¥{diff:.2f}"
+                    data["DS_CONSUMPTION"] = f"¥{diff:.2f}"
                     data["DS_CONSUMPTION_CLASS"] = "down"
                 elif diff < 0:
-                    data["DS_CONSUMPTION"] = f"+¥{abs(diff):.2f}"
-                    data["DS_CONSUMPTION_CLASS"] = "up"
+                    data["DS_CONSUMPTION"] = f"¥0"
+                    data["DS_CONSUMPTION_CLASS"] = "flat"
                 else:
                     data["DS_CONSUMPTION"] = "¥0"
                     data["DS_CONSUMPTION_CLASS"] = "flat"
