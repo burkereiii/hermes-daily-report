@@ -544,12 +544,22 @@ def collect_all():
     ds=today.strftime("%Y-%m-%d")
     wd=["星期一","星期二","星期三","星期四","星期五","星期六","星期日"][today.weekday()]
     
-    # A1: Today insights
-    out,_,_=run("hermes insights --days 1",timeout=60)
+    # A1: Today insights (cached within same day)
+    cache_file = f"D:\\Hermes\\cache\\insights_{ds}.txt"
+    if os.path.exists(cache_file):
+        with open(cache_file,"r",encoding="utf-8") as f: out = f.read()
+    else:
+        out,_,_=run("hermes insights --days 1",timeout=60)
+        with open(cache_file,"w",encoding="utf-8") as f: f.write(out)
     data=parse_insights_full(out)
     
-    # A2: Yesterday insights (compare)
-    out2,_,_=run("hermes insights --days 2",timeout=60)
+    # A2: Yesterday insights (cached)
+    cache2 = f"D:\\Hermes\\cache\\insights_2d_{ds}.txt"
+    if os.path.exists(cache2):
+        with open(cache2,"r",encoding="utf-8") as f: out2 = f.read()
+    else:
+        out2,_,_=run("hermes insights --days 2",timeout=60)
+        with open(cache2,"w",encoding="utf-8") as f: f.write(out2)
     ydata=parse_insights_full(out2)
     
     # Channels
