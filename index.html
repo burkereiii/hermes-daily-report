@@ -194,7 +194,7 @@
   .week-dual { display: flex; gap: 4px; align-items: flex-end; height: 66px; padding: 0 4px; margin-bottom: 6px; }
   .week-col { flex: 1; display: flex; flex-direction: column; gap: 2px; justify-content: flex-end; position: relative; }
   .week-bar-s { background: var(--accent); border-radius: 2px; min-height: 2px; transition: height 0.8s ease; }
-  .week-bar-ghost { background: transparent; border: 1px dashed rgba(167,139,250,0.25); border-radius: 2px; position: absolute; bottom: 0; left: 0; right: 0; }
+  .week-bar-ghost { background: rgba(124,58,237,0.18); border: 1px solid rgba(167,139,250,0.3); border-radius: 2px; position: absolute; bottom: 0; left: 0; right: 0; }
   .week-bar-s.inactive { background: rgba(124,58,237,0.06); min-height: 2px; }
   .week-labels { display: flex; gap: 3px; font-size: 0.62rem; color: var(--text-dim); }
   .week-labels span { flex: 1; text-align: center; }
@@ -205,7 +205,7 @@
   .peak-chart { display: flex; gap: 2px; align-items: flex-end; height: 48px; padding: 0 2px; }
   .peak-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
   .peak-bar { background: var(--accent); border-radius: 2px 2px 0 0; min-height: 1px; transition: height 0.6s ease; }
-  .peak-ghost { background: transparent; border: 1px dashed rgba(167,139,250,0.25); border-bottom: none; border-radius: 2px 2px 0 0; position: absolute; bottom: 0; left: 0; right: 0; }
+  .peak-ghost { background: rgba(124,58,237,0.18); border: 1px solid rgba(167,139,250,0.3); border-bottom: none; border-radius: 2px 2px 0 0; position: absolute; bottom: 0; left: 0; right: 0; }
   .peak-labels { display: flex; gap: 2px; font-size: 0.55rem; color: var(--text-dim); margin-top: 3px; }
   .peak-labels span { flex: 1; text-align: center; }
   .peak-note { font-size: 0.62rem; color: var(--yellow); opacity: 0.7; margin-top: 4px; text-align: center; }
@@ -330,9 +330,9 @@
   <div class="grid-4">
     <div class="kpi-card reveal reveal-d1">
       <div class="kpi-icon">💰</div>
-      <div class="kpi-value">¥0.34</div>
+      <div class="kpi-value">¥0.09</div>
       <div class="kpi-label">DeepSeek 消耗</div>
-      <div class="kpi-sub">余额 ¥59.82</div>
+      <div class="kpi-sub">余额 ¥59.73</div>
       <div class="kpi-delta down">9 个会话</div>
     </div>
     <div class="kpi-card reveal reveal-d2">
@@ -442,17 +442,17 @@
   <div class="grid-2 reveal">
     <div class="card">
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 2% · 峰值 18%</span></div>
+        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 9% · 峰值 29%</span></div>
         <div class="dual-track">
-          <div class="dual-fill-curr" style="width:2%"></div>
-          <div class="dual-fill-peak" style="width:18%"></div>
+          <div class="dual-fill-curr" style="width:9%"></div>
+          <div class="dual-fill-peak" style="width:29%"></div>
         </div>
       </div>
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">内存</span><span class="v">当前 40% · 峰值 51% · 40 GB</span></div>
+        <div class="dual-head"><span class="l">内存</span><span class="v">当前 40% · 峰值 55% · 40 GB</span></div>
         <div class="dual-track">
           <div class="dual-fill-curr" style="width:40%"></div>
-          <div class="dual-fill-peak" style="width:51%"></div>
+          <div class="dual-fill-peak" style="width:55%"></div>
         </div>
       </div>
       <div class="dual-progress">
@@ -465,7 +465,7 @@
     <div class="card">
       <div class="obs-stat" style="padding:8px 0;">
         <div><div class="obs-stat-val">9.9M</div><div class="obs-stat-lbl">缓存</div></div>
-        <div><div class="obs-stat-val">39.9M</div><div class="obs-stat-lbl">数据库</div></div>
+        <div><div class="obs-stat-val">40.0M</div><div class="obs-stat-lbl">数据库</div></div>
         <div><div class="obs-stat-val">—</div><div class="obs-stat-lbl">记忆条目</div></div>
         <div><div class="obs-stat-val">2.0G</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
       </div>
@@ -522,17 +522,17 @@
     <div class="card">
       <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">📝 文件变动 · 90 个</div>
       <ul class="log-list"><li class="log-item"><span class="log-file">Hermes/state.db-wal</span></li>
-<li class="log-item"><span class="log-file">Hermes/weixin/accounts/be8db2768347@im.bot.sync.json</span></li>
-<li class="log-item"><span class="log-file">Hermes/state.db</span></li>
 <li class="log-item"><span class="log-file">Hermes/skills/.bundled_manifest</span></li>
+<li class="log-item"><span class="log-file">Hermes/state.db</span></li>
 <li class="log-item"><span class="log-file">Hermes/logs/agent.log</span></li>
+<li class="log-item"><span class="log-file">Hermes/weixin/accounts/be8db2768347@im.bot.sync.json</span></li>
 <li class="log-item"><span class="log-file">Hermes/verification_evidence.db</span></li>
-<li class="log-item"><span class="log-file">Hermes/logs/errors.log</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/ticker_last_success</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/ticker_heartbeat</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/.tick.lock</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/jobs.json</span></li>
-<li class="log-item"><span class="log-file">Hermes/cron/output/02e94d8c0d8e/2026-07-01_03-15-38.md</span></li>
+<li class="log-item"><span class="log-file">Hermes/cron/output/02e94d8c0d8e/2026-07-01_03-17-38.md</span></li>
+<li class="log-item"><span class="log-file">Hermes/channel_directory.json</span></li>
 <li class="log-item"><span class="log-file" style="color:var(--text-dim)">... 还有 78 个文件</span></li></ul>
     </div>
   </div>
