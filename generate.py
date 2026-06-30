@@ -213,7 +213,7 @@ def collect_tailscale():
     data={"TAILSCALE_STATUS":"—","TAILSCALE_STATUS_CLASS":"offline",
           "TAILSCALE_IP":"—","TAILSCALE_DNS":"—","TAILSCALE_EXIT":"",
           "NETWORK_SUMMARY":"—"}
-    out,_,_=run("tailscale status --json 2>/dev/null",timeout=10)
+    out,_,_=run('bash -c "tailscale status --json 2>/dev/null"',timeout=10)
     if out:
         try:
             ts=json.loads(out)
