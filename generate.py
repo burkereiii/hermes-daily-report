@@ -317,6 +317,33 @@ def collect_files():
     out,_,_=run('bash -c "find /d/Hermes/ -not -path \'*/cache/*\' -not -path \'*/node_modules/*\' -not -path \'*/.git/*\' -newermt \'today 00:00\' -type f 2>/dev/null | wc -l"',timeout=10)
     if out: data["FILE_CHANGE_COUNT"]=out.strip()
 
+    # File list — show key files, cap at 12, skip noise dirs
+    out2,_,_=run('bash -c "find /d/Hermes/ -not -path \'*/cache/*\' -not -path \'*/node_modules/*\' -not -path \'*/.git/*\' -newermt \'today 00:00\' -type f -printf \'%T+ %p\n\' 2>/dev/null | sort -r | head -30"',timeout=10)
+    items=[]
+    seen=0
+    if out2:
+        for l in out2.strip().split("\n"):
+            if seen>=12: break
+            parts=l.split(" ",1)
+            if len(parts)<2: continue
+            fp=parts[1]
+            # Show only meaningful files
+            if any(x in fp for x in ['/plugins/','/skills/','/scripts/','config','.env','.md','template','generate']):
+                short=fp.replace("/d/Hermes/","Hermes/")
+                items.append(f'<li class="log-item"><span class="log-file">{short}</span></li>')
+                seen+=1
+        # Fallback: if no key files found, show any non-cache files
+        if seen==0:
+            for l in out2.strip().split("\n")[:12]:
+                parts=l.split(" ",1)
+                if len(parts)>=2:
+                    short=parts[1].replace("/d/Hermes/","Hermes/")
+                    items.append(f'<li class="log-item"><span class="log-file">{short}</span></li>')
+    total=int(data["FILE_CHANGE_COUNT"])
+    if total>12:
+        items.append(f'<li class="log-item"><span class="log-file" style="color:var(--text-dim)">... 还有 {total-12} 个文件</span></li>')
+    data["FILE_CHANGES"]="\n".join(items) if items else '<li class="log-empty">今日无文件变动</li>'
+
     # Hermes home size
     out2,_,_=run('bash -c "du -sh --exclude=node_modules /d/Hermes/ 2>/dev/null | cut -f1"',timeout=15)
     if out2: data["HERMES_HOME_SIZE"]=out2.strip()
@@ -786,7 +813,7 @@ def main():
                      "PEAK_NOTE","ESTIMATED_COST","COST_NOTE","PROCESS_TOTAL","PROCESS_TOP5",
                      "ZOMBIE_COUNT","TAILSCALE_STATUS","TAILSCALE_STATUS_CLASS","TAILSCALE_IP",
                      "TAILSCALE_DNS","TAILSCALE_EXIT","NETWORK_SUMMARY","IMAGE_COUNT","IMAGE_LIST",
-                     "FILE_CHANGE_COUNT","HERMES_HOME_SIZE","VAULT_TOTAL_FILES","VAULT_TODAY_CHANGES",
+                     "FILE_CHANGE_COUNT","FILE_CHANGES","HERMES_HOME_SIZE","VAULT_TOTAL_FILES","VAULT_TODAY_CHANGES",
                      "VAULT_RECENT_FILES","TAG_HEALTH","TAG_HEALTH_CLASS"]:
             data.setdefault(key,"—")
         
