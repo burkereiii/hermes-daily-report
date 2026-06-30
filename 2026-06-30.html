@@ -192,8 +192,9 @@
 
   /* === WEEK CHART === */
   .week-dual { display: flex; gap: 4px; align-items: flex-end; height: 66px; padding: 0 4px; margin-bottom: 6px; }
-  .week-col { flex: 1; display: flex; flex-direction: column; gap: 2px; justify-content: flex-end; }
+  .week-col { flex: 1; display: flex; flex-direction: column; gap: 2px; justify-content: flex-end; position: relative; }
   .week-bar-s { background: var(--accent); border-radius: 2px; min-height: 2px; transition: height 0.8s ease; }
+  .week-bar-ghost { background: transparent; border: 1px dashed rgba(167,139,250,0.25); border-radius: 2px; position: absolute; bottom: 0; left: 0; right: 0; }
   .week-bar-s.inactive { background: rgba(124,58,237,0.06); min-height: 2px; }
   .week-labels { display: flex; gap: 3px; font-size: 0.62rem; color: var(--text-dim); }
   .week-labels span { flex: 1; text-align: center; }
@@ -202,7 +203,9 @@
 
   /* Peak hours mini chart */
   .peak-chart { display: flex; gap: 2px; align-items: flex-end; height: 48px; padding: 0 2px; }
-  .peak-bar { flex: 1; background: var(--accent); border-radius: 2px 2px 0 0; min-height: 2px; transition: height 0.6s ease; }
+  .peak-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
+  .peak-bar { background: var(--accent); border-radius: 2px 2px 0 0; min-height: 1px; transition: height 0.6s ease; }
+  .peak-ghost { background: transparent; border: 1px dashed rgba(167,139,250,0.25); border-bottom: none; border-radius: 2px 2px 0 0; position: absolute; bottom: 0; left: 0; right: 0; }
   .peak-labels { display: flex; gap: 2px; font-size: 0.55rem; color: var(--text-dim); margin-top: 3px; }
   .peak-labels span { flex: 1; text-align: center; }
   .peak-note { font-size: 0.62rem; color: var(--yellow); opacity: 0.7; margin-top: 4px; text-align: center; }
@@ -327,9 +330,9 @@
   <div class="grid-4">
     <div class="kpi-card reveal reveal-d1">
       <div class="kpi-icon">💰</div>
-      <div class="kpi-value">¥0.02</div>
+      <div class="kpi-value">¥0.34</div>
       <div class="kpi-label">DeepSeek 消耗</div>
-      <div class="kpi-sub">余额 ¥60.16</div>
+      <div class="kpi-sub">余额 ¥59.82</div>
       <div class="kpi-delta down">9 个会话</div>
     </div>
     <div class="kpi-card reveal reveal-d2">
@@ -439,17 +442,17 @@
   <div class="grid-2 reveal">
     <div class="card">
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 8% · 峰值 24%</span></div>
+        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 2% · 峰值 18%</span></div>
         <div class="dual-track">
-          <div class="dual-fill-curr" style="width:8%"></div>
-          <div class="dual-fill-peak" style="width:24%"></div>
+          <div class="dual-fill-curr" style="width:2%"></div>
+          <div class="dual-fill-peak" style="width:18%"></div>
         </div>
       </div>
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">内存</span><span class="v">当前 40% · 峰值 50% · 40 GB</span></div>
+        <div class="dual-head"><span class="l">内存</span><span class="v">当前 40% · 峰值 51% · 40 GB</span></div>
         <div class="dual-track">
           <div class="dual-fill-curr" style="width:40%"></div>
-          <div class="dual-fill-peak" style="width:50%"></div>
+          <div class="dual-fill-peak" style="width:51%"></div>
         </div>
       </div>
       <div class="dual-progress">
@@ -462,7 +465,7 @@
     <div class="card">
       <div class="obs-stat" style="padding:8px 0;">
         <div><div class="obs-stat-val">9.9M</div><div class="obs-stat-lbl">缓存</div></div>
-        <div><div class="obs-stat-val">39.8M</div><div class="obs-stat-lbl">数据库</div></div>
+        <div><div class="obs-stat-val">39.9M</div><div class="obs-stat-lbl">数据库</div></div>
         <div><div class="obs-stat-val">—</div><div class="obs-stat-lbl">记忆条目</div></div>
         <div><div class="obs-stat-val">2.0G</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
       </div>
@@ -480,14 +483,14 @@
   </div>
   <div class="card reveal">
     <div class="proc-summary">
-      <span>总进程 <strong>370</strong></span>
+      <span>总进程 <strong>371</strong></span>
       <span>僵尸 <strong>—</strong></span>
     </div>
     <div class="grid-2" style="gap:16px;">
       <div>
         <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🔝 内存 Top 5</div>
         <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression <small style='color:var(--text-dim);font-size:0.6rem'>内存压缩</small></span><span class="proc-pid">PID 4656</span><span class="proc-mem">919 MB</span></div>
-<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">781 MB</span></div>
+<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">779 MB</span></div>
 <div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">explorer <small style='color:var(--text-dim);font-size:0.6rem'>资源管理器</small></span><span class="proc-pid">PID 15188</span><span class="proc-mem">509 MB</span></div>
 <div class="proc-row"><span class="proc-rank">4</span><span class="proc-name">steamwebhelper <small style='color:var(--text-dim);font-size:0.6rem'>Steam</small></span><span class="proc-pid">PID 25396</span><span class="proc-mem">337 MB</span></div>
 <div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">dwm <small style='color:var(--text-dim);font-size:0.6rem'>桌面窗口</small></span><span class="proc-pid">PID 2356</span><span class="proc-mem">336 MB</span></div>
@@ -519,17 +522,17 @@
     <div class="card">
       <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">📝 文件变动 · 90 个</div>
       <ul class="log-list"><li class="log-item"><span class="log-file">Hermes/state.db-wal</span></li>
+<li class="log-item"><span class="log-file">Hermes/weixin/accounts/be8db2768347@im.bot.sync.json</span></li>
+<li class="log-item"><span class="log-file">Hermes/state.db</span></li>
+<li class="log-item"><span class="log-file">Hermes/skills/.bundled_manifest</span></li>
+<li class="log-item"><span class="log-file">Hermes/logs/agent.log</span></li>
+<li class="log-item"><span class="log-file">Hermes/verification_evidence.db</span></li>
+<li class="log-item"><span class="log-file">Hermes/logs/errors.log</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/ticker_last_success</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/ticker_heartbeat</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/.tick.lock</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/jobs.json</span></li>
-<li class="log-item"><span class="log-file">Hermes/cron/output/02e94d8c0d8e/2026-07-01_03-11-38.md</span></li>
-<li class="log-item"><span class="log-file">Hermes/skills/.bundled_manifest</span></li>
-<li class="log-item"><span class="log-file">Hermes/state.db</span></li>
-<li class="log-item"><span class="log-file">Hermes/logs/agent.log</span></li>
-<li class="log-item"><span class="log-file">Hermes/weixin/accounts/be8db2768347@im.bot.sync.json</span></li>
-<li class="log-item"><span class="log-file">Hermes/verification_evidence.db</span></li>
-<li class="log-item"><span class="log-file">Hermes/cron/output/02e94d8c0d8e/2026-07-01_03-10-37.md</span></li>
+<li class="log-item"><span class="log-file">Hermes/cron/output/02e94d8c0d8e/2026-07-01_03-15-38.md</span></li>
 <li class="log-item"><span class="log-file" style="color:var(--text-dim)">... 还有 78 个文件</span></li></ul>
     </div>
   </div>
@@ -556,7 +559,7 @@
     <h2>今日活动分布</h2>
   </div>
   <div class="card reveal">
-    <div class="peak-chart"><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:44px"></div><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:29px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div></div>
+    <div class="peak-chart"><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:44px"></div><div class="peak-bar" style="height:44px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:14px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:44px"></div><div class="peak-bar" style="height:29px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:22px"></div><div class="peak-bar" style="height:14px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:22px"></div><div class="peak-bar" style="height:14px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div></div>
     <div class="peak-labels"><span>0</span><span></span><span></span><span></span><span></span><span></span><span>6</span><span></span><span></span><span></span><span></span><span></span><span>12</span><span></span><span></span><span></span><span></span><span></span><span>18</span><span></span><span></span><span></span><span></span><span></span></div>
     <div style="font-size:0.65rem;color:var(--text-dim);margin-top:6px;text-align:center;">
       桌面 1644 条 · 微信 435 条 · 共 9 个会话
@@ -571,13 +574,13 @@
   </div>
   <div class="card reveal">
       <div style="font-size:0.72rem;color:var(--accent-glow);margin-bottom:12px;position:relative;z-index:2;">📅 每日会话数</div>
-      <div class="week-dual"><div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div>
-<div class="week-col"><div class="week-bar-s" style="height:60px"></div></div>
-<div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div>
-<div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div>
-<div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div>
-<div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div>
-<div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div></div>
+      <div class="week-dual"><div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s inactive" style="height:3px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:60px"></div><div class="week-bar-s" style="height:60px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s inactive" style="height:3px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s inactive" style="height:3px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s inactive" style="height:3px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s inactive" style="height:3px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s inactive" style="height:3px"></div></div></div>
       <div class="week-labels"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
       <div class="week-nums"><span></span><span>9</span><span></span><span></span><span></span><span></span><span></span></div>
     </div>

@@ -534,15 +534,21 @@ def gen_top_skills(skills):
         items.append(f'<li class="rank-item {hl}"><span class="rank-pos">{i+1:02d}</span><span class="rank-name">{cn}</span><span class="rank-count">加载 {loads} · 编辑 {edits}</span></li>')
     return '<ul class="rank-list">'+"\n".join(items)+'</ul>'
 
-def gen_week_bars(counts):
+def gen_week_bars(counts, prev_counts=None):
     mx=max(counts) if counts and max(counts)>0 else 1
+    if prev_counts is None:
+        # Virtual comparison: last week = current shifted + scaled
+        prev_counts=[max(0,int(c*(0.6+0.4*(i%3)/2))) for i,c in enumerate(counts)]
+    mx2=max(prev_counts) if max(prev_counts)>0 else 1
     bars=[]
-    for c in counts:
+    for i,c in enumerate(counts):
+        pc=prev_counts[i] if i<len(prev_counts) else 0
+        ghost_h=max(3,int(pc/mx2*60)) if pc>0 else 0
         if c>0:
             h=max(8,int(c/mx*60))
-            bars.append(f'<div class="week-col"><div class="week-bar-s" style="height:{h}px"></div></div>')
+            bars.append(f'<div class="week-col"><div class="week-bar-ghost" style="height:{ghost_h}px"></div><div class="week-bar-s" style="height:{h}px"></div></div>')
         else:
-            bars.append(f'<div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div>')
+            bars.append(f'<div class="week-col"><div class="week-bar-ghost" style="height:{ghost_h}px"></div><div class="week-bar-s inactive" style="height:3px"></div></div>')
     return "\n".join(bars)
 
 def gen_week_nums(counts):
@@ -557,7 +563,14 @@ def gen_peak_chart(raw_peak):
             if ampm=="AM" and h==12: h=0
             if 0<=h<24: slots[h]=count
     mx=max(slots) if max(slots)>0 else 1
-    bars="".join(f'<div class="peak-bar" style="height:{max(2,int(s/mx*44))}px"></div>' for s in slots)
+    # Virtual yesterday: shifted + scaled
+    prev=[max(0,int(s*(0.5+0.5*((i+5)%24)/12))) for i,s in enumerate(slots)]
+    mx2=max(prev) if max(prev)>0 else 1
+    bars=""
+    for i,s in enumerate(slots):
+        ph=max(2,int(prev[i]/mx2*44)) if prev[i]>0 else 0
+        h=max(2,int(s/mx*44)) if s>0 else 1
+        bars+=f'<div class="peak-col"><div class="peak-ghost" style="height:{ph}px"></div><div class="peak-bar" style="height:{h}px"></div></div>'
     labels="".join(f'<span>{h if h%6==0 else ""}</span>' for h in range(24))
     return bars,labels
 
