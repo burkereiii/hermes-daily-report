@@ -490,13 +490,19 @@
     <h2>图片与文件</h2>
   </div>
   <div class="grid-2 reveal">
-    <div class="card">
-      <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🖼️ 图片生成 · {{IMAGE_COUNT}} 张</div>
-      <ul class="log-list">{{IMAGE_LIST}}</ul>
+    <div class="card" style="display:flex;align-items:center;justify-content:center;gap:12px;min-height:60px;">
+      <span style="font-size:1.4rem;">🖼️</span>
+      <div>
+        <span style="font-size:1.3rem;font-weight:700;color:var(--text-bright);">{{IMAGE_COUNT}} 张</span>
+        <span style="font-size:0.68rem;color:var(--text-dim);margin-left:6px;">今日图片生成</span>
+      </div>
     </div>
-    <div class="card">
-      <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">📝 文件变动</div>
-      <div class="log-list">{{FILE_CHANGES}}</div>
+    <div class="card" style="display:flex;align-items:center;justify-content:center;gap:12px;min-height:60px;">
+      <span style="font-size:1.4rem;">📝</span>
+      <div>
+        <span style="font-size:1.3rem;font-weight:700;color:var(--text-bright);">{{FILE_CHANGE_COUNT}} 个</span>
+        <span style="font-size:0.68rem;color:var(--text-dim);margin-left:6px;">今日文件变动</span>
+      </div>
     </div>
   </div>
 

@@ -327,9 +327,9 @@
   <div class="grid-4">
     <div class="kpi-card reveal reveal-d1">
       <div class="kpi-icon">💰</div>
-      <div class="kpi-value">¥0.56</div>
+      <div class="kpi-value">¥0.41</div>
       <div class="kpi-label">DeepSeek 消耗</div>
-      <div class="kpi-sub">余额 ¥62.81</div>
+      <div class="kpi-sub">余额 ¥62.40</div>
       <div class="kpi-delta down">10 个会话</div>
     </div>
     <div class="kpi-card reveal reveal-d2">
@@ -439,17 +439,17 @@
   <div class="grid-2 reveal">
     <div class="card">
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 4% · 峰值 11%</span></div>
+        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 7% · 峰值 26%</span></div>
         <div class="dual-track">
-          <div class="dual-fill-curr" style="width:4%"></div>
-          <div class="dual-fill-peak" style="width:11%"></div>
+          <div class="dual-fill-curr" style="width:7%"></div>
+          <div class="dual-fill-peak" style="width:26%"></div>
         </div>
       </div>
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">内存</span><span class="v">当前 38% · 峰值 51% · 40 GB</span></div>
+        <div class="dual-head"><span class="l">内存</span><span class="v">当前 38% · 峰值 43% · 40 GB</span></div>
         <div class="dual-track">
           <div class="dual-fill-curr" style="width:38%"></div>
-          <div class="dual-fill-peak" style="width:51%"></div>
+          <div class="dual-fill-peak" style="width:43%"></div>
         </div>
       </div>
       <div class="dual-progress">
@@ -462,9 +462,9 @@
     <div class="card">
       <div class="obs-stat" style="padding:8px 0;">
         <div><div class="obs-stat-val">9.9M</div><div class="obs-stat-lbl">缓存</div></div>
-        <div><div class="obs-stat-val">38.9M</div><div class="obs-stat-lbl">数据库</div></div>
+        <div><div class="obs-stat-val">39.5M</div><div class="obs-stat-lbl">数据库</div></div>
         <div><div class="obs-stat-val">—</div><div class="obs-stat-lbl">记忆条目</div></div>
-        <div><div class="obs-stat-val">1.9G</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
+        <div><div class="obs-stat-val">2.0G</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
       </div>
       <div style="font-size:0.64rem;color:var(--text-dim);text-align:center;margin-top:4px;">
         成本: $1.0081 估算 · deepseek
@@ -480,14 +480,14 @@
   </div>
   <div class="card reveal">
     <div class="proc-summary">
-      <span>总进程 <strong>371</strong></span>
+      <span>总进程 <strong>370</strong></span>
       <span>僵尸 <strong>—</strong></span>
     </div>
     <div class="grid-2" style="gap:16px;">
       <div>
         <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🔝 内存 Top 5</div>
-        <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression <small style='color:var(--text-dim);font-size:0.6rem'>内存压缩</small></span><span class="proc-pid">PID 4656</span><span class="proc-mem">1019 MB</span></div>
-<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">782 MB</span></div>
+        <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression <small style='color:var(--text-dim);font-size:0.6rem'>内存压缩</small></span><span class="proc-pid">PID 4656</span><span class="proc-mem">1018 MB</span></div>
+<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">777 MB</span></div>
 <div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">explorer <small style='color:var(--text-dim);font-size:0.6rem'>资源管理器</small></span><span class="proc-pid">PID 15188</span><span class="proc-mem">422 MB</span></div>
 <div class="proc-row"><span class="proc-rank">4</span><span class="proc-name">steamwebhelper <small style='color:var(--text-dim);font-size:0.6rem'>Steam</small></span><span class="proc-pid">PID 25396</span><span class="proc-mem">336 MB</span></div>
 <div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">dwm <small style='color:var(--text-dim);font-size:0.6rem'>桌面窗口</small></span><span class="proc-pid">PID 2356</span><span class="proc-mem">336 MB</span></div>
@@ -509,13 +509,19 @@
     <h2>图片与文件</h2>
   </div>
   <div class="grid-2 reveal">
-    <div class="card">
-      <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🖼️ 图片生成 · 0 张</div>
-      <ul class="log-list"><li class="log-empty">今日无图片生成</li></ul>
+    <div class="card" style="display:flex;align-items:center;justify-content:center;gap:12px;min-height:60px;">
+      <span style="font-size:1.4rem;">🖼️</span>
+      <div>
+        <span style="font-size:1.3rem;font-weight:700;color:var(--text-bright);">0 张</span>
+        <span style="font-size:0.68rem;color:var(--text-dim);margin-left:6px;">今日图片生成</span>
+      </div>
     </div>
-    <div class="card">
-      <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">📝 文件变动</div>
-      <div class="log-list"><li class="log-empty">今日无文件变动</li></div>
+    <div class="card" style="display:flex;align-items:center;justify-content:center;gap:12px;min-height:60px;">
+      <span style="font-size:1.4rem;">📝</span>
+      <div>
+        <span style="font-size:1.3rem;font-weight:700;color:var(--text-bright);">81 个</span>
+        <span style="font-size:0.68rem;color:var(--text-dim);margin-left:6px;">今日文件变动</span>
+      </div>
     </div>
   </div>
 
