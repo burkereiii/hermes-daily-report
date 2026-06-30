@@ -190,15 +190,15 @@ def collect_channels():
         try: cw=int(out.strip() or "0")
         except: pass
     if dash_ok:
-        if cw>10: data["MAC_STATUS_CLASS"]="activity"; data["MAC_STATUS_TEXT"]=f"已连接 · {cw} CLOSE_WAIT ⚠️"
-        else: data["MAC_STATUS_CLASS"]="online"; data["MAC_STATUS_TEXT"]=f"已连接 ({cw} CW)"
-    else: data["MAC_STATUS_CLASS"]="offline"; data["MAC_STATUS_TEXT"]="未响应"
+        if cw>10: data["MAC_STATUS_CLASS"]="activity"; data["MAC_STATUS_TEXT"]=f"在线 · {cw} CLOSE_WAIT ⚠️"
+        else: data["MAC_STATUS_CLASS"]="online"; data["MAC_STATUS_TEXT"]=f"在线 ({cw} CW)"
+    else: data["MAC_STATUS_CLASS"]="offline"; data["MAC_STATUS_TEXT"]="离线"
 
     data["WEBUI_STATUS_CLASS"]="online" if check_port(8787) else "offline"
-    data["WEBUI_STATUS_TEXT"]="运行中" if check_port(8787) else "未响应"
+    data["WEBUI_STATUS_TEXT"]="在线" if check_port(8787) else "离线"
     data["PREVIEW_STATUS_CLASS"]="online" if check_port(8899) else "offline"
-    data["PREVIEW_STATUS_TEXT"]="运行中" if check_port(8899) else "未响应"
-    data["WECHAT_STATUS_CLASS"]="offline"; data["WECHAT_STATUS_TEXT"]="无活动"
+    data["PREVIEW_STATUS_TEXT"]="在线" if check_port(8899) else "离线"
+    data["WECHAT_STATUS_CLASS"]="offline"; data["WECHAT_STATUS_TEXT"]="离线"
     return data
 
 def collect_gateway():
@@ -565,8 +565,8 @@ def collect_all():
     # Channels
     ch=collect_channels()
     wm=int(data.get("WECHAT_MSGS","0").replace(",","") or "0")
-    if wm>0: ch["WECHAT_STATUS_CLASS"]="online"; ch["WECHAT_STATUS_TEXT"]="活跃"
-    elif check_port(9119): ch["WECHAT_STATUS_CLASS"]="activity"; ch["WECHAT_STATUS_TEXT"]="待命中"
+    if wm>0: ch["WECHAT_STATUS_CLASS"]="online"; ch["WECHAT_STATUS_TEXT"]="在线"
+    elif check_port(9119): ch["WECHAT_STATUS_CLASS"]="activity"; ch["WECHAT_STATUS_TEXT"]="在线 (待命中)"
     data.update(ch)
     
     # Gateway
