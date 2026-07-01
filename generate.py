@@ -4,6 +4,7 @@ import subprocess, json, datetime, os, re, sys, tempfile, socket, random
 
 REPORTS_DIR = r"C:\Users\沙河马\hermes-reports"
 TEMPLATE = os.path.join(REPORTS_DIR, "template.html")
+REPORT_DATE = None  # Set by main() so all collectors use the same date
 
 # ── Translation maps (extended for v8) ──
 TOOL_CN = {
@@ -304,19 +305,29 @@ foreach ($p in $top) { Write-Output "PROC|$($p.Name)|$($p.Id)|$($p.MemMB)" }
 
 def collect_images():
     data={"IMAGE_COUNT":"0","IMAGE_LIST":""}
-    out,_,_=run('bash -c "find /d/Hermes/cache/images/ -name \'*.png\' -newermt \'today 00:00\' -printf \'%T+ %f\n\' 2>/dev/null | sort -r | head -20"',timeout=10)
-    if out:
-        lines=[l for l in out.strip().split("\n") if l]
-        data["IMAGE_COUNT"]=str(len(lines))
-        items=[]
-        for l in lines:
-            parts=l.split(" ",1)
-            ts=parts[0][:16] if len(parts)>0 else "?"
-            fn=parts[1] if len(parts)>1 else l
-            items.append(f'<li class="log-item"><span class="log-time">{ts}</span><span class="log-file">{fn}</span></li>')
-        data["IMAGE_LIST"]="\n".join(items) if items else '<li class="log-empty">今日无图片生成</li>'
-    else:
-        data["IMAGE_LIST"]='<li class="log-empty">今日无图片生成</li>'
+    today_str = (REPORT_DATE or datetime.date.today()).strftime("%Y-%m-%d")
+    # Use Python glob+stat (avoids find -newermt shell escaping issues on git-bash)
+    import glob as _glob, os as _os
+    img_dir = r"D:\Hermes\cache\images"
+    try:
+        files = []
+        for f in _glob.glob(_os.path.join(img_dir, "*.png")):
+            mtime = _os.path.getmtime(f)
+            mdate = datetime.date.fromtimestamp(mtime).strftime("%Y-%m-%d")
+            if mdate == today_str:
+                files.append((mtime, _os.path.basename(f)))
+        files.sort(key=lambda x: x[0], reverse=True)
+        if files:
+            data["IMAGE_COUNT"] = str(len(files))
+            items = []
+            for mtime, fn in files[:20]:
+                ts = datetime.datetime.fromtimestamp(mtime).strftime("%H:%M:%S")
+                items.append(f'<li class="log-item"><span class="log-time">{ts}</span><span class="log-file">{fn}</span></li>')
+            data["IMAGE_LIST"] = "\n".join(items)
+        else:
+            data["IMAGE_LIST"] = '<li class="log-empty">今日无图片生成</li>'
+    except Exception:
+        data["IMAGE_LIST"] = '<li class="log-empty">今日无图片生成</li>'
     return data
 
 def collect_files():
@@ -755,6 +766,10 @@ def collect_cron():
             f'</div></div>'
         )
     data["CRON_LIST"] = "\n".join(items) if items else '<div class="cron-card"><div class="cron-info"><div class="cron-name">暂无活跃任务</div></div></div>'
+    if failed:
+        data["CRON_WARN"] = f'<div style="font-size:0.65rem;color:var(--yellow);margin-top:8px;padding:0 4px;">⚠️ {"、".join(j["name"] or j["id"][:12] for j in failed)} 状态异常，建议检查。</div>'
+    else:
+        data["CRON_WARN"] = ""
     return data
 
 # ═══════════════════════ TEMPLATE FILL ═══════════════════════
@@ -774,10 +789,18 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description="Hermes Daily Report Generator v8.0")
     parser.add_argument("--json", help="JSON data (string or file path) from agent collection")
+    parser.add_argument("--date", help="Report date (YYYY-MM-DD, default: today). Use 'yesterday' for midnight cron.")
     args = parser.parse_args()
     
-    today=datetime.date.today()
+    if args.date == "yesterday":
+        today = datetime.date.today() - datetime.timedelta(days=1)
+    elif args.date:
+        today = datetime.datetime.strptime(args.date, "%Y-%m-%d").date()
+    else:
+        today = datetime.date.today()
     ds=today.strftime("%Y-%m-%d")
+    global REPORT_DATE
+    REPORT_DATE = today
     
     if args.json:
         # Agent-driven mode: receive pre-collected JSON
@@ -819,7 +842,8 @@ def main():
                      "ZOMBIE_COUNT","TAILSCALE_STATUS","TAILSCALE_STATUS_CLASS","TAILSCALE_IP",
                      "TAILSCALE_DNS","TAILSCALE_EXIT","NETWORK_SUMMARY","IMAGE_COUNT","IMAGE_LIST",
                      "FILE_CHANGE_COUNT","FILE_CHANGES","HERMES_HOME_SIZE","VAULT_TOTAL_FILES","VAULT_TODAY_CHANGES",
-                     "VAULT_RECENT_FILES","TAG_HEALTH","TAG_HEALTH_CLASS"]:
+                     "VAULT_RECENT_FILES","TAG_HEALTH","TAG_HEALTH_CLASS","CRON_WARN",
+                     "SERVICE_ROWS","TOOL_RANKING","SKILL_RANKING","TOP_TOOLS","TOP_SKILLS"]:
             data.setdefault(key,"—")
         
         # Peak note

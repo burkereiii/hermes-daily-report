@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hermes 系统日报 · 2026-07-01</title>
+<title>Hermes 系统日报 · 2026-07-02</title>
 <style>
   :root {
     --bg: #050308;
@@ -30,6 +30,7 @@
   body {
     background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.6; overflow-x: hidden;
   }
+  #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
   /* BG orbs */
   .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
@@ -65,9 +66,9 @@
   .section-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
 
   /* CARD base */
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; transition: border-color 0.3s, box-shadow 0.3s; position: relative; }
-  .card:hover { border-color: var(--border-hover); box-shadow: 0 4px 24px rgba(124,58,237,0.03); }
-  .card-accent { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; position: relative; transition: border-color 0.3s; }
+  .card { background: rgba(18,14,34,0.1); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; transition: border-color 0.3s, box-shadow 0.3s; position: relative; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .card:hover { border-color: var(--border-hover); box-shadow: 0 4px 24px rgba(124,58,237,0.05); }
+  .card-accent { background: rgba(18,14,34,0.1); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; position: relative; transition: border-color 0.3s; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   .card-accent::before { content: ''; position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px; background: var(--accent); border-radius: 0 2px 2px 0; }
   .card-accent:hover { border-color: var(--border-hover); }
 
@@ -78,9 +79,10 @@
 
   /* === 1. OVERVIEW CARDS with delta === */
   .kpi-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    background: rgba(18,14,34,0.1); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 14px 14px 10px; position: relative; overflow: hidden; transition: all 0.3s;
     display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 88px;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
   .kpi-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
   .kpi-card::after {
@@ -107,8 +109,9 @@
   /* === 2. CHANNEL STRIPS === */
   .channel-strip {
     display: flex; align-items: center; gap: 12px;
-    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: rgba(18,14,34,0.1); border: 1px solid var(--border); border-radius: var(--radius-sm);
     padding: 8px 16px; transition: border-color 0.3s;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
   .channel-strip:hover { border-color: var(--border-hover); }
   .ch-strip-icon { font-size: 1.3rem; width: 24px; text-align: center; }
@@ -192,8 +195,9 @@
 
   /* === WEEK CHART === */
   .week-dual { display: flex; gap: 4px; align-items: flex-end; height: 66px; padding: 0 4px; margin-bottom: 6px; }
-  .week-col { flex: 1; display: flex; flex-direction: column; gap: 2px; justify-content: flex-end; }
+  .week-col { flex: 1; display: flex; flex-direction: column; gap: 2px; justify-content: flex-end; position: relative; }
   .week-bar-s { background: var(--accent); border-radius: 2px; min-height: 2px; transition: height 0.8s ease; }
+  .week-bar-ghost { background: rgba(251,191,36,0.2); border: 1.5px solid rgba(251,191,36,0.45); border-radius: 2px; position: absolute; bottom: 0; left: 0; right: 0; }
   .week-bar-s.inactive { background: rgba(124,58,237,0.06); min-height: 2px; }
   .week-labels { display: flex; gap: 3px; font-size: 0.62rem; color: var(--text-dim); }
   .week-labels span { flex: 1; text-align: center; }
@@ -202,7 +206,9 @@
 
   /* Peak hours mini chart */
   .peak-chart { display: flex; gap: 2px; align-items: flex-end; height: 48px; padding: 0 2px; }
-  .peak-bar { flex: 1; background: var(--accent); border-radius: 2px 2px 0 0; min-height: 2px; transition: height 0.6s ease; }
+  .peak-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
+  .peak-bar { background: var(--accent); border-radius: 2px 2px 0 0; min-height: 1px; transition: height 0.6s ease; }
+  .peak-ghost { background: rgba(251,191,36,0.2); border: 1.5px solid rgba(251,191,36,0.45); border-bottom: none; border-radius: 2px 2px 0 0; position: absolute; bottom: 0; left: 0; right: 0; }
   .peak-labels { display: flex; gap: 2px; font-size: 0.55rem; color: var(--text-dim); margin-top: 3px; }
   .peak-labels span { flex: 1; text-align: center; }
   .peak-note { font-size: 0.62rem; color: var(--yellow); opacity: 0.7; margin-top: 4px; text-align: center; }
@@ -210,9 +216,9 @@
   /* === NOTABLE SESSIONS === */
   .notable-row { display: flex; gap: 12px; flex-wrap: wrap; }
   .notable-chip {
-    flex: 1; min-width: 140px; background: var(--card); border: 1px solid var(--border);
+    flex: 1; min-width: 140px; background: rgba(18,14,34,0.1); border: 1px solid var(--border);
     border-radius: 20px; padding: 10px 16px; display: flex; align-items: center; gap: 10px;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
   .notable-chip:hover { border-color: var(--border-hover); }
   .notable-chip-icon { font-size: 1.1rem; }
@@ -221,9 +227,10 @@
 
   /* === CRON === */
   .cron-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    background: rgba(18,14,34,0.1); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 14px 18px; margin-bottom: 10px; transition: border-color 0.3s;
     display: flex; align-items: center; gap: 14px;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
   .cron-card:hover { border-color: var(--border-hover); }
   .cron-status-icon { font-size: 1.1rem; }
@@ -250,7 +257,7 @@
   @keyframes float-tag { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
   /* === DEEP INSIGHTS === */
-  .narrative-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 24px; }
+  .narrative-section { background: rgba(18,14,34,0.1); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 24px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   .narrative-intro { font-size: 0.88rem; color: var(--text); line-height: 1.75; margin-bottom: 16px; }
   .narrative-intro em { color: var(--accent-glow); font-style: normal; font-weight: 600; }
   .narrative-recs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -284,6 +291,7 @@
 </head>
 <body>
 
+<canvas id="bg-canvas"></canvas>
 <div class="bg-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
 
 <!-- HERO -->
@@ -291,9 +299,9 @@
   <img class="hero-bg" src="maki-hero.png" alt="沙河麻衣">
   <div class="hero-fade"></div>
   <div class="hero-content">
-    <div class="hero-bread">系统运维 <em>/</em> 日报 <em>/</em> 2026-07-01</div>
+    <div class="hero-bread">系统运维 <em>/</em> 日报 <em>/</em> 2026-07-02</div>
     <h1>Hermes 系统日报</h1>
-    <div class="sub">星期三 · 沙河麻衣自动生成</div>
+    <div class="sub">星期四 · 沙河麻衣自动生成</div>
   </div>
   </div>
 </div>
@@ -302,16 +310,16 @@
 <div class="marquee-wrap">
   <div class="marquee">
     <span>deepseek-v4-pro</span><span class="sep">★</span>
-    <span>会话 10</span><span class="sep">★</span>
-    <span>165.3M</span><span class="sep">★</span>
+    <span>会话 8</span><span class="sep">★</span>
+    <span>11.2M</span><span class="sep">★</span>
     <span>Cron 4/4</span><span class="sep">★</span>
-    <span>图片 0</span><span class="sep">★</span>
+    <span>图片 2</span><span class="sep">★</span>
     <span>PID 31852</span><span class="sep">★</span>
     <span>deepseek-v4-pro</span><span class="sep">★</span>
-    <span>会话 10</span><span class="sep">★</span>
-    <span>165.3M</span><span class="sep">★</span>
+    <span>会话 8</span><span class="sep">★</span>
+    <span>11.2M</span><span class="sep">★</span>
     <span>Cron 4/4</span><span class="sep">★</span>
-    <span>图片 0</span><span class="sep">★</span>
+    <span>图片 2</span><span class="sep">★</span>
     <span>PID 31852</span><span class="sep">★</span>
   </div>
 </div>
@@ -327,31 +335,31 @@
   <div class="grid-4">
     <div class="kpi-card reveal reveal-d1">
       <div class="kpi-icon">💰</div>
-      <div class="kpi-value">¥0.19</div>
+      <div class="kpi-value">¥0</div>
       <div class="kpi-label">DeepSeek 消耗</div>
-      <div class="kpi-sub">余额 ¥61.88</div>
-      <div class="kpi-delta down">10 个会话</div>
+      <div class="kpi-sub">余额 ¥52.47</div>
+      <div class="kpi-delta flat">8 个会话</div>
     </div>
     <div class="kpi-card reveal reveal-d2">
       <div class="kpi-icon">📨</div>
-      <div class="kpi-value">2324</div>
+      <div class="kpi-value">413</div>
       <div class="kpi-label">条消息</div>
-      <div class="kpi-sub">用户 139 条</div>
-      <div class="kpi-delta down">↓ 1786 (43%)</div>
+      <div class="kpi-sub">用户 22 条</div>
+      <div class="kpi-delta down">↓ 3079 (88%)</div>
     </div>
     <div class="kpi-card reveal reveal-d3">
       <div class="kpi-icon">⚡</div>
-      <div class="kpi-value">165.3M</div>
+      <div class="kpi-value">11.2M</div>
       <div class="kpi-label">Token</div>
-      <div class="kpi-sub">I/O 1.4M / 460.2K</div>
-      <div class="kpi-delta down">↓ 183990313 (53%)</div>
+      <div class="kpi-sub">I/O 527.9K / 125.7K</div>
+      <div class="kpi-delta down">↓ 294563401 (96%)</div>
     </div>
     <div class="kpi-card reveal reveal-d4">
       <div class="kpi-icon">🔧</div>
-      <div class="kpi-value">1123</div>
+      <div class="kpi-value">235</div>
       <div class="kpi-label">次工具调用</div>
-      <div class="kpi-sub">均会话 3h</div>
-      <div class="kpi-delta down">↓ 782 (41%)</div>
+      <div class="kpi-sub">均会话 9m</div>
+      <div class="kpi-delta down">↓ 1450 (86%)</div>
     </div>
   </div>
 
@@ -371,7 +379,7 @@
     <div class="channel-strip">
       <span class="ch-strip-icon">💬</span>
       <span class="ch-strip-name">微信</span>
-      <span class="ch-strip-detail">iLink Bot · 今日 435 条</span>
+      <span class="ch-strip-detail">iLink Bot · 今日 26 条</span>
       <span class="ch-strip-status"><span class="ch-dot online"></span><span class="ch-txt online">在线</span></span>
     </div>
     <div class="channel-strip">
@@ -407,26 +415,23 @@
   <div class="grid-2 reveal">
     <div class="card">
       <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:12px;">🔧 工具排行</div>
-      <ul class="rank-list"><li class="rank-item"><span class="rank-pos">01</span><span class="rank-name">终端</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:100%"></div></div><span class="rank-count">535</span></li>
-<li class="rank-item"><span class="rank-pos">02</span><span class="rank-name">补丁</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:24%"></div></div><span class="rank-count">131</span></li>
-<li class="rank-item"><span class="rank-pos">03</span><span class="rank-name">读文件</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:18%"></div></div><span class="rank-count">99</span></li>
-<li class="rank-item"><span class="rank-pos">04</span><span class="rank-name">桌面操控</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:11%"></div></div><span class="rank-count">61</span></li>
-<li class="rank-item"><span class="rank-pos">05</span><span class="rank-name">浏览</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:8%"></div></div><span class="rank-count">44</span></li>
-<li class="rank-item"><span class="rank-pos">06</span><span class="rank-name">写文件</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:7%"></div></div><span class="rank-count">41</span></li>
-<li class="rank-item"><span class="rank-pos">07</span><span class="rank-name">搜索</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:6%"></div></div><span class="rank-count">37</span></li>
-<li class="rank-item"><span class="rank-pos">08</span><span class="rank-name">进程</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:6%"></div></div><span class="rank-count">33</span></li>
-<li class="rank-item"><span class="rank-pos">09</span><span class="rank-name">清单</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:5%"></div></div><span class="rank-count">31</span></li>
-<li class="rank-item"><span class="rank-pos">10</span><span class="rank-name">查技能</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:2%"></div></div><span class="rank-count">13</span></li></ul>
+      <ul class="rank-list"><li class="rank-item"><span class="rank-pos">01</span><span class="rank-name">终端</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:100%"></div></div><span class="rank-count">175</span></li>
+<li class="rank-item"><span class="rank-pos">02</span><span class="rank-name">会话搜索</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:10%"></div></div><span class="rank-count">18</span></li>
+<li class="rank-item"><span class="rank-pos">03</span><span class="rank-name">读文件</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:5%"></div></div><span class="rank-count">10</span></li>
+<li class="rank-item"><span class="rank-pos">04</span><span class="rank-name">查技能</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:4%"></div></div><span class="rank-count">8</span></li>
+<li class="rank-item"><span class="rank-pos">05</span><span class="rank-name">写文件</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:4%"></div></div><span class="rank-count">7</span></li>
+<li class="rank-item"><span class="rank-pos">06</span><span class="rank-name">搜索</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:3%"></div></div><span class="rank-count">6</span></li>
+<li class="rank-item"><span class="rank-pos">07</span><span class="rank-name">补丁</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:1%"></div></div><span class="rank-count">3</span></li>
+<li class="rank-item"><span class="rank-pos">08</span><span class="rank-name">清单</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:1%"></div></div><span class="rank-count">3</span></li>
+<li class="rank-item"><span class="rank-pos">09</span><span class="rank-name">生图</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:1%"></div></div><span class="rank-count">2</span></li>
+<li class="rank-item"><span class="rank-pos">10</span><span class="rank-name">定时任务</span><div class="rank-bar-wrap"><div class="rank-bar" style="width:0%"></div></div><span class="rank-count">1</span></li></ul>
     </div>
     <div class="card">
       <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:12px;">🧠 技能使用</div>
-      <ul class="rank-list"><li class="rank-item skill-hl"><span class="rank-pos">01</span><span class="rank-name">系统日报</span><span class="rank-count">加载 4 · 编辑 4</span></li>
-<li class="rank-item skill-hl"><span class="rank-pos">02</span><span class="rank-name">笔记管理</span><span class="rank-count">加载 4 · 编辑 0</span></li>
-<li class="rank-item skill-hl"><span class="rank-pos">03</span><span class="rank-name">配置管理</span><span class="rank-count">加载 2 · 编辑 0</span></li>
-<li class="rank-item "><span class="rank-pos">04</span><span class="rank-name">Obsidian管理</span><span class="rank-count">加载 1 · 编辑 0</span></li>
-<li class="rank-item "><span class="rank-pos">05</span><span class="rank-name">计划制定</span><span class="rank-count">加载 1 · 编辑 0</span></li>
-<li class="rank-item "><span class="rank-pos">06</span><span class="rank-name">系统调试</span><span class="rank-count">加载 1 · 编辑 0</span></li>
-<li class="rank-item "><span class="rank-pos">07</span><span class="rank-name">知识策展</span><span class="rank-count">加载 0 · 编辑 1</span></li></ul>
+      <ul class="rank-list"><li class="rank-item skill-hl"><span class="rank-pos">01</span><span class="rank-name">系统日报</span><span class="rank-count">加载 5 · 编辑 0</span></li>
+<li class="rank-item skill-hl"><span class="rank-pos">02</span><span class="rank-name">笔记管理</span><span class="rank-count">加载 1 · 编辑 0</span></li>
+<li class="rank-item skill-hl"><span class="rank-pos">03</span><span class="rank-name">user-knowledge-builder</span><span class="rank-count">加载 1 · 编辑 0</span></li>
+<li class="rank-item "><span class="rank-pos">04</span><span class="rank-name">麻衣自拍</span><span class="rank-count">加载 1 · 编辑 0</span></li></ul>
     </div>
   </div>
 
@@ -439,21 +444,21 @@
   <div class="grid-2 reveal">
     <div class="card">
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 10% · 峰值 28%</span></div>
+        <div class="dual-head"><span class="l">CPU</span><span class="v">当前 22% · 峰值 46%</span></div>
         <div class="dual-track">
-          <div class="dual-fill-curr" style="width:10%"></div>
-          <div class="dual-fill-peak" style="width:28%"></div>
-        </div>
-      </div>
-      <div class="dual-progress">
-        <div class="dual-head"><span class="l">内存</span><span class="v">当前 38% · 峰值 46% · 40 GB</span></div>
-        <div class="dual-track">
-          <div class="dual-fill-curr" style="width:38%"></div>
+          <div class="dual-fill-curr" style="width:22%"></div>
           <div class="dual-fill-peak" style="width:46%"></div>
         </div>
       </div>
       <div class="dual-progress">
-        <div class="dual-head"><span class="l">磁盘 C:</span><span class="v">当前 52% · 237.0 GB</span></div>
+        <div class="dual-head"><span class="l">内存</span><span class="v">当前 40% · 峰值 45% · 40 GB</span></div>
+        <div class="dual-track">
+          <div class="dual-fill-curr" style="width:40%"></div>
+          <div class="dual-fill-peak" style="width:45%"></div>
+        </div>
+      </div>
+      <div class="dual-progress">
+        <div class="dual-head"><span class="l">磁盘 C:</span><span class="v">当前 52% · 236.5 GB</span></div>
         <div class="dual-track">
           <div class="dual-fill-curr" style="width:52%"></div>
         </div>
@@ -461,13 +466,13 @@
     </div>
     <div class="card">
       <div class="obs-stat" style="padding:8px 0;">
-        <div><div class="obs-stat-val">9.9M</div><div class="obs-stat-lbl">缓存</div></div>
-        <div><div class="obs-stat-val">39.5M</div><div class="obs-stat-lbl">数据库</div></div>
+        <div><div class="obs-stat-val">12M</div><div class="obs-stat-lbl">缓存</div></div>
+        <div><div class="obs-stat-val">52.8M</div><div class="obs-stat-lbl">数据库</div></div>
         <div><div class="obs-stat-val">—</div><div class="obs-stat-lbl">记忆条目</div></div>
         <div><div class="obs-stat-val">2.0G</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
       </div>
       <div style="font-size:0.64rem;color:var(--text-dim);text-align:center;margin-top:4px;">
-        成本: $1.0081 估算 · deepseek
+        成本: $0.3390 估算 · deepseek
       </div>
     </div>
   </div>
@@ -480,17 +485,17 @@
   </div>
   <div class="card reveal">
     <div class="proc-summary">
-      <span>总进程 <strong>370</strong></span>
+      <span>总进程 <strong>377</strong></span>
       <span>僵尸 <strong>—</strong></span>
     </div>
     <div class="grid-2" style="gap:16px;">
       <div>
         <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🔝 内存 Top 5</div>
-        <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression <small style='color:var(--text-dim);font-size:0.6rem'>内存压缩</small></span><span class="proc-pid">PID 4656</span><span class="proc-mem">1018 MB</span></div>
-<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">781 MB</span></div>
-<div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">explorer <small style='color:var(--text-dim);font-size:0.6rem'>资源管理器</small></span><span class="proc-pid">PID 15188</span><span class="proc-mem">422 MB</span></div>
-<div class="proc-row"><span class="proc-rank">4</span><span class="proc-name">steamwebhelper <small style='color:var(--text-dim);font-size:0.6rem'>Steam</small></span><span class="proc-pid">PID 25396</span><span class="proc-mem">336 MB</span></div>
-<div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">dwm <small style='color:var(--text-dim);font-size:0.6rem'>桌面窗口</small></span><span class="proc-pid">PID 2356</span><span class="proc-mem">336 MB</span></div>
+        <div class="proc-row"><span class="proc-rank">1</span><span class="proc-name">Memory Compression <small style='color:var(--text-dim);font-size:0.6rem'>内存压缩</small></span><span class="proc-pid">PID 4656</span><span class="proc-mem">923 MB</span></div>
+<div class="proc-row"><span class="proc-rank">2</span><span class="proc-name">Hermes <small style='color:var(--text-dim);font-size:0.6rem'>AI Agent</small></span><span class="proc-pid">PID 5260</span><span class="proc-mem">842 MB</span></div>
+<div class="proc-row"><span class="proc-rank">3</span><span class="proc-name">python <small style='color:var(--text-dim);font-size:0.6rem'>Python</small></span><span class="proc-pid">PID 13792</span><span class="proc-mem">571 MB</span></div>
+<div class="proc-row"><span class="proc-rank">4</span><span class="proc-name">explorer <small style='color:var(--text-dim);font-size:0.6rem'>资源管理器</small></span><span class="proc-pid">PID 15188</span><span class="proc-mem">511 MB</span></div>
+<div class="proc-row"><span class="proc-rank">5</span><span class="proc-name">steamwebhelper <small style='color:var(--text-dim);font-size:0.6rem'>Steam</small></span><span class="proc-pid">PID 25396</span><span class="proc-mem">373 MB</span></div>
       </div>
       <div>
         <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">🌐 网络概况</div>
@@ -512,25 +517,25 @@
     <div class="card" style="display:flex;align-items:center;justify-content:center;gap:12px;min-height:60px;">
       <span style="font-size:1.4rem;">🖼️</span>
       <div>
-        <span style="font-size:1.3rem;font-weight:700;color:var(--text-bright);">0 张</span>
+        <span style="font-size:1.3rem;font-weight:700;color:var(--text-bright);">2 张</span>
         <span style="font-size:0.68rem;color:var(--text-dim);margin-left:6px;">今日图片生成</span>
       </div>
     </div>
     <div class="card">
-      <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">📝 文件变动 · 81 个</div>
+      <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:6px;">📝 文件变动 · 1242 个</div>
       <ul class="log-list"><li class="log-item"><span class="log-file">Hermes/state.db-wal</span></li>
 <li class="log-item"><span class="log-file">Hermes/skills/.bundled_manifest</span></li>
-<li class="log-item"><span class="log-file">Hermes/state.db</span></li>
 <li class="log-item"><span class="log-file">Hermes/weixin/accounts/be8db2768347@im.bot.sync.json</span></li>
+<li class="log-item"><span class="log-file">Hermes/state.db</span></li>
 <li class="log-item"><span class="log-file">Hermes/logs/agent.log</span></li>
 <li class="log-item"><span class="log-file">Hermes/verification_evidence.db</span></li>
+<li class="log-item"><span class="log-file">Hermes/cron/jobs.json</span></li>
+<li class="log-item"><span class="log-file">Hermes/cron/output/02e94d8c0d8e/2026-07-02_00-44-12.md</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/ticker_last_success</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/ticker_heartbeat</span></li>
 <li class="log-item"><span class="log-file">Hermes/cron/.tick.lock</span></li>
-<li class="log-item"><span class="log-file">Hermes/cron/jobs.json</span></li>
-<li class="log-item"><span class="log-file">Hermes/cron/output/02e94d8c0d8e/2026-07-01_02-24-36.md</span></li>
-<li class="log-item"><span class="log-file">Hermes/cron/output/02e94d8c0d8e/2026-07-01_02-23-36.md</span></li>
-<li class="log-item"><span class="log-file" style="color:var(--text-dim)">... 还有 69 个文件</span></li></ul>
+<li class="log-item"><span class="log-file">Hermes/logs/errors.log</span></li>
+<li class="log-item"><span class="log-file" style="color:var(--text-dim)">... 还有 1230 个文件</span></li></ul>
     </div>
   </div>
 
@@ -542,21 +547,25 @@
   </div>
   <div class="card reveal">
     <div class="obs-stat">
-      <div><div class="obs-stat-val">135</div><div class="obs-stat-lbl">总文件数</div></div>
+      <div><div class="obs-stat-val">137</div><div class="obs-stat-lbl">总文件数</div></div>
       <div><div class="obs-stat-val">0</div><div class="obs-stat-lbl">今日变更</div></div>
       <div><div class="obs-stat-val ">—</div><div class="obs-stat-lbl">标签健康</div></div>
     </div>
     <div class="obs-recent">今日无变更</div>
   </div>
 
-  <!-- ===== 08 会话时间线 ===== -->
+  <!-- ===== 08 24h 活动分布 ===== -->
   <div class="section-head reveal">
     <div class="ghost">TIMELINE</div>
-    <div class="section-badge"><span class="dot"></span>全部会话</div>
-    <h2>今日会话时间线</h2>
+    <div class="section-badge"><span class="dot"></span>24小时</div>
+    <h2>今日活动分布</h2>
   </div>
   <div class="card reveal">
-    <div class="tl-empty">数据待采集</div>
+    <div class="peak-chart"><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:11px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:11px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:44px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:11px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:11px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div><div class="peak-col"><div class="peak-ghost" style="height:0px"></div><div class="peak-bar" style="height:1px"></div></div></div>
+    <div class="peak-labels"><span>0</span><span></span><span></span><span></span><span></span><span></span><span>6</span><span></span><span></span><span></span><span></span><span></span><span>12</span><span></span><span></span><span></span><span></span><span></span><span>18</span><span></span><span></span><span></span><span></span><span></span></div>
+    <div style="font-size:0.65rem;color:var(--text-dim);margin-top:6px;text-align:center;">
+      桌面 66 条 · 微信 26 条 · 共 8 个会话
+    </div>
   </div>
 
   <!-- ===== 09 一周节奏 ===== -->
@@ -565,29 +574,18 @@
     <div class="section-badge"><span class="dot"></span>活动规律</div>
     <h2>一周节奏</h2>
   </div>
-  <div class="grid-2 reveal">
-    <div class="card">
+  <div class="card reveal">
       <div style="font-size:0.72rem;color:var(--accent-glow);margin-bottom:12px;position:relative;z-index:2;">📅 每日会话数</div>
-      <div class="week-dual"><div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div>
-<div class="week-col"><div class="week-bar-s" style="height:60px"></div></div>
-<div class="week-col"><div class="week-bar-s" style="height:8px"></div></div>
-<div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div>
-<div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div>
-<div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div>
-<div class="week-col"><div class="week-bar-s inactive" style="height:3px"></div></div></div>
+      <div class="week-dual"><div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s inactive" style="height:3px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s inactive" style="height:3px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s" style="height:60px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s" style="height:8px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s inactive" style="height:3px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s inactive" style="height:3px"></div></div>
+<div class="week-col"><div class="week-bar-ghost" style="height:0px"></div><div class="week-bar-s inactive" style="height:3px"></div></div></div>
       <div class="week-labels"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
-      <div class="week-nums"><span></span><span>9</span><span>1</span><span></span><span></span><span></span><span></span></div>
+      <div class="week-nums"><span></span><span></span><span>7</span><span>1</span><span></span><span></span><span></span></div>
     </div>
-    <div class="card">
-      <div style="font-size:0.72rem;color:var(--accent-glow);margin-bottom:10px;">⏰ 24h 活动峰值</div>
-      <div class="peak-chart"><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:44px"></div><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:29px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:14px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div><div class="peak-bar" style="height:2px"></div></div>
-      <div class="peak-labels"><span>0</span><span></span><span></span><span></span><span></span><span></span><span>6</span><span></span><span></span><span></span><span></span><span></span><span>12</span><span></span><span></span><span></span><span></span><span></span><span>18</span><span></span><span></span><span></span><span></span><span></span></div>
-      <div style="font-size:0.65rem;color:var(--text-dim);margin-top:6px;text-align:center;">
-        桌面 1756 条 · 微信 435 条
-      </div>
-      <div class="peak-note">⚠️ 峰值为瞬时快照+模拟，非持续监控数据。部署轻量守护进程后可获取真实峰值。</div>
-    </div>
-  </div>
 
   <!-- ===== 10 亮点会话 ===== -->
   <div class="section-head reveal">
@@ -596,10 +594,10 @@
     <h2>今日亮点会话</h2>
   </div>
   <div class="notable-row reveal">
-    <div class="notable-chip"><span class="notable-chip-icon">⏳</span><div class="notable-chip-info"><strong>13h 16m</strong>最长会话 · Jun 30, 20260630_021238_</div></div>
-<div class="notable-chip"><span class="notable-chip-icon">💬</span><div class="notable-chip-info"><strong>644 msgs</strong>最多消息 · Jun 30, 20260630_171539_</div></div>
-<div class="notable-chip"><span class="notable-chip-icon">⚡</span><div class="notable-chip-info"><strong>603,720 tokens</strong>最多Token · Jun 30, 20260630_171539_</div></div>
-<div class="notable-chip"><span class="notable-chip-icon">🔧</span><div class="notable-chip-info"><strong>282 calls</strong>最多工具调用 · Jun 30, 20260630_171539_</div></div>
+    <div class="notable-chip"><span class="notable-chip-icon">⏳</span><div class="notable-chip-info"><strong>23m</strong>最长会话</div></div>
+<div class="notable-chip"><span class="notable-chip-icon">💬</span><div class="notable-chip-info"><strong>142 msgs</strong>最多消息</div></div>
+<div class="notable-chip"><span class="notable-chip-icon">⚡</span><div class="notable-chip-info"><strong>121,863 tokens</strong>最多Token</div></div>
+<div class="notable-chip"><span class="notable-chip-icon">🔧</span><div class="notable-chip-info"><strong>83 calls</strong>最多工具调用</div></div>
   </div>
 
   <!-- ===== 11 CRON ===== -->
@@ -608,12 +606,13 @@
     <div class="section-badge"><span class="dot"></span>自动化</div>
     <h2>Cron 任务 ⚠️ 1 个异常</h2>
   </div>
-  <div class="reveal">
-    <div class="cron-card"><span class="cron-status-icon">✅</span><div class="cron-info"><div class="cron-name">日报生成</div><div class="cron-desc">每日零点自动生成系统日报，推送至 GitHub Pages</div></div><div class="cron-meta"><div class="cron-sched">0 0 * * *</div><span class="cron-status-tag ok">正常</span></div></div>
-<div class="cron-card"><span class="cron-status-icon">✅</span><div class="cron-info"><div class="cron-name">全盘健康检查</div><div class="cron-desc">凌晨3点采集系统指标并诊断，异常推送微信告警</div></div><div class="cron-meta"><div class="cron-sched">0 3 * * *</div><span class="cron-status-tag ok">正常</span></div></div>
-<div class="cron-card"><span class="cron-status-icon">✅</span><div class="cron-info"><div class="cron-name">宿主进程自动清理</div><div class="cron-desc">每30分钟清理僵尸进程和临时文件</div></div><div class="cron-meta"><div class="cron-sched">*/30 * * * *</div><span class="cron-status-tag ok">正常</span></div></div>
-<div class="cron-card"><span class="cron-status-icon">⚠️</span><div class="cron-info"><div class="cron-name">峰值采样</div><div class="cron-desc"></div></div><div class="cron-meta"><div class="cron-sched">* * * * *</div><span class="cron-status-tag error">异常</span></div></div>
+  <div class="card reveal">
+    <div class="cron-card"><span class="cron-status-icon">✅</span><div class="cron-info"><div class="cron-name">日报生成</div><div class="cron-desc">每日零点自动生成系统日报，推送至 GitHub Pages</div></div><div class="cron-meta"><div class="cron-sched">每天 00:00</div><span class="cron-status-tag ok">正常</span></div></div>
+<div class="cron-card"><span class="cron-status-icon">✅</span><div class="cron-info"><div class="cron-name">全盘健康检查</div><div class="cron-desc">凌晨3点采集系统指标并诊断，异常推送微信告警</div></div><div class="cron-meta"><div class="cron-sched">每天 03:00</div><span class="cron-status-tag ok">正常</span></div></div>
+<div class="cron-card"><span class="cron-status-icon">✅</span><div class="cron-info"><div class="cron-name">宿主进程自动清理</div><div class="cron-desc">每30分钟清理僵尸进程和临时文件</div></div><div class="cron-meta"><div class="cron-sched">每 30 分钟</div><span class="cron-status-tag ok">正常</span></div></div>
+<div class="cron-card"><span class="cron-status-icon">⚠️</span><div class="cron-info"><div class="cron-name">峰值采样</div><div class="cron-desc">每分钟采样CPU/内存/磁盘，用于日报真实峰值数据</div></div><div class="cron-meta"><div class="cron-sched">每分钟</div><span class="cron-status-tag error">异常</span></div></div>
   </div>
+  {{CRON_WARN}}
 
   <!-- ===== 12 深度洞察 ===== -->
   <div class="section-head reveal">
@@ -645,7 +644,7 @@
 
   <!-- FOOTER -->
   <div class="footer reveal">
-    <p>由 <span>沙河麻衣</span> 自动生成 · 2026-07-01 · Hermes Agent on DeepSeek</p>
+    <p>由 <span>沙河麻衣</span> 自动生成 · 2026-07-02 · Hermes Agent on DeepSeek</p>
     <p style="margin-top:2px;"><a href="https://burkereiii.github.io/hermes-daily-report/">🌐 在线查看</a> · v8.0 全谱数据</p>
   </div>
 
@@ -662,6 +661,39 @@
     }
   }
   window.addEventListener('scroll',rev);window.addEventListener('load',rev);rev();
+})();
+</script>
+<!-- PARTICLES -->
+<script>
+(function(){
+  var c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
+  var w,h,particles=[],t=0;
+  function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  for(var i=0;i<50;i++){
+    particles.push({x:Math.random()*w,y:Math.random()*h,r:1+Math.random()*4,
+      vx:(Math.random()-.5)*0.25,vy:-0.2-Math.random()*0.6,
+      o:0.12+Math.random()*0.4});
+  }
+  function draw(){
+    t+=0.002;
+    ctx.clearRect(0,0,w,h);
+    var g=ctx.createRadialGradient(w*0.55+Math.sin(t)*80,h*0.45+Math.cos(t*1.3)*60,0,w*0.5,h*0.5,w*0.7);
+    g.addColorStop(0,'rgba(60,15,90,0)');
+    g.addColorStop(0.6,'rgba(50,15,80,0.04)');
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    for(var i=0;i<particles.length;i++){
+      var p=particles[i];
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.y<-10){p.y=h+10;p.x=Math.random()*w;}
+      if(p.x<0)p.x=w;if(p.x>w)p.x=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(167,139,250,'+p.o+')';ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
 })();
 </script>
 </body>
