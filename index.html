@@ -468,7 +468,7 @@
       <div class="obs-stat" style="padding:8px 0;">
         <div><div class="obs-stat-val">12M</div><div class="obs-stat-lbl">缓存</div></div>
         <div><div class="obs-stat-val">54.9M</div><div class="obs-stat-lbl">数据库</div></div>
-        <div><div class="obs-stat-val">—</div><div class="obs-stat-lbl">记忆条目</div></div>
+        <div><div class="obs-stat-val">56</div><div class="obs-stat-lbl">记忆条目</div></div>
         <div><div class="obs-stat-val">2.0G</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
       </div>
       <div style="font-size:0.64rem;color:var(--text-dim);text-align:center;margin-top:4px;">
@@ -623,12 +623,17 @@
   </div>
   <div class="card reveal" style="margin-bottom:12px;">
     <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🔍 今日主题</div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"><span class="float-tag" style="animation:none">数据待分析</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"><span class="float-tag" style="animation:none;background:var(--accent-dim);border-color:var(--accent);">系统日报开发</span><span class="float-tag" style="animation:none;background:rgba(232,121,160,0.12);border-color:var(--pink);">转正危机应对</span><span class="float-tag" style="animation:none;background:rgba(52,211,153,0.12);border-color:var(--green);">运维监控与修复</span><span class="float-tag" style="animation:none;background:rgba(251,191,36,0.12);border-color:var(--yellow);">知识策展</span></div>
   </div>
   <div class="narrative-section reveal">
-    <div class="narrative-intro">今日数据已采集，深度分析待 agent 生成。</div>
-    <div class="narrative-recs"></div>
-  </div>
+      <div class="narrative-intro">周三（7/1）是日报 v8 定型日，共 10 个会话、491 条消息。终端调用占比 73%（202/278），说明大量时间花在 shell 操作和脚本调试上——日报的 generate.py 跑了多轮迭代，CDN 发布流程也经过多次验证。相比周二（13.0M vs 319M token），活动量骤降 96%，但这属于正常波动：周二是日报 v8 集中开发日，周三进入收尾和策略讨论阶段。</div>
+      <div class="narrative-recs">
+        <div class="rec-item"><span class="rec-bullet">01</span><span>峰值采样 cron（02e94d8c）状态异常，建议检查 peak_monitor.ps1 运行日志——若 JSON 为空，需确认 @() 数组强制和属性守卫已生效</span></div>
+        <div class="rec-item"><span class="rec-bullet">02</span><span>宿主进程清理 cron 也标异常，可查 D:\Hermes\cron\output\ 下对应输出文件排查根因</span></div>
+        <div class="rec-item"><span class="rec-bullet">03</span><span>日报 v8 已定型，可移除 preview_yesterday 标记文件和 insights 缓存——关闭优化模式，恢复实时数据</span></div>
+        <div class="rec-item"><span class="rec-bullet">04</span><span>记忆条目 56 条，部分内容重复（WebUI 配置、进程管理规则出现 3+ 次），可考虑合并精简</span></div>
+      </div>
+    </div>
 
   <!-- ===== 13 浮动标签 ===== -->
   <div class="float-tags reveal">
