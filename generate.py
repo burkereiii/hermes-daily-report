@@ -399,8 +399,8 @@ def collect_host():
             with open(peak_file,"r",encoding="utf-8") as f:
                 samples = json.load(f)
             if samples:
-                today = datetime.date.today().strftime("%Y-%m-%d")
-                today_samples = [s for s in samples if s.get("ts","").startswith(today)]
+                today_str = (REPORT_DATE or datetime.date.today()).strftime("%Y-%m-%d")
+                today_samples = [s for s in samples if s.get("ts","").startswith(today_str)]
                 if today_samples:
                     cpu_peak = max(s["cpu"] for s in today_samples)
                     mem_peak = max(s["mem"] for s in today_samples)
@@ -606,8 +606,8 @@ def gen_notable(notable):
 # ═══════════════════════ COLLECT ALL (self-collect mode) ═══════════════════════
 
 def collect_all():
-    """Self-collect mode. If past midnight but before 4AM, report on yesterday."""
-    today=datetime.date.today()
+    """Self-collect mode. Uses REPORT_DATE if set by --date flag."""
+    today=REPORT_DATE or datetime.date.today()
     ds=today.strftime("%Y-%m-%d")
     wd=["星期一","星期二","星期三","星期四","星期五","星期六","星期日"][today.weekday()]
     
