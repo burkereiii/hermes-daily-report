@@ -459,13 +459,91 @@ def estimate_cost(model_name, raw_input, raw_output):
             return f"${cost:.4f}", f"估算 · {prefix}"
     return "—", "价格待确认"
 
+# ── Balance snapshot helpers (per-date, never overwritten) ──
+
+CACHE_DIR = r"D:\Hermes\cache"
+
+def _balance_snapshot_path(date_str):
+    return os.path.join(CACHE_DIR, f"ds_balance_{date_str}.json")
+
+def _migrate_old_snapshot():
+    """One-time: migrate legacy ds_balance.json to per-date format."""
+    old = os.path.join(CACHE_DIR, "ds_balance.json")
+    if not os.path.exists(old):
+        return
+    try:
+        with open(old, "r") as f:
+            hist = json.load(f)
+        d = hist.get("date", "")
+        b = hist.get("balance")
+        if d and b is not None:
+            new_path = _balance_snapshot_path(d)
+            if not os.path.exists(new_path):
+                with open(new_path, "w") as f:
+                    json.dump({"date": d, "balance": b, "source": "migrated"}, f)
+        os.remove(old)
+    except:
+        pass
+
+def _save_snapshot(date_str, balance):
+    """Save/update end-of-day balance for a specific date.
+    Allows overwrite — the 00:00 cron will naturally be the last writer,
+    giving the most accurate end-of-day value."""
+    path = _balance_snapshot_path(date_str)
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    with open(path, "w") as f:
+        json.dump({"date": date_str, "balance": balance,
+                   "saved_at": datetime.datetime.now().isoformat()}, f)
+
+def _load_snapshot(date_str):
+    """Load end-of-day balance for a date. Returns float or None."""
+    path = _balance_snapshot_path(date_str)
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, "r") as f:
+            return json.load(f).get("balance")
+    except:
+        return None
+
+def _calc_consumption(prev_balance, current_balance):
+    """Calculate consumption and detect ¥100 recharges.
+    Returns (formatted_string, css_class, recharge_note)."""
+    diff = prev_balance - current_balance
+    # Detect recharge: balance went UP by ~100
+    if current_balance > prev_balance and abs(current_balance - prev_balance - 100) < 5:
+        adjusted = prev_balance + 100 - current_balance
+        if adjusted > 0:
+            return (f"¥{adjusted:.2f}", "down", " · 检测到充值 +100")
+        return ("¥0", "flat", " · 检测到充值 +100")
+    if diff > 0:
+        return (f"¥{diff:.2f}", "down", "")
+    return ("¥0", "flat", "")
+
 def collect_deepseek_cost():
-    """Query DeepSeek API for real account balance. Track daily consumption.
-    Detects ¥100 top-ups: if balance jumps up by ~100, treat as recharge not negative spend."""
-    data = {"DS_BALANCE": "—", "DS_CONSUMPTION": "—", "DS_CONSUMPTION_CLASS": "flat",
-            "DS_RECHARGE_NOTE": "", "DS_CURRENCY": "CNY"}
+    """Query DeepSeek API balance. Store per-date snapshot for accurate daily tracking.
     
-    # Query API
+    Logic:
+    - Cron at 00:00 → REPORT_DATE is yesterday. Query API, save snapshot as end-of-yesterday.
+      Calculate consumption = day-before-yesterday balance - yesterday balance.
+    - Manual run for today → query API live, save snapshot for today.
+    - Manual run for past date → use stored snapshots only (don't query API — balance changed).
+    """
+    data = {"DS_BALANCE": "—", "DS_CONSUMPTION": "—", "DS_CONSUMPTION_CLASS": "flat",
+            "DS_RECHARGE_NOTE": "", "DS_CURRENCY": "CNY", "DS_CONSUMPTION_NOTE": ""}
+    
+    _migrate_old_snapshot()
+    
+    report_date_str = REPORT_DATE.strftime("%Y-%m-%d") if REPORT_DATE else datetime.date.today().strftime("%Y-%m-%d")
+    today_str = datetime.date.today().strftime("%Y-%m-%d")
+    yesterday_str = (REPORT_DATE - datetime.timedelta(days=1)).strftime("%Y-%m-%d") if REPORT_DATE else ""
+    is_today = (report_date_str == today_str)
+    # Cron at 00:00 captures end-of-yesterday: always query API for the true balance
+    _now = datetime.datetime.now()
+    _near_midnight = (_now.hour == 0 and _now.minute < 5)
+    _should_query_api = is_today or _near_midnight
+    
+    # Key
     key = ""
     env_paths = ["/d/Hermes/.env", "D:\\Hermes\\.env"]
     for p in env_paths:
@@ -480,57 +558,54 @@ def collect_deepseek_cost():
     if not key:
         return data
     
-    try:
-        import urllib.request, ssl
-        ctx = ssl.create_default_context()
-        req = urllib.request.Request("https://api.deepseek.com/user/balance")
-        req.add_header("Authorization", f"Bearer {key}")
-        resp = urllib.request.urlopen(req, context=ctx, timeout=10)
-        body = json.loads(resp.read())
-        
-        if body.get("is_available") and body.get("balance_infos"):
-            info = body["balance_infos"][0]
-            current = float(info["total_balance"])
-            currency = info.get("currency", "CNY")
-            data["DS_BALANCE"] = f"{current:.2f}"
-            data["DS_CURRENCY"] = currency
-            
-            # Load yesterday's balance
-            cache_file = "D:\\Hermes\\cache\\ds_balance.json"
-            yesterday = None
-            if os.path.exists(cache_file):
-                try:
-                    with open(cache_file,"r") as f:
-                        hist = json.load(f)
-                    yesterday = hist.get("balance")
-                except: pass
-            
-            # Calculate consumption
-            if yesterday is not None:
-                diff = yesterday - current
-                # Detect ¥100 recharge: balance went UP by ~100
-                if current > yesterday and abs(current - yesterday - 100) < 5:
-                    data["DS_RECHARGE_NOTE"] = " · 检测到充值 +100"
-                    # Consumption is what it would have been without recharge
-                    adjusted = yesterday + 100 - current
-                    data["DS_CONSUMPTION"] = f"¥{adjusted:.2f}" if adjusted > 0 else "¥0"
-                    data["DS_CONSUMPTION_CLASS"] = "down" if adjusted > 0 else "flat"
-                elif diff > 0:
-                    data["DS_CONSUMPTION"] = f"¥{diff:.2f}"
-                    data["DS_CONSUMPTION_CLASS"] = "down"
-                elif diff < 0:
-                    data["DS_CONSUMPTION"] = f"¥0"
-                    data["DS_CONSUMPTION_CLASS"] = "flat"
-                else:
-                    data["DS_CONSUMPTION"] = "¥0"
-                    data["DS_CONSUMPTION_CLASS"] = "flat"
-            
-            # Store current for tomorrow
-            with open(cache_file,"w") as f:
-                json.dump({"date": datetime.date.today().strftime("%Y-%m-%d"), "balance": current}, f)
-    except Exception as e:
-        data["DS_BALANCE"] = "—"
-        data["DS_CONSUMPTION"] = "API 查询失败"
+    current = None
+    currency = "CNY"
+    
+    if _should_query_api:
+        # Query API live for current balance
+        try:
+            import urllib.request, ssl
+            ctx = ssl.create_default_context()
+            req = urllib.request.Request("https://api.deepseek.com/user/balance")
+            req.add_header("Authorization", f"Bearer {key}")
+            resp = urllib.request.urlopen(req, context=ctx, timeout=10)
+            body = json.loads(resp.read())
+            if body.get("is_available") and body.get("balance_infos"):
+                info = body["balance_infos"][0]
+                current = float(info["total_balance"])
+                currency = info.get("currency", "CNY")
+                # Save under REPORT_DATE (at 00:00 this is yesterday = end-of-day)
+                _save_snapshot(report_date_str, current)
+        except Exception as e:
+            # Fall back to stored snapshot for report date
+            current = _load_snapshot(report_date_str)
+    else:
+        # Past date: use stored snapshot
+        current = _load_snapshot(report_date_str)
+    
+    if current is None:
+        data["DS_CONSUMPTION_NOTE"] = "无当日快照"
+        return data
+    
+    data["DS_BALANCE"] = f"{current:.2f}"
+    data["DS_CURRENCY"] = currency
+    
+    # Calculate consumption: previous day's end-of-day minus this day's end-of-day
+    if is_today:
+        prev_date = yesterday_str
+    else:
+        prev_date = (REPORT_DATE - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+    
+    prev_balance = _load_snapshot(prev_date)
+    if prev_balance is None:
+        data["DS_CONSUMPTION"] = "—"
+        data["DS_CONSUMPTION_NOTE"] = f"无 {prev_date} 快照，今日起开始累积"
+        return data
+    
+    consumption, css_class, recharge_note = _calc_consumption(prev_balance, current)
+    data["DS_CONSUMPTION"] = consumption
+    data["DS_CONSUMPTION_CLASS"] = css_class
+    data["DS_RECHARGE_NOTE"] = recharge_note
     
     return data
 
