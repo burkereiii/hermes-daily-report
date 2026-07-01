@@ -234,7 +234,7 @@ def collect_tailscale():
     data={"TAILSCALE_STATUS":"—","TAILSCALE_STATUS_CLASS":"offline",
           "TAILSCALE_IP":"—","TAILSCALE_DNS":"—","TAILSCALE_EXIT":"",
           "NETWORK_SUMMARY":"—"}
-    out,_,_=run('bash -c "tailscale status --json 2>/dev/null"',timeout=10)
+    out,_,_=run('tailscale status --json 2>nul',timeout=10)
     if out:
         try:
             ts=json.loads(out)
@@ -319,6 +319,8 @@ def collect_images():
         files.sort(key=lambda x: x[0], reverse=True)
         if files:
             data["IMAGE_COUNT"] = str(len(files))
+            latest_ts = datetime.datetime.fromtimestamp(files[0][0]).strftime("%H:%M")
+            data["IMAGE_TIME"] = f'<div style="font-size:0.58rem;color:var(--text-dim);margin-top:2px;">最新 {latest_ts}</div>'
             items = []
             for mtime, fn in files[:20]:
                 ts = datetime.datetime.fromtimestamp(mtime).strftime("%H:%M:%S")
@@ -424,6 +426,7 @@ def collect_storage():
     out,_,_=run('bash -c "wc -c < /d/Hermes/state.db 2>/dev/null || echo 0"')
     try: data["DB_SIZE"]=human_bytes(int(out.strip()))
     except: pass
+    # MEMORY_COUNT: filled by agent during cron (not accessible from standalone Python)
     return data
 
 def collect_obsidian():
@@ -842,7 +845,7 @@ def main():
                      "ZOMBIE_COUNT","TAILSCALE_STATUS","TAILSCALE_STATUS_CLASS","TAILSCALE_IP",
                      "TAILSCALE_DNS","TAILSCALE_EXIT","NETWORK_SUMMARY","IMAGE_COUNT","IMAGE_LIST",
                      "FILE_CHANGE_COUNT","FILE_CHANGES","HERMES_HOME_SIZE","VAULT_TOTAL_FILES","VAULT_TODAY_CHANGES",
-                     "VAULT_RECENT_FILES","TAG_HEALTH","TAG_HEALTH_CLASS","CRON_WARN",
+                     "VAULT_RECENT_FILES","TAG_HEALTH","TAG_HEALTH_CLASS","CRON_WARN","IMAGE_TIME",
                      "SERVICE_ROWS","TOOL_RANKING","SKILL_RANKING","TOP_TOOLS","TOP_SKILLS"]:
             data.setdefault(key,"—")
         
