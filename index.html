@@ -468,7 +468,7 @@
       <div class="obs-stat" style="padding:8px 0;">
         <div><div class="obs-stat-val">7.6M</div><div class="obs-stat-lbl">缓存</div></div>
         <div><div class="obs-stat-val">63.3M</div><div class="obs-stat-lbl">数据库</div></div>
-        <div><div class="obs-stat-val">—</div><div class="obs-stat-lbl">记忆条目</div></div>
+        <div><div class="obs-stat-val">0</div><div class="obs-stat-lbl">记忆条目</div></div>
         <div><div class="obs-stat-val">2.0G</div><div class="obs-stat-lbl">Hermes 总占用</div></div>
       </div>
       <div style="font-size:0.64rem;color:var(--text-dim);text-align:center;margin-top:4px;">
@@ -623,11 +623,17 @@
   </div>
   <div class="card reveal" style="margin-bottom:12px;">
     <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent-glow);margin-bottom:8px;">🔍 今日主题</div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"><span class="float-tag" style="animation:none">数据待分析</span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"><span class="float-tag" style="animation:none;background:rgba(124,58,237,0.15);color:#c4b5fd;">🛠️ 系统开发 · 6 会话</span>
+<span class="float-tag" style="animation:none;background:rgba(52,211,153,0.15);color:#6ee7b7;">🎨 Web设计迭代 · 2 会话</span>
+<span class="float-tag" style="animation:none;background:rgba(251,191,36,0.15);color:#fcd34d;">📝 知识管理 · 2 会话</span>
+<span class="float-tag" style="animation:none;background:rgba(232,121,160,0.15);color:#f0abcb;">🤖 日常交互 · 1 会话</span></div>
   </div>
   <div class="narrative-section reveal">
-    <div class="narrative-intro">今日数据已采集，深度分析待 agent 生成。</div>
-    <div class="narrative-recs"></div>
+    <div class="narrative-intro">周四的节奏依然以系统开发为主旋律——<em>终端操作 145 次</em>、补丁 31 次、写文件 27 次，典型的 coding+debug 工作流。<em>popular-web-designs 技能加载了 3 次</em>，结合 12 次浏览器跳转，下午有一个集中的 Web 设计迭代 session。相比昨天（周三），各项指标全面回落：消息 -38%、Token -36%、工具调用 -40%，这并非衰退信号——周三是日报 v8.x 大修日，峰值属于集中冲刺后的自然回落。活动集中在<em>凌晨 0-1 点和上午 9-10 点</em>，中间 7 小时静默，表明夜间自动化 workflow 在运行后进入休眠，早晨人工介入继续开发。</div>
+        <div class="narrative-recs"><div class="narrative-rec-item"><div class="rec-icon">⚠️</div><div class="rec-text">Cron 峰值采样 + 进程清理 双双异常，大概率是 PowerShell 脚本权限问题。这是连续第二天异常 —— 建议优先排查，否则 CPU/内存峰值数据一直是模拟值。</div></div>
+    <div class="narrative-rec-item"><div class="rec-icon">📊</div><div class="rec-text">DS 余额 ¥49.17，昨日消耗无基线数据（首次记录），明天起可看到真实的日消耗趋势。token 量折算约 $0.37，实际 API 支出待累积数据验证。</div></div>
+    <div class="narrative-rec-item"><div class="rec-icon">💡</div><div class="rec-text">凌晨 0-1 点有显著活动（cron 日报生成 + 自动化），确认是 health-check 正常执行。可考虑将 cron 异常检测加入日报逻辑，自动诊断失败原因。</div></div>
+    <div class="narrative-rec-item"><div class="rec-icon">🎯</div><div class="rec-text">工具使用高度集中在 terminal/读文件/补丁/写文件，组合占比达 75%。如果明天继续保持这个模式，可以考虑把高频组合封装成 skill 或 alias 加速 workflow。</div></div></div>
   </div>
 
   <!-- ===== 13 浮动标签 ===== -->
