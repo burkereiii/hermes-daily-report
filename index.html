@@ -127,8 +127,8 @@
   @keyframes pulse-dot { 0%,100% { box-shadow: 0 0 4px var(--green); } 50% { box-shadow: 0 0 12px var(--green); } }
 
   /* === 3. PROCESS LIST === */
-  .proc-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(124,58,237,0.05); font-size: 0.76rem; }
-  .proc-row:last-child { border-bottom: none; }
+  .proc-row, .proc-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(124,58,237,0.05); font-size: 0.76rem; }
+  .proc-row:last-child, .proc-item:last-child { border-bottom: none; }
   .proc-rank { width: 18px; font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-align: right; }
   .proc-name { flex: 1; color: var(--text-bright); }
   .proc-pid { width: 50px; font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); text-align: right; }
@@ -226,13 +226,13 @@
   .notable-chip-info strong { color: var(--text-bright); display: block; font-size: 0.84rem; }
 
   /* === CRON === */
-  .cron-card {
+  .cron-card, .cron-item {
     background: rgba(18,14,34,0.1); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 14px 18px; margin-bottom: 10px; transition: border-color 0.3s;
     display: flex; align-items: center; gap: 14px;
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
-  .cron-card:hover { border-color: var(--border-hover); }
+  .cron-card:hover, .cron-item:hover { border-color: var(--border-hover); }
   .cron-status-icon { font-size: 1.1rem; }
   .cron-info { flex: 1; }
   .cron-name { font-size: 0.85rem; font-weight: 600; color: var(--text-bright); }
@@ -397,7 +397,7 @@
       <span class="ch-strip-icon">🔗</span>
       <span class="ch-strip-name">Tailscale</span>
       <span class="ch-strip-detail">100.64.111.119 · node.tailbfef97.ts.net</span>
-      <span class="ch-strip-status"><span class="ch-dot —"></span><span class="ch-txt —">在线</span></span>
+      <span class="ch-strip-status"><span class="ch-dot online"></span><span class="ch-txt online">在线</span></span>
     </div>
   </div>
 
@@ -596,9 +596,9 @@
   <div class="card reveal">
     <div class="cron-item"><span class="cron-name">日报生成</span><span class="cron-sched">每天 00:05</span></div><div class="cron-item"><span class="cron-name">全盘健康检查</span><span class="cron-sched">每天 03:00</span></div><div class="cron-item"><span class="cron-name">宿主进程自动清理</span><span class="cron-sched">每30分钟</span></div><div class="cron-item"><span class="cron-name">峰值采样</span><span class="cron-sched">每分钟</span></div>
   </div>
-  全盘健康检查: 微信推送失败 (iLink rate limited)
+    <div style="font-size:0.68rem;color:var(--red);padding:4px 12px;margin-top:2px;opacity:0.8;">⚠️ 全盘健康检查: 微信推送失败 (iLink rate limited)</div>
 
-  <!-- ===== 12 深度洞察 ===== -->
+    <!-- ===== 12 深度洞察 ===== -->
   <div class="section-head reveal">
     <div class="ghost">INSIGHTS</div>
     <div class="section-badge"><span class="dot"></span>深度分析</div>
