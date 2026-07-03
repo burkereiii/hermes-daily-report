@@ -118,11 +118,11 @@
   .ch-strip-name { font-size: 0.82rem; font-weight: 600; color: var(--text-bright); min-width: 60px; }
   .ch-strip-detail { flex: 1; font-size: 0.72rem; color: var(--text-dim); }
   .ch-strip-status { display: flex; align-items: center; gap: 5px; }
-  .ch-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .ch-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-dim); }
   .ch-dot.online { background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse-dot 2s infinite; }
   .ch-dot.offline { background: var(--red); }
   .ch-dot.activity { background: var(--yellow); box-shadow: 0 0 4px var(--yellow); }
-  .ch-txt { font-size: 0.73rem; font-weight: 500; }
+  .ch-txt { font-size: 0.73rem; font-weight: 500; color: var(--text-dim); }
   .ch-txt.online { color: var(--green); } .ch-txt.offline { color: var(--red); } .ch-txt.activity { color: var(--yellow); }
   @keyframes pulse-dot { 0%,100% { box-shadow: 0 0 4px var(--green); } 50% { box-shadow: 0 0 12px var(--green); } }
 
