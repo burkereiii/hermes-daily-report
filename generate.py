@@ -924,6 +924,12 @@ def main():
                      "SERVICE_ROWS","TOOL_RANKING","SKILL_RANKING","TOP_TOOLS","TOP_SKILLS"]:
             data.setdefault(key,"—")
         
+        # Derive TAILSCALE_STATUS_CLASS from status text (pitfall #71 fix)
+        ts_cls = data.get("TAILSCALE_STATUS_CLASS","")
+        if ts_cls in ("—",""):
+            ts = data.get("TAILSCALE_STATUS","")
+            data["TAILSCALE_STATUS_CLASS"] = "online" if "在线" in ts else ("offline" if "离线" in ts else ts_cls)
+        
         # Peak note
         peak_src = data.get("PEAK_SOURCE","")
         if peak_src:
