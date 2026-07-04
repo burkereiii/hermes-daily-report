@@ -306,23 +306,27 @@ foreach ($p in $top) { Write-Output "PROC|$($p.Name)|$($p.Id)|$($p.MemMB)" }
 def collect_images():
     data={"IMAGE_COUNT":"0","IMAGE_LIST":""}
     today_str = (REPORT_DATE or datetime.date.today()).strftime("%Y-%m-%d")
-    # Use Python glob+stat (avoids find -newermt shell escaping issues on git-bash)
     import glob as _glob, os as _os
-    img_dir = r"D:\Hermes\cache\images"
+    exts = ("*.png","*.jpg","*.jpeg","*.webp")
+    img_dirs = [r"D:\Hermes\cache\images", r"D:\Hermes\images"]
     try:
         files = []
-        for f in _glob.glob(_os.path.join(img_dir, "*.png")):
-            mtime = _os.path.getmtime(f)
-            mdate = datetime.date.fromtimestamp(mtime).strftime("%Y-%m-%d")
-            if mdate == today_str:
-                files.append((mtime, _os.path.basename(f)))
+        for img_dir in img_dirs:
+            if not _os.path.isdir(img_dir):
+                continue
+            for ext in exts:
+                for f in _glob.glob(_os.path.join(img_dir, ext)):
+                    mtime = _os.path.getmtime(f)
+                    mdate = datetime.date.fromtimestamp(mtime).strftime("%Y-%m-%d")
+                    if mdate == today_str:
+                        files.append((mtime, _os.path.basename(f), img_dir))
         files.sort(key=lambda x: x[0], reverse=True)
         if files:
             data["IMAGE_COUNT"] = str(len(files))
             latest_ts = datetime.datetime.fromtimestamp(files[0][0]).strftime("%H:%M")
             data["IMAGE_TIME"] = f'<div style="font-size:0.58rem;color:var(--text-dim);margin-top:2px;">最新 {latest_ts}</div>'
             items = []
-            for mtime, fn in files[:20]:
+            for mtime, fn, _d in files[:20]:
                 ts = datetime.datetime.fromtimestamp(mtime).strftime("%H:%M:%S")
                 items.append(f'<li class="log-item"><span class="log-time">{ts}</span><span class="log-file">{fn}</span></li>')
             data["IMAGE_LIST"] = "\n".join(items)
